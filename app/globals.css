@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+:root {
+  --color-primary: #0D2B2E;
+  --color-gold: #C9A84C;
+  --color-gold-light: #E8D5A3;
+  --color-bg: #F5F0E8;
+  --color-text: #1A1A1A;
+  --color-text-muted: #6B6B6B;
+  --color-success: #2D6A4F;
+  --color-warning: #E9C46A;
+  --color-danger: #C1121F;
+  --color-surface: #FFFFFF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--color-text);
+  background: var(--color-bg);
+  font-family: var(--font-sans), sans-serif;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display), serif;
+  font-weight: 600;
+}
+
+.font-display {
+  font-family: var(--font-display), serif;
+}
+
+.font-mono-data {
+  font-family: var(--font-mono), monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
