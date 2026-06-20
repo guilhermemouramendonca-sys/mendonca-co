@@ -93,13 +93,6 @@ export default function SDRPage() {
   const semana = semanaISO();
 
   const carregar = useCallback(async () => {
-    const inicioSemana = (() => {
-      const d = new Date();
-      d.setDate(d.getDate() - d.getDay() + 1);
-      d.setHours(0, 0, 0, 0);
-      return d.toISOString();
-    })();
-
     const [{ data: leadsData }, { data: cadData }, { data: metaData }] = await Promise.all([
       supabase.from("leads")
         .select("*")
