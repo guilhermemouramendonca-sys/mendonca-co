@@ -87,7 +87,6 @@ const ACOES_RADAR: Record<string, string[]> = {
 };
 
 export function extrairAcoesRadar360(resultado: Record<string, unknown>): ItemPlano[] {
-  const scores = resultado.scores as Record<string, number> ?? {};
   const criticas = (resultado.zonaCritica as string[] ?? []);
   const atencao = (resultado.zonaAtencao as string[] ?? []);
 

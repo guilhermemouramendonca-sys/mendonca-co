@@ -134,7 +134,7 @@ export function DISCPDF({ nome, empresa, cargo, resultado, data }: Props) {
           </Svg>
           {/* Labels sobre o SVG */}
           <View style={{ position: "absolute", top: 148, left: 50 }}>
-            {fatores.map((f, i) => (
+            {fatores.map((f) => (
               <View key={f} style={{ flexDirection: "row", alignItems: "center", height: 30, gap: 8 }}>
                 <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: CORES_DISC[f], width: 40 }}>
                   {f} — {DISC_NOMES[f].slice(0, 3)}.

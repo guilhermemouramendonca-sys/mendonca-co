@@ -2,15 +2,15 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  Target, MessageCircle, Mail, Phone, Linkedin,
+  Target, MessageCircle, Mail, Phone, Link2,
   CheckCircle2, Clock, AlertCircle, Plus, ChevronRight,
   Flame, TrendingUp, X,
 } from "lucide-react";
-import { formatDate } from "@/lib/utils";
+
 import Link from "next/link";
 
 type Lead = {
@@ -38,7 +38,7 @@ type CadenciaItem = {
 };
 
 const CANAL_CONFIG: Record<string, { label: string; icon: React.ReactNode; cor: string }> = {
-  linkedin:      { label: "LinkedIn",      icon: <Linkedin size={13} />,      cor: "#0A66C2" },
+  linkedin:      { label: "LinkedIn",      icon: <Link2 size={13} />,         cor: "#0A66C2" },
   whatsapp:      { label: "WhatsApp",      icon: <MessageCircle size={13} />, cor: "#25D366" },
   email:         { label: "E-mail",        icon: <Mail size={13} />,          cor: "#C9A84C" },
   ligacao:       { label: "Ligação",       icon: <Phone size={13} />,         cor: "#8E44AD" },
@@ -90,7 +90,6 @@ export default function SDRPage() {
   const [notaAcao, setNotaAcao] = useState("");
   const [canalAcao, setCanalAcao] = useState("whatsapp");
 
-  const hoje = new Date().toISOString().split("T")[0];
   const semana = semanaISO();
 
   const carregar = useCallback(async () => {

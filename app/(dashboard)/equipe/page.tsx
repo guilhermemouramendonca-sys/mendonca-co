@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserPlus, Mail, Shield, User, X, Check } from "lucide-react";
+import { UserPlus, Mail, User, X, Check } from "lucide-react";
 
 type Papel = "admin" | "consultor" | "cs" | "sdr" | "closer";
 

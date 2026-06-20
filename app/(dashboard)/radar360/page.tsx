@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Link2, FileText, ExternalLink, ChevronDown, ChevronUp, Users } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { DIMENSOES, corScore, labelScore } from "@/lib/radar360/dimensoes";

@@ -25,7 +25,6 @@ export function BenchmarkComparacao({
   tipo, metrica, valorAtual,
   categoria, segmento, porte,
   unidade = "%",
-  label = "seu resultado",
 }: BenchmarkComparacaoProps) {
   const [benchmark, setBenchmark] = useState<BenchmarkResult | null>(null);
   const [carregando, setCarregando] = useState(true);

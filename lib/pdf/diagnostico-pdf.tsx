@@ -77,7 +77,6 @@ function gridPts(norm: number) {
 function RadarChart({ scores }: { scores: [number, number, number] }) {
   const s = scores.map((v) => v / 10);
   const corDim = scores.map((v) => faixaScore(v).cor);
-  const labelsPos = [0, 1, 2].map((i) => radarPt(i, 1.22));
   const scorePos = scores.map((_, i) => radarPt(i, s[i]));
   const gridLevels = [0.25, 0.5, 0.75, 1.0];
   const axesTips = [0, 1, 2].map((i) => radarPt(i, 1.0));

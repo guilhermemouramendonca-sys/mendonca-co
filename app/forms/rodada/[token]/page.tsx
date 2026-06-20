@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { SetorSelects } from "@/components/ui/setor-selects";
+
 
 import { PERGUNTAS_Q12, calcularQ12, ESCALA_Q12, type RespostasQ12 } from "@/lib/pesquisas/q12";
 import { AFIRMACOES_GPTW, calcularGPTW, ESCALA_GPTW, type RespostasGPTW } from "@/lib/pesquisas/gptw";
