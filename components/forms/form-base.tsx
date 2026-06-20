@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -35,6 +35,17 @@ export function FormBase({ titulo, subtitulo, origem, tipoServico, camposExtras,
   const [enviado, setEnviado] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [erro, setErro] = useState("");
+  const [utm, setUtm] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const u: Record<string, string> = {};
+    for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
+      const v = p.get(k);
+      if (v) u[k] = v;
+    }
+    setUtm(u);
+  }, []);
 
   const {
     register,
@@ -56,10 +67,12 @@ export function FormBase({ titulo, subtitulo, origem, tipoServico, camposExtras,
       cargo: data.cargo,
       empresa: data.empresa,
       como_encontrou: data.como_encontrou,
+      canal: utm.utm_source || data.como_encontrou?.toLowerCase().replace(/\s+/g, "_") || null,
       origem,
       tipo_servico: tipoServico,
       etapa: "novo",
       dados_extras: dadosExtras ?? {},
+      ...utm,
     });
 
     if (error) {

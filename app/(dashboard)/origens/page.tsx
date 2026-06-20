@@ -9,8 +9,10 @@ type Lead = {
   id: string;
   canal?: string;
   como_encontrou?: string;
+  utm_source?: string;
   etapa: string;
   valor_estimado?: number;
+  valor_fechado?: number;
   criado_em: string;
 };
 
@@ -67,7 +69,7 @@ function calcularStats(leads: Lead[]): CanalStats[] {
   const mapa: Record<string, Lead[]> = {};
 
   for (const lead of leads) {
-    const canal = lead.canal || lead.como_encontrou?.toLowerCase().replace(/\s+/g, "_") || "outro";
+    const canal = lead.canal || lead.utm_source || lead.como_encontrou?.toLowerCase().replace(/\s+/g, "_") || "outro";
     const key = CANAL_LABELS[canal] ? canal : "outro";
     if (!mapa[key]) mapa[key] = [];
     mapa[key].push(lead);
@@ -75,11 +77,11 @@ function calcularStats(leads: Lead[]): CanalStats[] {
 
   return Object.entries(mapa)
     .map(([canal, ls]) => {
-      const fechados = ls.filter((l) => l.etapa === "fechado").length;
+      const fechados = ls.filter((l) => l.etapa === "ganho" || l.etapa === "fechado").length;
       const perdidos = ls.filter((l) => l.etapa === "perdido").length;
       const em_andamento = ls.length - fechados - perdidos;
       const valor_estimado = ls.reduce((s, l) => s + (l.valor_estimado ?? 0), 0);
-      const valor_fechado = ls.filter((l) => l.etapa === "fechado").reduce((s, l) => s + (l.valor_estimado ?? 0), 0);
+      const valor_fechado = ls.filter((l) => l.etapa === "ganho" || l.etapa === "fechado").reduce((s, l) => s + (l.valor_fechado ?? l.valor_estimado ?? 0), 0);
       const por_etapa = Object.fromEntries(
         ETAPAS_ORDEM.map((e) => [e, ls.filter((l) => l.etapa === e).length])
       );
@@ -118,7 +120,7 @@ export default function OrigensPage() {
   async function carregar() {
     const { data } = await supabase
       .from("leads")
-      .select("id, canal, como_encontrou, etapa, valor_estimado, criado_em")
+      .select("id, canal, como_encontrou, utm_source, etapa, valor_estimado, valor_fechado, criado_em")
       .order("criado_em", { ascending: false });
     if (data) setLeads(data as Lead[]);
   }
@@ -133,7 +135,7 @@ export default function OrigensPage() {
 
   const stats = calcularStats(leadsFiltrados);
   const totalLeads = leadsFiltrados.length;
-  const totalFechados = leadsFiltrados.filter((l) => l.etapa === "fechado").length;
+  const totalFechados = leadsFiltrados.filter((l) => l.etapa === "ganho" || l.etapa === "fechado").length;
   const taxaGeral = totalLeads > 0 ? Math.round((totalFechados / totalLeads) * 100) : 0;
   const melhorCanal = stats.length > 0 ? stats.reduce((a, b) => (a.taxa_conversao > b.taxa_conversao ? a : b)) : null;
   const maiorVolume = stats.length > 0 ? stats[0] : null;

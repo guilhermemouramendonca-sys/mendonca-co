@@ -24,6 +24,7 @@ import {
   HeartPulse,
   RadioTower,
   GraduationCap,
+  Sprout,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -43,6 +44,7 @@ const navItems = [
   { href: "/sdr", label: "SDR / Prospecção", icon: Megaphone },
   { href: "/propostas", label: "Propostas", icon: FileBadge },
   { href: "/cs", label: "CS / Sucesso", icon: HeartPulse },
+  { href: "/marketing", label: "Marketing & Growth", icon: Sprout },
   { href: "/origens", label: "Origens & Canais", icon: RadioTower },
   { href: "/turmas", label: "Turmas & Educação", icon: GraduationCap },
   { href: "/equipe", label: "Equipe", icon: UsersRound },

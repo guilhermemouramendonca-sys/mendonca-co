@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,16 @@ const ESCALA = [1, 2, 3, 4, 5];
 export default function Radar360PublicoPage() {
   const { token } = useParams<{ token: string }>();
   const supabase = createClient();
+  const [utm, setUtm] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const p = new URLSearchParams(window.location.search);
+    const u: Record<string, string> = {};
+    for (const k of ["utm_source", "utm_medium", "utm_campaign", "utm_content"]) {
+      const v = p.get(k); if (v) u[k] = v;
+    }
+    setUtm(u);
+  }, []);
 
   const [fase, setFase] = useState<Fase>("identificacao");
   const [nome, setNome] = useState("");
@@ -82,7 +92,7 @@ export default function Radar360PublicoPage() {
     await fetch("/api/radar360/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, empresa, cargo, faturamento, resultado }),
+      body: JSON.stringify({ nome, email, empresa, cargo, faturamento, resultado, ...utm }),
     });
 
     setSalvando(false);

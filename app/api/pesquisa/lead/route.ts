@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
-  const { nome, email, empresa, cargo, tipo, observacoes } = await req.json();
+  const { nome, email, empresa, cargo, tipo, observacoes, utm_source, utm_medium, utm_campaign, utm_content } = await req.json();
   const supabase = await createClient();
 
   // 1. cliente existente?
@@ -37,7 +37,12 @@ export async function POST(req: NextRequest) {
     cargo: cargo || null,
     tipo_servico: tipoServico[tipo] ?? tipo,
     origem: "pesquisa_publica",
-    estagio: "novo",
+    etapa: "novo",
+    canal: utm_source || null,
+    utm_source: utm_source || null,
+    utm_medium: utm_medium || null,
+    utm_campaign: utm_campaign || null,
+    utm_content: utm_content || null,
     observacoes: observacoes || null,
   });
 
