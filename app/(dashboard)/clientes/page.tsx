@@ -44,24 +44,32 @@ const STATUS_VARIANT: Record<string, "success" | "warning" | "danger" | "muted">
 export default function ClientesPage() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [busca, setBusca] = useState("");
+  const [filtroResponsavel, setFiltroResponsavel] = useState<"todos" | "meus">("todos");
+  const [userId, setUserId] = useState<string | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
   const supabase = createClient();
 
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setUserId(data.user?.id ?? null));
+    carregar();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { carregar(); }, []);
+  }, []);
 
   async function carregar() {
     const { data } = await supabase
       .from("clientes")
-      .select("*")
+      .select("*, usuarios!responsavel_id(nome)")
       .order("criado_em", { ascending: false });
     if (data) setClientes(data as Cliente[]);
   }
 
-  const filtrados = clientes.filter((c) =>
-    c.nome.toLowerCase().includes(busca.toLowerCase()) ||
-    c.setor?.toLowerCase().includes(busca.toLowerCase())
-  );
+  const filtrados = clientes.filter((c) => {
+    const buscaOk = c.nome.toLowerCase().includes(busca.toLowerCase()) ||
+      c.setor?.toLowerCase().includes(busca.toLowerCase());
+    const responsavelOk = filtroResponsavel === "todos" ||
+      (c as unknown as Record<string, unknown>).responsavel_id === userId;
+    return buscaOk && responsavelOk;
+  });
 
   return (
     <div>
@@ -70,10 +78,22 @@ export default function ClientesPage() {
           <h1 className="font-display text-4xl font-bold text-text-main">Clientes</h1>
           <p className="text-text-muted mt-1">{clientes.length} empresa{clientes.length !== 1 ? "s" : ""} cadastrada{clientes.length !== 1 ? "s" : ""}</p>
         </div>
-        <Button onClick={() => setModalAberto(true)}>
-          <Plus size={16} />
-          Novo Cliente
-        </Button>
+        <div className="flex items-center gap-2">
+          <div className="flex rounded-btn border border-[#E8D5A3]/50 overflow-hidden text-xs">
+            {(["todos", "meus"] as const).map((f) => (
+              <button
+                key={f}
+                onClick={() => setFiltroResponsavel(f)}
+                className={`px-3 py-1.5 transition-all ${filtroResponsavel === f ? "bg-primary text-gold" : "bg-surface text-text-muted hover:text-text-main"}`}
+              >
+                {f === "todos" ? "Todos" : "Minha carteira"}
+              </button>
+            ))}
+          </div>
+          <Button onClick={() => setModalAberto(true)}>
+            <Plus size={16} /> Novo Cliente
+          </Button>
+        </div>
       </div>
 
       {/* Busca */}

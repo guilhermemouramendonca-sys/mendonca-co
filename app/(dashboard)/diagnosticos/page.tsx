@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, Download, Link2, ExternalLink } from "lucide-react";
@@ -28,7 +28,8 @@ export default function DiagnosticosPage() {
   const [linkCopiado, setLinkCopiado] = useState<string | null>(null);
   const supabase = createClient();
 
-  useState(() => { carregar(); });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { carregar(); }, []);
 
   async function carregar() {
     const { data } = await supabase

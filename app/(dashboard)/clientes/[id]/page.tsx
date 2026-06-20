@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   ArrowLeft, Users, Edit2, Plus, Trash2,
-  Phone, Mail, MessageCircle, FileText, Calendar, Save,
+  Phone, Mail, MessageCircle, FileText, Calendar, Save, Share2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/utils";
@@ -81,6 +81,11 @@ export default function ClienteFichaPage() {
   const [interacoes, setInteracoes] = useState<Interacao[]>([]);
   const [aba, setAba] = useState<"visao" | "contatos" | "sessoes" | "historico">("visao");
   const [editandoCliente, setEditandoCliente] = useState(false);
+  const [gerandoRelatorio, setGerandoRelatorio] = useState(false);
+  const [modalCompartilhar, setModalCompartilhar] = useState(false);
+  const [compartilhamentos, setCompartilhamentos] = useState<{id:string;titulo:string;tipo:string;criado_em:string}[]>([]);
+  const [formComp, setFormComp] = useState({ titulo: "", descricao: "", arquivo_url: "", tipo: "documento" });
+  const [salvandoComp, setSalvandoComp] = useState(false);
 
   // Novo contato
   const [novoContato, setNovoContato] = useState({ nome: "", cargo: "", email: "", whatsapp: "", papel: "outro" });
@@ -97,16 +102,40 @@ export default function ClienteFichaPage() {
   useEffect(() => { carregar(); }, [id]);
 
   async function carregar() {
-    const [{ data: c }, { data: ct }, { data: s }, { data: i }] = await Promise.all([
+    const [{ data: c }, { data: ct }, { data: s }, { data: i }, { data: comp }] = await Promise.all([
       supabase.from("clientes").select("*").eq("id", id).single(),
       supabase.from("contatos_cliente").select("*").eq("cliente_id", id).order("principal", { ascending: false }),
       supabase.from("sessoes").select("*").eq("cliente_id", id).order("data", { ascending: false }),
       supabase.from("interacoes").select("*").eq("cliente_id", id).order("data", { ascending: false }),
+      supabase.from("compartilhamentos").select("id,titulo,tipo,criado_em").eq("cliente_id", id).order("criado_em", { ascending: false }),
     ]);
     if (c) setCliente(c as Cliente);
     if (ct) setContatos(ct as Contato[]);
     if (s) setSessoes(s as Sessao[]);
     if (i) setInteracoes(i as Interacao[]);
+    if (comp) setCompartilhamentos(comp);
+  }
+
+  async function compartilharDoc() {
+    if (!formComp.titulo || !formComp.arquivo_url) return;
+    setSalvandoComp(true);
+    await supabase.from("compartilhamentos").insert({
+      cliente_id: id,
+      titulo: formComp.titulo,
+      descricao: formComp.descricao || null,
+      arquivo_url: formComp.arquivo_url,
+      tipo: formComp.tipo,
+    });
+    setSalvandoComp(false);
+    setModalCompartilhar(false);
+    setFormComp({ titulo: "", descricao: "", arquivo_url: "", tipo: "documento" });
+    carregar();
+  }
+
+  async function removerCompartilhamento(cid: string) {
+    if (!confirm("Remover acesso do cliente a este documento?")) return;
+    await supabase.from("compartilhamentos").delete().eq("id", cid);
+    carregar();
   }
 
   async function salvarContato() {
@@ -174,9 +203,33 @@ export default function ClienteFichaPage() {
             </p>
           </div>
         </div>
-        <Button variant="secondary" onClick={() => setEditandoCliente(true)}>
-          <Edit2 size={15} /> Editar
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="secondary"
+            onClick={async () => {
+              setGerandoRelatorio(true);
+              const res = await fetch("/api/relatorio-executivo", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ clienteId: id }),
+              });
+              const data = await res.json();
+              if (data.pdfUrl) window.open(data.pdfUrl, "_blank");
+              else alert(data.error ?? "Erro ao gerar relatório.");
+              setGerandoRelatorio(false);
+            }}
+            disabled={gerandoRelatorio}
+          >
+            <FileText size={15} />
+            {gerandoRelatorio ? "Gerando..." : "Relatório Executivo"}
+          </Button>
+          <Button variant="secondary" onClick={() => setModalCompartilhar(true)}>
+            <Share2 size={15} /> Portal do Cliente
+          </Button>
+          <Button variant="secondary" onClick={() => setEditandoCliente(true)}>
+            <Edit2 size={15} /> Editar
+          </Button>
+        </div>
       </div>
 
       {/* Abas */}
@@ -506,6 +559,92 @@ export default function ClienteFichaPage() {
           onClose={() => setEditandoCliente(false)}
           onSave={carregar}
         />
+      )}
+
+      {/* Modal Portal do Cliente / Compartilhamentos */}
+      {modalCompartilhar && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-surface rounded-card w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl">
+            <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+              <div>
+                <h2 className="font-display text-xl font-semibold text-text-main">Portal do Cliente</h2>
+                <p className="text-xs text-text-muted mt-0.5">Documentos visíveis para {cliente.nome}</p>
+              </div>
+              <button onClick={() => setModalCompartilhar(false)} className="text-text-muted hover:text-text-main">✕</button>
+            </div>
+
+            {/* Lista de compartilhamentos existentes */}
+            <div className="px-6 pt-4">
+              {compartilhamentos.length === 0 ? (
+                <p className="text-sm text-text-muted text-center py-4">Nenhum documento compartilhado ainda.</p>
+              ) : (
+                <div className="space-y-2 mb-4">
+                  {compartilhamentos.map((c) => (
+                    <div key={c.id} className="flex items-center gap-3 p-3 bg-bg rounded-btn">
+                      <FileText size={14} className="text-gold flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-text-main truncate">{c.titulo}</p>
+                        <p className="text-xs text-text-muted">{c.tipo} · {formatDate(c.criado_em)}</p>
+                      </div>
+                      <button onClick={() => removerCompartilhamento(c.id)} className="text-text-muted hover:text-red-500 transition-colors flex-shrink-0">
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Formulário novo compartilhamento */}
+            <div className="px-6 pb-6 space-y-3 border-t border-[#E8D5A3]/30 pt-4">
+              <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">Compartilhar novo documento</p>
+              <div className="space-y-1.5">
+                <Label>Título *</Label>
+                <input
+                  value={formComp.titulo}
+                  onChange={(e) => setFormComp((p) => ({ ...p, titulo: e.target.value }))}
+                  placeholder="Ex: Relatório Executivo — Jun/2025"
+                  className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label>URL do arquivo *</Label>
+                <input
+                  value={formComp.arquivo_url}
+                  onChange={(e) => setFormComp((p) => ({ ...p, arquivo_url: e.target.value }))}
+                  placeholder="https://..."
+                  className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1.5">
+                  <Label>Tipo</Label>
+                  <select
+                    value={formComp.tipo}
+                    onChange={(e) => setFormComp((p) => ({ ...p, tipo: e.target.value }))}
+                    className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                  >
+                    {[["relatorio","Relatório"],["diagnostico","Diagnóstico"],["radar360","Radar 360"],["pesquisa","Pesquisa"],["canvas","Canvas"],["proposta","Proposta"],["plano_acao","Plano de Ação"],["documento","Documento"],["outro","Outro"]].map(([v,l]) => (
+                      <option key={v} value={v}>{l}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-1.5">
+                  <Label>Descrição</Label>
+                  <input
+                    value={formComp.descricao}
+                    onChange={(e) => setFormComp((p) => ({ ...p, descricao: e.target.value }))}
+                    placeholder="Opcional..."
+                    className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                  />
+                </div>
+              </div>
+              <Button onClick={compartilharDoc} disabled={salvandoComp || !formComp.titulo || !formComp.arquivo_url} className="w-full">
+                <Share2 size={14} /> {salvandoComp ? "Salvando..." : "Compartilhar com cliente"}
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

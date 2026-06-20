@@ -59,6 +59,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
     cargo: lead?.cargo ?? "",
     empresa: lead?.empresa ?? "",
     como_encontrou: lead?.como_encontrou ?? "",
+    canal: (lead as Record<string, unknown>)?.canal as string ?? "",
     tipo_servico: lead?.tipo_servico ?? "",
     valor_estimado: lead?.valor_estimado?.toString() ?? "",
     etapa: lead?.etapa ?? etapaInicial ?? "novo",
@@ -184,16 +185,22 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
                   <Input value={form.cargo} onChange={(e) => set("cargo", e.target.value)} placeholder="CEO, Diretor..." />
                 </div>
                 <div className="space-y-1.5">
-                  <Label>Como nos encontrou</Label>
+                  <Label>Canal de origem</Label>
                   <select
-                    value={form.como_encontrou}
-                    onChange={(e) => set("como_encontrou", e.target.value)}
+                    value={form.canal}
+                    onChange={(e) => set("canal", e.target.value)}
                     className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                   >
                     <option value="">Selecione...</option>
-                    {["Instagram", "LinkedIn", "Indicação", "Podcast", "YouTube", "Outro"].map((o) => (
-                      <option key={o} value={o}>{o}</option>
-                    ))}
+                    <option value="indicacao">Indicação</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="organico">Orgânico (SEO/blog)</option>
+                    <option value="evento">Evento / Palestra</option>
+                    <option value="google">Google Ads</option>
+                    <option value="whatsapp_ativo">WhatsApp Ativo</option>
+                    <option value="email_frio">E-mail Frio</option>
+                    <option value="outro">Outro</option>
                   </select>
                 </div>
               </div>

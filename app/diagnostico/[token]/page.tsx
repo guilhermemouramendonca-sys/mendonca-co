@@ -34,6 +34,7 @@ export default function DiagnosticoPublicoPage() {
   const [email, setEmail] = useState("");
   const [empresa, setEmpresa] = useState("");
   const [cargo, setCargo] = useState("");
+  const [faturamento, setFaturamento] = useState("");
   const [atual, setAtual] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [salvando, setSalvando] = useState(false);
@@ -69,11 +70,18 @@ export default function DiagnosticoPublicoPage() {
     setSalvando(true);
     const resultado = calcularResultado(respostas);
 
+    const camposRespondente = {
+      respondente_nome: nome,
+      respondente_email: email,
+      respondente_empresa: empresa || null,
+      respondente_cargo: cargo || null,
+      faturamento_faixa: faturamento || null,
+    };
+
     const payload = {
       tipo: "captacao" as const,
       token,
-      respondente_nome: nome,
-      respondente_email: email,
+      ...camposRespondente,
       respostas,
       resultado,
     };
@@ -88,7 +96,7 @@ export default function DiagnosticoPublicoPage() {
     if (existente) {
       await supabase
         .from("diagnosticos")
-        .update({ respostas, resultado, respondente_nome: nome, respondente_email: email })
+        .update({ respostas, resultado, ...camposRespondente })
         .eq("token", token);
     } else {
       await supabase.from("diagnosticos").insert(payload);
@@ -140,6 +148,20 @@ export default function DiagnosticoPublicoPage() {
               <div className="space-y-1.5">
                 <Label>Cargo</Label>
                 <Input value={cargo} onChange={(e) => setCargo(e.target.value)} placeholder="CEO, Diretor..." />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Faturamento anual da empresa</Label>
+                <select
+                  value={faturamento}
+                  onChange={(e) => setFaturamento(e.target.value)}
+                  className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3]/50 bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30"
+                >
+                  <option value="">Selecionar (opcional)</option>
+                  <option value="ate_7m">Até R$7M/ano</option>
+                  <option value="7m_30m">R$7M a R$30M/ano</option>
+                  <option value="30m_100m">R$30M a R$100M/ano</option>
+                  <option value="acima_100m">Acima de R$100M/ano</option>
+                </select>
               </div>
 
               {erro && <p className="text-sm text-danger">{erro}</p>}

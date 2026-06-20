@@ -4,6 +4,7 @@ import { createElement } from "react";
 import { DiagnosticoPDF } from "@/lib/pdf/diagnostico-pdf";
 import { createServiceClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
+import { enviarEmailPDF } from "@/lib/email/sender";
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,6 +25,9 @@ export async function POST(req: NextRequest) {
       // @ts-expect-error react-pdf types diverge from React's createElement
       createElement(DiagnosticoPDF, {
         nome: diag.respondente_nome ?? "Respondente",
+        empresa: diag.respondente_empresa ?? null,
+        cargo: diag.respondente_cargo ?? null,
+        faturamento: diag.faturamento_faixa ?? null,
         resultado: diag.resultado,
         data: formatDate(diag.criado_em),
       })
@@ -46,6 +50,44 @@ export async function POST(req: NextRequest) {
     const pdfUrl = urlData.publicUrl;
 
     await supabase.from("diagnosticos").update({ pdf_url: pdfUrl }).eq("id", diagnosticoId);
+
+    if (diag.respondente_email) {
+      await enviarEmailPDF({
+        nome: diag.respondente_nome ?? "Respondente",
+        email: diag.respondente_email,
+        tipo: "diagnostico_3d",
+        pdfUrl,
+      });
+    }
+
+    // Plano de ação automático
+    await fetch(`${req.nextUrl.origin}/api/plano-acao`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tipo: "diagnostico_3d",
+        referenciaId: diagnosticoId,
+        nome: diag.respondente_nome,
+        email: diag.respondente_email,
+        empresa: diag.respondente_empresa,
+        resultado: diag.resultado,
+      }),
+    }).catch(() => {});
+
+    if (diag.respondente_email) {
+      fetch(`${req.nextUrl.origin}/api/followup/agendar`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipo: "diagnostico_3d",
+          referenciaId: diagnosticoId,
+          nome: diag.respondente_nome,
+          email: diag.respondente_email,
+          empresa: diag.respondente_empresa,
+          pdfUrl,
+        }),
+      }).catch(() => {});
+    }
 
     return NextResponse.json({ pdfUrl });
   } catch (err) {
