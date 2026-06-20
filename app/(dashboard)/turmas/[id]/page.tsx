@@ -41,9 +41,9 @@ const STATUS_ALUNO: Record<string, { label: string; cor: string }> = {
   desistente:   { label: "Desistente",    cor: "#6B7280" },
 };
 
-const STATUS_TURMA: Record<string, { label: string; variant: "success" | "warning" | "muted" | "danger" | "info" }> = {
+const STATUS_TURMA: Record<string, { label: string; variant: "success" | "warning" | "muted" | "danger" | "primary" }> = {
   rascunho:           { label: "Rascunho",            variant: "muted" },
-  inscricoes_abertas: { label: "Inscrições Abertas",  variant: "info" },
+  inscricoes_abertas: { label: "Inscrições Abertas",  variant: "primary" },
   em_andamento:       { label: "Em Andamento",         variant: "success" },
   encerrada:          { label: "Encerrada",            variant: "muted" },
   cancelada:          { label: "Cancelada",            variant: "danger" },
