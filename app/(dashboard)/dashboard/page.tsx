@@ -42,7 +42,7 @@ type Dados = {
   planoTotal: number;
   planoPorStatus: Record<StatusPlano, number>;
   // Atividade recente
-  ultimosLeads: { id: string; nome: string; empresa: string; tipo_servico: string; criado_em: string }[];
+  ultimosLeads: { id: string; nome: string; empresa: string; tipo_servico: string; etapa: string; criado_em: string }[];
   cobrancasProximas: { id: string; cliente_nome: string; valor: number; vencimento: string }[];
 };
 
