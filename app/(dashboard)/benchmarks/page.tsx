@@ -88,7 +88,7 @@ export default function BenchmarksPage() {
     setRecalculando(false);
   }
 
-  const tiposDisponiveis = ["todos", ...new Set([...referencias, ...snapshots].map((r) => r.tipo))];
+  const tiposDisponiveis = ["todos", ...Array.from(new Set([...referencias, ...snapshots].map((r) => r.tipo)))];
 
   const refsFiltradas = referencias.filter((r) => tipoFiltro === "todos" || r.tipo === tipoFiltro);
   const snapsFiltrados = snapshots.filter((r) => tipoFiltro === "todos" || r.tipo === tipoFiltro);
