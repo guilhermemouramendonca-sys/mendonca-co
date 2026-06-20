@@ -68,9 +68,7 @@ export async function POST(req: NextRequest) {
     dataEmissao: proposta.criado_em,
   };
 
-  const buffer = await renderToBuffer(
-    React.createElement(PropostaPDF, { proposta: propostaData })
-  );
+  const buffer = await renderToBuffer(React.createElement(PropostaPDF, { proposta: propostaData }) as unknown as import("react").ReactElement<import("@react-pdf/renderer").DocumentProps>);
 
   // Upload para Supabase Storage
   const path = `propostas/${proposta.id}.pdf`;

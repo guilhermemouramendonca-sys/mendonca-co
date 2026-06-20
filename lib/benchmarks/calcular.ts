@@ -126,7 +126,7 @@ function calcularMediasPorGrupo(
   }
 
   // Por categoria
-  const categorias = [...new Set(registros.map((r) => r.categoria).filter(Boolean))] as string[];
+  const categorias = Array.from(new Set(registros.map((r) => r.categoria).filter(Boolean))) as string[];
   for (const cat of categorias) {
     const grupo = registros.filter((r) => r.categoria === cat);
     const vals = grupo.map(extrairValor).filter((v) => v != null) as number[];
@@ -136,7 +136,7 @@ function calcularMediasPorGrupo(
   }
 
   // Por segmento
-  const segmentos = [...new Set(registros.map((r) => r.segmento).filter(Boolean))] as string[];
+  const segmentos = Array.from(new Set(registros.map((r) => r.segmento).filter(Boolean))) as string[];
   for (const seg of segmentos) {
     const grupo = registros.filter((r) => r.segmento === seg);
     const vals = grupo.map(extrairValor).filter((v) => v != null) as number[];
@@ -146,7 +146,7 @@ function calcularMediasPorGrupo(
   }
 
   // Por porte
-  const portes = [...new Set(registros.map((r) => r.faturamento_faixa).filter(Boolean))] as string[];
+  const portes = Array.from(new Set(registros.map((r) => r.faturamento_faixa).filter(Boolean))) as string[];
   for (const porte of portes) {
     const grupo = registros.filter((r) => r.faturamento_faixa === porte);
     const vals = grupo.map(extrairValor).filter((v) => v != null) as number[];

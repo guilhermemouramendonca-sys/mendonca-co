@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { createElement } from "react";
+import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer";
+import { createElement, type ReactElement, type JSXElementConstructor } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { CanvasPDF } from "@/lib/pdf/canvas-pdf";
 import { enviarEmailPDF } from "@/lib/email/sender";
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
         cargo: c.respondente_cargo ?? null,
         resultado: c.resultado,
         data,
-      })
+      }) as unknown as ReactElement<DocumentProps, string | JSXElementConstructor<unknown>>
     )
   );
 

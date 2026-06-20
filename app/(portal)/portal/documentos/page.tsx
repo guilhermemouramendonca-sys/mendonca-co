@@ -69,7 +69,7 @@ export default function PortalDocumentos() {
     setLoading(false);
   }
 
-  const tiposDisponiveis = [...new Set(docs.map((d) => d.tipo))];
+  const tiposDisponiveis = Array.from(new Set(docs.map((d) => d.tipo)));
 
   const filtrados = docs.filter((d) => {
     const buscaOk = d.titulo.toLowerCase().includes(busca.toLowerCase()) ||

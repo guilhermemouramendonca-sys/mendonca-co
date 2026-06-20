@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { createElement } from "react";
+import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer";
+import { createElement, type ReactElement, type JSXElementConstructor } from "react";
+type PDFElement = ReactElement<DocumentProps, string | JSXElementConstructor<unknown>>;
 import { createClient } from "@/lib/supabase/server";
 import { DISCPDF } from "@/lib/pdf/disc-pdf";
 import { Q12PDF } from "@/lib/pdf/q12-pdf";
@@ -31,15 +32,15 @@ export async function POST(req: NextRequest) {
 
   if (tipo === "disc") {
     pdfBuffer = Buffer.from(
-      await renderToBuffer(createElement(DISCPDF, { nome, empresa, cargo, resultado: p.resultado, data }))
+      await renderToBuffer(createElement(DISCPDF, { nome, empresa, cargo, resultado: p.resultado, data }) as unknown as PDFElement)
     );
   } else if (tipo === "q12") {
     pdfBuffer = Buffer.from(
-      await renderToBuffer(createElement(Q12PDF, { nome, empresa, cargo, resultado: p.resultado, data }))
+      await renderToBuffer(createElement(Q12PDF, { nome, empresa, cargo, resultado: p.resultado, data }) as unknown as PDFElement)
     );
   } else if (tipo === "gptw") {
     pdfBuffer = Buffer.from(
-      await renderToBuffer(createElement(GPTWPDF, { nome, empresa, cargo, resultado: p.resultado, data }))
+      await renderToBuffer(createElement(GPTWPDF, { nome, empresa, cargo, resultado: p.resultado, data }) as unknown as PDFElement)
     );
   } else {
     return NextResponse.json({ error: "Tipo de pesquisa inválido" }, { status: 400 });

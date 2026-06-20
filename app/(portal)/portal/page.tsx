@@ -59,7 +59,7 @@ export default function PortalDashboard() {
 
     if (!vinculo) { setLoading(false); return; }
 
-    const clienteData = (vinculo as { clientes: Cliente }).clientes;
+    const clienteData = (vinculo as unknown as { clientes: Cliente }).clientes;
     setCliente(clienteData);
 
     const clienteId = clienteData.id;

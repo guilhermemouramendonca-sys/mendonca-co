@@ -197,7 +197,7 @@ export default function CanvasPublicoPage() {
                 </div>
                 <textarea
                   className="w-full rounded-lg border border-[#E8D5A3] bg-[#F5F0E8] p-4 text-sm text-[#1A1A1A] placeholder:text-[#6B6B6B]/60 focus:outline-none focus:ring-2 focus:border-transparent resize-none"
-                  style={{ focusRingColor: q.cor, minHeight: 120 }}
+                  style={{ minHeight: 120 }}
                   placeholder={q.placeholder}
                   value={valor}
                   onChange={(e) => setRespostas({ ...respostas, [q.id]: e.target.value })}

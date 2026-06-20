@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { createElement } from "react";
+import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer";
+import { createElement, type ReactElement, type JSXElementConstructor } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { RelatorioExecutivoPDF } from "@/lib/pdf/relatorio-executivo-pdf";
 import type {
@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
           cargo: contatoPrincipal?.cargo ?? undefined,
         },
         data, diagnosticos, radar360, pesquisas, canvas,
-      })
+      }) as unknown as ReactElement<DocumentProps, string | JSXElementConstructor<unknown>>
     )
   );
 

@@ -36,9 +36,9 @@ const TIPO_LABELS: Record<string, string> = {
   imersao: "Imersão",
 };
 
-const STATUS_CONFIG: Record<string, { label: string; variant: "success" | "warning" | "muted" | "danger" | "info" }> = {
+const STATUS_CONFIG: Record<string, { label: string; variant: "success" | "warning" | "muted" | "danger" | "primary" }> = {
   rascunho:          { label: "Rascunho",           variant: "muted" },
-  inscricoes_abertas: { label: "Inscrições Abertas", variant: "info" },
+  inscricoes_abertas: { label: "Inscrições Abertas", variant: "primary" },
   em_andamento:      { label: "Em Andamento",        variant: "success" },
   encerrada:         { label: "Encerrada",           variant: "muted" },
   cancelada:         { label: "Cancelada",           variant: "danger" },

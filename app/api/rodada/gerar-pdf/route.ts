@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { renderToBuffer } from "@react-pdf/renderer";
-import { createElement } from "react";
+import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer";
+import { createElement, type ReactElement, type JSXElementConstructor } from "react";
+type PDFElement = ReactElement<DocumentProps, string | JSXElementConstructor<unknown>>;
 import { createClient } from "@/lib/supabase/server";
 import { RodadaQ12PDF, RodadaGPTWPDF } from "@/lib/pdf/rodada-pdf";
 
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
           consolidado,
           respondentes,
           data,
-        })
+        }) as unknown as PDFElement
       )
     );
   } else if (rodada.tipo === "gptw") {
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
           consolidado,
           respondentes,
           data,
-        })
+        }) as unknown as PDFElement
       )
     );
   } else {
