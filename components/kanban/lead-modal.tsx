@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { X, MessageCircle, Mail, Phone, Users, FileText, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/utils";
-import type { Lead, Etapa } from "@/app/(dashboard)/leads/page";
+import type { Lead, Etapa } from "@/lib/crm/tipos";
 
 type Interacao = {
   id: string;
@@ -21,6 +21,7 @@ type Props = {
   etapaInicial: Etapa | null;
   onClose: () => void;
   onSave: () => void;
+  onGanhoPerda?: (lead: Lead, tipo: "ganho" | "perdido") => void;
 };
 
 const TIPO_ICONS: Record<string, React.ReactNode> = {
@@ -44,11 +45,11 @@ const ETAPAS = [
   { value: "diagnostico", label: "Diagnóstico Agendado" },
   { value: "proposta", label: "Proposta Enviada" },
   { value: "negociacao", label: "Em Negociação" },
-  { value: "fechado", label: "Fechado" },
+  { value: "ganho", label: "Ganho" },
   { value: "perdido", label: "Perdido" },
 ];
 
-export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
+export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }: Props) {
   const supabase = createClient();
   const isNovo = !lead;
 
@@ -58,14 +59,13 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
     whatsapp: lead?.whatsapp ?? "",
     cargo: lead?.cargo ?? "",
     empresa: lead?.empresa ?? "",
-    como_encontrou: lead?.como_encontrou ?? "",
-    canal: (lead as Record<string, unknown>)?.canal as string ?? "",
+    canal: lead?.canal ?? "",
     tipo_servico: lead?.tipo_servico ?? "",
     valor_estimado: lead?.valor_estimado?.toString() ?? "",
     etapa: lead?.etapa ?? etapaInicial ?? "novo",
     proxima_acao: lead?.proxima_acao ?? "",
     data_proxima_acao: lead?.data_proxima_acao ?? "",
-    motivo_perda: lead?.motivo_perda ?? "",
+    data_fechamento_prevista: lead?.data_fechamento_prevista ?? "",
   });
 
   const [interacoes, setInteracoes] = useState<Interacao[]>([]);
@@ -86,11 +86,20 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
     if (data) setInteracoes(data as Interacao[]);
   }
 
+  function handleEtapaChange(novaEtapa: string) {
+    if ((novaEtapa === "ganho" || novaEtapa === "perdido") && onGanhoPerda && lead) {
+      onGanhoPerda(lead, novaEtapa as "ganho" | "perdido");
+      return;
+    }
+    setForm((prev) => ({ ...prev, etapa: novaEtapa as Etapa }));
+  }
+
   async function salvar() {
     setSalvando(true);
     const payload = {
       ...form,
       valor_estimado: form.valor_estimado ? parseFloat(form.valor_estimado) : null,
+      data_fechamento_prevista: form.data_fechamento_prevista || null,
       origem: lead?.origem ?? "manual",
       atualizado_em: new Date().toISOString(),
     };
@@ -126,9 +135,16 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
       <div className="bg-surface rounded-card w-full max-w-2xl max-h-[90vh] flex flex-col shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
-          <h2 className="font-display text-2xl font-semibold text-text-main">
-            {isNovo ? "Novo Lead" : lead.nome}
-          </h2>
+          <div>
+            <h2 className="font-display text-2xl font-semibold text-text-main">
+              {isNovo ? "Novo Lead" : lead.nome}
+            </h2>
+            {lead?.utm_source && (
+              <p className="text-xs text-text-muted mt-0.5">
+                Origem UTM: {lead.utm_source} / {lead.utm_medium} {lead.utm_campaign ? `· ${lead.utm_campaign}` : ""}
+              </p>
+            )}
+          </div>
           <button onClick={onClose} className="text-text-muted hover:text-text-main transition-colors">
             <X size={20} />
           </button>
@@ -195,6 +211,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
                     <option value="indicacao">Indicação</option>
                     <option value="linkedin">LinkedIn</option>
                     <option value="instagram">Instagram</option>
+                    <option value="youtube">YouTube</option>
                     <option value="organico">Orgânico (SEO/blog)</option>
                     <option value="evento">Evento / Palestra</option>
                     <option value="google">Google Ads</option>
@@ -221,7 +238,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
                 </div>
                 <div className="space-y-1.5">
                   <Label>Valor estimado (R$)</Label>
-                  <Input type="number" value={form.valor_estimado} onChange={(e) => set("valor_estimado", e.target.value)} placeholder="0,00" />
+                  <Input type="number" value={form.valor_estimado} onChange={(e) => set("valor_estimado", e.target.value)} placeholder="0" />
                 </div>
               </div>
 
@@ -230,7 +247,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
                   <Label>Etapa</Label>
                   <select
                     value={form.etapa}
-                    onChange={(e) => set("etapa", e.target.value)}
+                    onChange={(e) => handleEtapaChange(e.target.value)}
                     className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                   >
                     {ETAPAS.map((e) => (
@@ -239,20 +256,42 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
                   </select>
                 </div>
                 <div className="space-y-1.5">
+                  <Label>Data fechamento previsto</Label>
+                  <Input type="date" value={form.data_fechamento_prevista} onChange={(e) => set("data_fechamento_prevista", e.target.value)} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <Label>Próxima ação</Label>
+                  <Input value={form.proxima_acao} onChange={(e) => set("proxima_acao", e.target.value)} placeholder="Enviar proposta, agendar reunião..." />
+                </div>
+                <div className="space-y-1.5">
                   <Label>Data próxima ação</Label>
                   <Input type="date" value={form.data_proxima_acao} onChange={(e) => set("data_proxima_acao", e.target.value)} />
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <Label>Próxima ação</Label>
-                <Input value={form.proxima_acao} onChange={(e) => set("proxima_acao", e.target.value)} placeholder="Enviar proposta, agendar reunião..." />
-              </div>
+              {/* Dados ganho/perda (só leitura se já foi registrado) */}
+              {lead?.etapa === "ganho" && lead?.motivo_ganho && (
+                <div className="bg-[#2D6A4F]/10 border border-[#2D6A4F]/30 rounded-btn p-4 space-y-1">
+                  <p className="text-xs font-medium text-[#2D6A4F]">Negócio ganho</p>
+                  {lead.valor_fechado && (
+                    <p className="text-sm text-text-main">Valor fechado: R$ {lead.valor_fechado.toLocaleString("pt-BR")}</p>
+                  )}
+                  <p className="text-sm text-text-main">{lead.motivo_ganho}</p>
+                  {lead.data_ganho && <p className="text-xs text-text-muted">{formatDate(lead.data_ganho)}</p>}
+                </div>
+              )}
 
-              {form.etapa === "perdido" && (
-                <div className="space-y-1.5">
-                  <Label>Motivo da perda</Label>
-                  <Input value={form.motivo_perda} onChange={(e) => set("motivo_perda", e.target.value)} placeholder="Descreva o motivo..." />
+              {lead?.etapa === "perdido" && lead?.motivo_perda && (
+                <div className="bg-danger/10 border border-danger/30 rounded-btn p-4 space-y-1">
+                  <p className="text-xs font-medium text-danger">Negócio perdido</p>
+                  {lead.categoria_perda && (
+                    <p className="text-xs text-text-muted capitalize">{lead.categoria_perda.replace(/_/g, " ")}</p>
+                  )}
+                  <p className="text-sm text-text-main">{lead.motivo_perda}</p>
+                  {lead.data_perda && <p className="text-xs text-text-muted">{formatDate(lead.data_perda)}</p>}
                 </div>
               )}
             </div>
@@ -263,7 +302,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave }: Props) {
               {/* Nova interação */}
               <div className="bg-bg rounded-btn p-4 space-y-3">
                 <p className="text-sm font-medium text-text-main">Registrar interação</p>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {["whatsapp", "email", "ligacao", "reuniao", "nota"].map((tipo) => (
                     <button
                       key={tipo}

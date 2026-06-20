@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
-  const { nome, email, empresa, cargo } = await req.json();
+  const { nome, email, empresa, cargo, utm_source, utm_medium, utm_campaign, utm_content } = await req.json();
   const supabase = await createClient();
 
   const { data: cliente } = await supabase
@@ -28,8 +28,11 @@ export async function POST(req: NextRequest) {
     cargo: cargo || null,
     tipo_servico: "canvas_estrategico",
     origem: "canvas_publico",
-    estagio: "novo",
-    observacoes: "Lead gerado via Canvas Estratégico público.",
+    etapa: "novo",
+    utm_source: utm_source || null,
+    utm_medium: utm_medium || null,
+    utm_campaign: utm_campaign || null,
+    utm_content: utm_content || null,
   });
 
   return NextResponse.json({ status: "lead_criado" });

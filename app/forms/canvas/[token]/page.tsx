@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,15 @@ type Fase = "identificacao" | "perguntas" | "concluido" | "erro";
 
 export default function CanvasPublicoPage() {
   const { token } = useParams<{ token: string }>();
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  const utm = {
+    utm_source: searchParams.get("utm_source") ?? undefined,
+    utm_medium: searchParams.get("utm_medium") ?? undefined,
+    utm_campaign: searchParams.get("utm_campaign") ?? undefined,
+    utm_content: searchParams.get("utm_content") ?? undefined,
+  };
 
   const [fase, setFase] = useState<Fase>("identificacao");
   const [canvasId, setCanvasId] = useState<string | null>(null);
@@ -80,7 +88,7 @@ export default function CanvasPublicoPage() {
     fetch("/api/canvas/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, empresa: empresa || null, cargo: cargo || null }),
+      body: JSON.stringify({ nome, email, empresa: empresa || null, cargo: cargo || null, ...utm }),
     }).catch(() => {});
 
     setSalvando(false);
