@@ -2,6 +2,130 @@ export type DimensaoId =
   | "estrategia" | "lideranca" | "cultura" | "gestao"
   | "processos" | "marketing" | "vendas" | "financeiro";
 
+export type PerguntaRadar = {
+  id: string;
+  dimensaoId: DimensaoId;
+  nivel: "Estratégico" | "Tático" | "Operacional";
+  corHex: string;
+  pergunta: string;
+  ancora1: string;
+  ancora5: string;
+};
+
+export const PERGUNTAS_RADAR: PerguntaRadar[] = [
+  // ── ESTRATÉGIA ───────────────────────────────────────────────
+  { id: "estrategia_E", dimensaoId: "estrategia", nivel: "Estratégico", corHex: "#0D2B2E",
+    pergunta: "Sua empresa tem uma visão de longo prazo clara e documentada?",
+    ancora1: "Sem visão definida. Reagimos ao que aparece.",
+    ancora5: "Visão de 3–5 anos, comunicada ao time e revisada regularmente." },
+  { id: "estrategia_T", dimensaoId: "estrategia", nivel: "Tático", corHex: "#0D2B2E",
+    pergunta: "As metas estratégicas estão desdobradas em planos trimestrais?",
+    ancora1: "Sem metas formais. Cada área age por conta.",
+    ancora5: "OKRs trimestrais conhecidos por todos e revisados mensalmente." },
+  { id: "estrategia_O", dimensaoId: "estrategia", nivel: "Operacional", corHex: "#0D2B2E",
+    pergunta: "O planejamento estratégico orienta as decisões do dia a dia?",
+    ancora1: "Estratégia no papel, operação no improviso.",
+    ancora5: "Cada decisão operacional é avaliada com base nas metas estratégicas." },
+
+  // ── LIDERANÇA ────────────────────────────────────────────────
+  { id: "lideranca_E", dimensaoId: "lideranca", nivel: "Estratégico", corHex: "#C9A84C",
+    pergunta: "Há um pipeline de liderança sendo desenvolvido na empresa?",
+    ancora1: "Tudo depende de mim. Sem sucessores preparados.",
+    ancora5: "Líderes de segundo nível prontos e em crescimento contínuo." },
+  { id: "lideranca_T", dimensaoId: "lideranca", nivel: "Tático", corHex: "#C9A84C",
+    pergunta: "Qual é o nível de autonomia do seu time de liderança?",
+    ancora1: "Todas as decisões passam por mim. Time só executa.",
+    ancora5: "Líderes decidem, resolvem e respondem por resultados." },
+  { id: "lideranca_O", dimensaoId: "lideranca", nivel: "Operacional", corHex: "#C9A84C",
+    pergunta: "Feedbacks e 1-on-1s com líderes acontecem com regularidade?",
+    ancora1: "Sem feedbacks estruturados. Líderes isolados.",
+    ancora5: "1-on-1 semanal e plano de desenvolvimento por líder." },
+
+  // ── CULTURA ──────────────────────────────────────────────────
+  { id: "cultura_E", dimensaoId: "cultura", nivel: "Estratégico", corHex: "#8E44AD",
+    pergunta: "Os valores da empresa guiam comportamentos reais e decisões?",
+    ancora1: "Valores no papel. Comportamentos tóxicos tolerados.",
+    ancora5: "Valores vividos diariamente e usados em decisões de RH." },
+  { id: "cultura_T", dimensaoId: "cultura", nivel: "Tático", corHex: "#8E44AD",
+    pergunta: "Existe um código de cultura documentado e compartilhado com o time?",
+    ancora1: "Cultura implícita, nunca formalizada.",
+    ancora5: "Código de cultura ativo, onboarding cultural estruturado." },
+  { id: "cultura_O", dimensaoId: "cultura", nivel: "Operacional", corHex: "#8E44AD",
+    pergunta: "Rituais culturais são praticados consistentemente no dia a dia?",
+    ancora1: "Nenhum ritual cultural instalado.",
+    ancora5: "3+ rituais semanais que reforçam os valores ativamente." },
+
+  // ── GESTÃO ───────────────────────────────────────────────────
+  { id: "gestao_E", dimensaoId: "gestao", nivel: "Estratégico", corHex: "#2980B9",
+    pergunta: "O modelo de gestão da empresa é padronizado e replicável?",
+    ancora1: "Cada área gere do jeito que quer. Sem padrão.",
+    ancora5: "Modelo de gestão documentado, ensinado e praticado." },
+  { id: "gestao_T", dimensaoId: "gestao", nivel: "Tático", corHex: "#2980B9",
+    pergunta: "Os KPIs principais são conhecidos e acompanhados regularmente?",
+    ancora1: "Sem métricas definidas. Gestão por feeling.",
+    ancora5: "3–5 KPIs por área, revisados em reunião semanal." },
+  { id: "gestao_O", dimensaoId: "gestao", nivel: "Operacional", corHex: "#2980B9",
+    pergunta: "As reuniões de resultado são produtivas e acontecem com frequência?",
+    ancora1: "Sem reuniões de resultado estruturadas.",
+    ancora5: "Reuniões fixas com pauta, métricas e decisões documentadas." },
+
+  // ── PROCESSOS ────────────────────────────────────────────────
+  { id: "processos_E", dimensaoId: "processos", nivel: "Estratégico", corHex: "#E67E22",
+    pergunta: "Os processos críticos do negócio estão mapeados e documentados?",
+    ancora1: "Tudo na cabeça de quem executa. Sem documentação.",
+    ancora5: "Processos críticos documentados, revisados e atualizados." },
+  { id: "processos_T", dimensaoId: "processos", nivel: "Tático", corHex: "#E67E22",
+    pergunta: "Os processos têm indicadores de qualidade, prazo e responsável?",
+    ancora1: "Sem KPIs de processo. Reação a problemas.",
+    ancora5: "Cada processo tem SLA, taxa de erro e dono definido." },
+  { id: "processos_O", dimensaoId: "processos", nivel: "Operacional", corHex: "#E67E22",
+    pergunta: "A operação escala sem depender de uma única pessoa-chave?",
+    ancora1: "A empresa para sem a pessoa certa presente.",
+    ancora5: "Processos transferíveis. Novo colaborador aprende em dias." },
+
+  // ── MARKETING ────────────────────────────────────────────────
+  { id: "marketing_E", dimensaoId: "marketing", nivel: "Estratégico", corHex: "#C0392B",
+    pergunta: "O posicionamento da empresa é claro e diferenciado no mercado?",
+    ancora1: "Sem posicionamento definido. Serve a todos igualmente.",
+    ancora5: "Nicho claro, proposta única e posição defensável no setor." },
+  { id: "marketing_T", dimensaoId: "marketing", nivel: "Tático", corHex: "#C0392B",
+    pergunta: "A empresa gera demanda previsível pelos canais de marketing?",
+    ancora1: "Marketing inexistente ou sem resultado mensurável.",
+    ancora5: "Canais ativos gerando leads qualificados mensalmente." },
+  { id: "marketing_O", dimensaoId: "marketing", nivel: "Operacional", corHex: "#C0392B",
+    pergunta: "O desempenho do marketing é medido com métricas regulares?",
+    ancora1: "Sem métricas de marketing. Só intuição.",
+    ancora5: "CAC, conversão e ROI por canal monitorados." },
+
+  // ── VENDAS ───────────────────────────────────────────────────
+  { id: "vendas_E", dimensaoId: "vendas", nivel: "Estratégico", corHex: "#27AE60",
+    pergunta: "Existe um processo de vendas estruturado e replicável?",
+    ancora1: "Vendas por indicação, sem método ou funil definido.",
+    ancora5: "Processo documentado, replicável por qualquer vendedor." },
+  { id: "vendas_T", dimensaoId: "vendas", nivel: "Tático", corHex: "#27AE60",
+    pergunta: "A pipeline de vendas é monitorada com métricas e previsibilidade?",
+    ancora1: "Sem CRM ou controle de oportunidades.",
+    ancora5: "CRM atualizado com taxas de conversão por etapa e forecast." },
+  { id: "vendas_O", dimensaoId: "vendas", nivel: "Operacional", corHex: "#27AE60",
+    pergunta: "As reuniões de vendas geram ações e revisão de resultados?",
+    ancora1: "Sem reunião de vendas estruturada.",
+    ancora5: "Revisão semanal com forecast, prioridades e plano de ação." },
+
+  // ── FINANCEIRO ───────────────────────────────────────────────
+  { id: "financeiro_E", dimensaoId: "financeiro", nivel: "Estratégico", corHex: "#2D6A4F",
+    pergunta: "A empresa tem visibilidade clara do resultado financeiro mensal?",
+    ancora1: "Sem DRE. Receita e despesa desconhecidas.",
+    ancora5: "DRE mensal, projeções e análise de margem por linha." },
+  { id: "financeiro_T", dimensaoId: "financeiro", nivel: "Tático", corHex: "#2D6A4F",
+    pergunta: "As decisões de investimento têm base financeira e ROI esperado?",
+    ancora1: "Decisões sem análise de retorno ou custo.",
+    ancora5: "Todo investimento tem ROI esperado e payback definido." },
+  { id: "financeiro_O", dimensaoId: "financeiro", nivel: "Operacional", corHex: "#2D6A4F",
+    pergunta: "O caixa e fluxo financeiro são monitorados regularmente?",
+    ancora1: "Caixa desconhecido. Sempre no limite.",
+    ancora5: "Fluxo projetado 90 dias à frente, atualizado semanalmente." },
+];
+
 export type ResultadoRadar360 = {
   scores: Record<DimensaoId, number>;
   geral: number;
@@ -98,7 +222,11 @@ const PORTA_MAP: Record<DimensaoId, ResultadoRadar360["portaEntrada"]> = {
 
 export function calcularRadar360(respostas: Record<string, number>): ResultadoRadar360 {
   const scores = {} as Record<DimensaoId, number>;
-  for (const d of DIMENSOES) scores[d.id] = respostas[d.id] ?? 1;
+  for (const d of DIMENSOES) {
+    const pergs = PERGUNTAS_RADAR.filter((p) => p.dimensaoId === d.id);
+    const vals = pergs.map((p) => respostas[p.id] ?? 1);
+    scores[d.id] = parseFloat((vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2));
+  }
 
   const geral = parseFloat(
     (Object.values(scores).reduce((a, b) => a + b, 0) / DIMENSOES.length).toFixed(2)

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { PERGUNTAS, calcularResultado, faixaScore } from "@/lib/diagnostico/perguntas";
 import { createClient } from "@/lib/supabase/client";
@@ -39,6 +39,7 @@ export default function DiagnosticoPublicoPage() {
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const pergunta = PERGUNTAS[atual];
   const total = PERGUNTAS.length;
@@ -52,6 +53,10 @@ export default function DiagnosticoPublicoPage() {
 
   function responderAtual(valor: number) {
     setRespostas((prev) => ({ ...prev, [pergunta.id]: valor }));
+    if (atual < total - 1) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setAtual((p) => p + 1), 380);
+    }
   }
 
   function avancar() {
@@ -63,6 +68,7 @@ export default function DiagnosticoPublicoPage() {
   }
 
   function voltar() {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (atual > 0) setAtual((p) => p - 1);
   }
 
@@ -101,6 +107,19 @@ export default function DiagnosticoPublicoPage() {
     } else {
       await supabase.from("diagnosticos").insert(payload);
     }
+
+    // CRM lead
+    await fetch("/api/pesquisa/lead", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nome, email,
+        empresa: empresa || null,
+        cargo: cargo || null,
+        tipo: "diagnostico_3d",
+        observacoes: `Diagnóstico 3D concluído. Score geral: ${resultado.geral.toFixed(1)}/10`,
+      }),
+    }).catch(() => {});
 
     setSalvando(false);
     setFase("concluido");

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -378,6 +378,20 @@ function StepperQ12({ atual, setAtual, respostas, setRespostas, onFinalizar, sal
   const pergunta = PERGUNTAS_Q12[atual];
   const total = PERGUNTAS_Q12.length;
   const resp = respostas[pergunta.id];
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function selecionar(valor: number) {
+    setRespostas({ ...respostas, [pergunta.id]: valor });
+    if (atual < total - 1) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setAtual(atual + 1), 380);
+    }
+  }
+
+  function voltar() {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setAtual(atual - 1);
+  }
 
   return (
     <div className="min-h-screen bg-primary flex flex-col">
@@ -404,7 +418,7 @@ function StepperQ12({ atual, setAtual, respostas, setRespostas, onFinalizar, sal
             {ESCALA_Q12.map((e) => (
               <button
                 key={e.valor}
-                onClick={() => setRespostas({ ...respostas, [pergunta.id]: e.valor })}
+                onClick={() => selecionar(e.valor)}
                 className={`w-full py-3 px-6 rounded-btn text-sm font-medium transition-all flex items-center gap-4 ${
                   resp === e.valor
                     ? "bg-gold text-primary font-semibold"
@@ -418,7 +432,7 @@ function StepperQ12({ atual, setAtual, respostas, setRespostas, onFinalizar, sal
           </div>
 
           <div className="flex items-center justify-between gap-4">
-            <Button variant="secondary" onClick={() => setAtual(atual - 1)} disabled={atual === 0} className="border-gold/30 text-gold/70 hover:text-gold hover:border-gold">
+            <Button variant="secondary" onClick={voltar} disabled={atual === 0} className="border-gold/30 text-gold/70 hover:text-gold hover:border-gold">
               <ChevronLeft size={16} /> Voltar
             </Button>
             <Button onClick={atual === total - 1 ? onFinalizar : () => setAtual(atual + 1)} disabled={resp === undefined || salvando} className="min-w-32">
@@ -444,6 +458,20 @@ function StepperGPTW({ atual, setAtual, respostas, setRespostas, onFinalizar, sa
   const afirmacao = AFIRMACOES_GPTW[atual];
   const total = AFIRMACOES_GPTW.length;
   const resp = respostas[afirmacao.id];
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function selecionar(valor: number) {
+    setRespostas({ ...respostas, [afirmacao.id]: valor });
+    if (atual < total - 1) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setAtual(atual + 1), 380);
+    }
+  }
+
+  function voltar() {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setAtual(atual - 1);
+  }
 
   return (
     <div className="min-h-screen bg-primary flex flex-col">
@@ -470,7 +498,7 @@ function StepperGPTW({ atual, setAtual, respostas, setRespostas, onFinalizar, sa
             {ESCALA_GPTW.map((e) => (
               <button
                 key={e.valor}
-                onClick={() => setRespostas({ ...respostas, [afirmacao.id]: e.valor })}
+                onClick={() => selecionar(e.valor)}
                 className={`w-full py-3 px-6 rounded-btn text-sm font-medium transition-all flex items-center gap-4 ${
                   resp === e.valor
                     ? "bg-gold text-primary font-semibold"
@@ -484,7 +512,7 @@ function StepperGPTW({ atual, setAtual, respostas, setRespostas, onFinalizar, sa
           </div>
 
           <div className="flex items-center justify-between gap-4">
-            <Button variant="secondary" onClick={() => setAtual(atual - 1)} disabled={atual === 0} className="border-gold/30 text-gold/70 hover:text-gold hover:border-gold">
+            <Button variant="secondary" onClick={voltar} disabled={atual === 0} className="border-gold/30 text-gold/70 hover:text-gold hover:border-gold">
               <ChevronLeft size={16} /> Voltar
             </Button>
             <Button onClick={atual === total - 1 ? onFinalizar : () => setAtual(atual + 1)} disabled={resp === undefined || salvando} className="min-w-32">
@@ -525,15 +553,60 @@ function ResultadoDISCCard({ resultado }: { resultado: Record<string, unknown> }
   );
 }
 
+const PIRAMIDE_Q12 = [
+  { dim: "Crescimento",        cor: "#2D6A4F", nivel: 4, desc: "Aprendizado e desenvolvimento" },
+  { dim: "Trabalho em Equipe", cor: "#2980B9", nivel: 3, desc: "Pertencimento e propósito" },
+  { dim: "Suporte Individual", cor: "#C9A84C", nivel: 2, desc: "Reconhecimento e suporte" },
+  { dim: "Necessidades Básicas", cor: "#C0392B", nivel: 1, desc: "Clareza e recursos" },
+];
+
 function ResultadoQ12Card({ resultado }: { resultado: Record<string, unknown> }) {
   const percentual = resultado.percentual as number;
   const nivel = resultado.nivel as string;
   const cor = resultado.cor as string;
+  const porDimensao = resultado.porDimensao as Record<string, number> | undefined;
+
   return (
-    <div className="bg-bg rounded-card p-6 text-center">
-      <p className="text-text-muted text-xs uppercase tracking-wide mb-2">Índice de Engajamento</p>
-      <p className="font-mono-data text-5xl font-bold text-text-main mb-1">{percentual}<span className="text-xl text-text-muted font-normal">%</span></p>
-      <span className="text-sm font-medium" style={{ color: cor }}>{nivel}</span>
+    <div className="space-y-4">
+      {/* Score geral */}
+      <div className="bg-bg rounded-card p-6 text-center">
+        <p className="text-text-muted text-xs uppercase tracking-wide mb-2">Índice de Engajamento</p>
+        <p className="font-mono-data text-5xl font-bold text-text-main mb-1">{percentual}<span className="text-xl text-text-muted font-normal">%</span></p>
+        <span className="text-sm font-medium" style={{ color: cor }}>{nivel}</span>
+      </div>
+
+      {/* Pirâmide Q12 */}
+      {porDimensao && (
+        <div className="bg-bg rounded-card p-5">
+          <p className="text-text-muted text-xs uppercase tracking-wide mb-4 text-center">Pirâmide de Engajamento</p>
+          <div className="space-y-2">
+            {PIRAMIDE_Q12.map((camada, i) => {
+              const score = porDimensao[camada.dim];
+              const pct = score !== undefined ? Math.round(((score - 1) / 4) * 100) : 0;
+              const largura = [50, 65, 80, 100][i]; // topo menor, base maior
+              return (
+                <div key={camada.dim} className="flex flex-col items-center gap-1">
+                  <div style={{ width: `${largura}%` }}>
+                    <div className="flex items-center justify-between mb-0.5 px-1">
+                      <span className="text-[10px] font-medium" style={{ color: camada.cor }}>{camada.dim}</span>
+                      {score !== undefined && (
+                        <span className="text-[10px] font-mono-data text-text-muted">{pct}%</span>
+                      )}
+                    </div>
+                    <div className="h-7 rounded-btn flex items-center px-2" style={{ backgroundColor: camada.cor + "20", border: `1px solid ${camada.cor}40` }}>
+                      <div className="h-3 rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: camada.cor }} />
+                    </div>
+                    <p className="text-[9px] text-text-muted text-center mt-0.5">{camada.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <p className="text-[10px] text-text-muted/60 text-center mt-3">
+            Nível {PIRAMIDE_Q12.find(c => (porDimensao[c.dim] ?? 0) < 3)?.nivel ?? 4} — base a fortalecer primeiro
+          </p>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DIMENSOES, calcularRadar360, corScore, labelScore } from "@/lib/radar360/dimensoes";
+import { DIMENSOES, PERGUNTAS_RADAR, calcularRadar360, corScore, labelScore } from "@/lib/radar360/dimensoes";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SetorSelects } from "@/components/ui/setor-selects";
 import { BenchmarkComparacao } from "@/components/ui/benchmark-comparacao";
@@ -14,6 +14,7 @@ import { BenchmarkComparacao } from "@/components/ui/benchmark-comparacao";
 type Fase = "identificacao" | "perguntas" | "concluido";
 
 const ESCALA = [1, 2, 3, 4, 5];
+const TOTAL = PERGUNTAS_RADAR.length; // 24
 
 export default function Radar360PublicoPage() {
   const { token } = useParams<{ token: string }>();
@@ -41,22 +42,33 @@ export default function Radar360PublicoPage() {
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const dim = DIMENSOES[atual];
-  const total = DIMENSOES.length;
-  const respostaAtual = respostas[dim.id];
-  const progresso = Math.round((Object.keys(respostas).length / total) * 100);
+  const pergunta = PERGUNTAS_RADAR[atual];
+  const dim = DIMENSOES.find((d) => d.id === pergunta.dimensaoId)!;
+  const respostaAtual = respostas[pergunta.id];
+  const respondidas = Object.keys(respostas).length;
+  const progresso = Math.round((respondidas / TOTAL) * 100);
+
+  // Índice dentro do pilar (0, 1 ou 2)
+  const idxNoPilar = atual % 3;
+  const pilares = Array.from(new Set(PERGUNTAS_RADAR.map((p) => p.dimensaoId)));
 
   function responder(val: number) {
-    setRespostas((prev) => ({ ...prev, [dim.id]: val }));
+    setRespostas((prev) => ({ ...prev, [pergunta.id]: val }));
+    if (atual < TOTAL - 1) {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => setAtual((p) => p + 1), 380);
+    }
   }
 
   function avancar() {
-    if (atual < total - 1) setAtual((p) => p + 1);
+    if (atual < TOTAL - 1) setAtual((p) => p + 1);
     else finalizar();
   }
 
   function voltar() {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (atual > 0) setAtual((p) => p - 1);
   }
 
@@ -88,7 +100,6 @@ export default function Radar360PublicoPage() {
       await supabase.from("radar360").insert({ token, ...campos });
     }
 
-    // Integração CRM: cria lead se email não consta em clientes nem leads
     await fetch("/api/radar360/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -121,8 +132,8 @@ export default function Radar360PublicoPage() {
           <div className="bg-surface rounded-card p-8 shadow-lg">
             <h2 className="font-display text-2xl font-semibold text-text-main mb-2">Antes de começar</h2>
             <p className="text-text-muted text-sm mb-6">
-              <strong>8 perguntas</strong> sobre as principais dimensões do seu negócio.
-              Leva menos de <strong>5 minutos</strong>. Você receberá um relatório completo com plano de ação.
+              <strong>24 perguntas</strong> sobre os 8 pilares do seu negócio (3 perguntas por pilar: estratégico, tático e operacional).
+              Leva cerca de <strong>10 minutos</strong>.
             </p>
 
             <div className="space-y-4">
@@ -213,7 +224,7 @@ export default function Radar360PublicoPage() {
                 return (
                   <div key={d.id} className="bg-bg rounded-btn p-2 text-center">
                     <p className="text-[9px] text-text-muted mb-1 leading-tight">{d.titulo}</p>
-                    <p className="font-mono-data text-lg font-bold text-text-main">{score}</p>
+                    <p className="font-mono-data text-lg font-bold text-text-main">{score.toFixed(1)}</p>
                     <div className="w-full bg-[#E8D5A3]/30 rounded-full h-1 mt-1">
                       <div className="h-1 rounded-full" style={{ width: `${(score / 5) * 100}%`, backgroundColor: cor }} />
                     </div>
@@ -228,6 +239,12 @@ export default function Radar360PublicoPage() {
   }
 
   // ── PERGUNTAS ─────────────────────────────────────────────
+  const nivelCores: Record<string, string> = {
+    "Estratégico": "#C9A84C",
+    "Tático": "#2980B9",
+    "Operacional": "#27AE60",
+  };
+
   return (
     <div className="min-h-screen bg-primary flex flex-col">
       {/* Header com progresso */}
@@ -235,13 +252,26 @@ export default function Radar360PublicoPage() {
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-3">
             <h1 className="font-display text-lg font-bold text-gold">Radar 360</h1>
-            <span className="text-gold/60 text-sm font-mono-data">{atual + 1}/{total}</span>
+            <span className="text-gold/60 text-sm font-mono-data">{atual + 1}/{TOTAL}</span>
           </div>
-          <div className="w-full bg-gold/10 rounded-full h-1.5">
-            <div
-              className="h-1.5 rounded-full bg-gold transition-all duration-300"
-              style={{ width: `${progresso}%` }}
-            />
+          {/* Mini progresso por pilar */}
+          <div className="flex gap-1 mb-2">
+            {pilares.map((pid) => {
+              const pergsDopilar = PERGUNTAS_RADAR.filter((p) => p.dimensaoId === pid);
+              const respondidas = pergsDopilar.filter((p) => respostas[p.id] !== undefined).length;
+              const cor = DIMENSOES.find((d) => d.id === pid)?.corHex ?? "#C9A84C";
+              return (
+                <div key={pid} className="flex-1 flex flex-col gap-0.5">
+                  {[0, 1, 2].map((i) => (
+                    <div key={i} className="h-1 rounded-full transition-all"
+                      style={{ backgroundColor: respondidas > i ? cor : cor + "30" }} />
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+          <div className="w-full bg-gold/10 rounded-full h-1">
+            <div className="h-1 rounded-full bg-gold transition-all duration-300" style={{ width: `${progresso}%` }} />
           </div>
         </div>
       </div>
@@ -249,19 +279,25 @@ export default function Radar360PublicoPage() {
       {/* Pergunta */}
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-2xl">
-          {/* Badge de dimensão */}
-          <div className="mb-6 text-center">
+          {/* Badges: dimensão + nível */}
+          <div className="mb-6 flex items-center justify-center gap-2 flex-wrap">
             <span
               className="text-xs font-medium px-3 py-1 rounded-full border"
               style={{ color: dim.corHex, borderColor: dim.corHex + "50", backgroundColor: dim.corHex + "15" }}
             >
               {dim.titulo}
             </span>
+            <span
+              className="text-xs font-medium px-3 py-1 rounded-full border"
+              style={{ color: nivelCores[pergunta.nivel], borderColor: nivelCores[pergunta.nivel] + "50", backgroundColor: nivelCores[pergunta.nivel] + "15" }}
+            >
+              {pergunta.nivel} · {idxNoPilar + 1}/3
+            </span>
           </div>
 
           {/* Pergunta */}
           <h2 className="font-display text-3xl md:text-4xl font-semibold text-gold text-center mb-10 leading-snug">
-            {dim.pergunta}
+            {pergunta.pergunta}
           </h2>
 
           {/* Escala 1-5 */}
@@ -283,8 +319,8 @@ export default function Radar360PublicoPage() {
 
           {/* Âncoras */}
           <div className="flex justify-between text-xs text-gold/40 px-2 mb-10">
-            <span className="max-w-[45%] text-left">1 — {dim.ancora1}</span>
-            <span className="max-w-[45%] text-right">5 — {dim.ancora5}</span>
+            <span className="max-w-[45%] text-left">1 — {pergunta.ancora1}</span>
+            <span className="max-w-[45%] text-right">5 — {pergunta.ancora5}</span>
           </div>
 
           {/* Navegação */}
@@ -293,8 +329,8 @@ export default function Radar360PublicoPage() {
               <ChevronLeft size={16} /> Voltar
             </Button>
             <Button onClick={avancar} disabled={respostaAtual === undefined || salvando} className="min-w-32">
-              {salvando ? "Salvando..." : atual === total - 1 ? "Concluir" : "Próxima"}
-              {!salvando && atual < total - 1 && <ChevronRight size={16} />}
+              {salvando ? "Salvando..." : atual === TOTAL - 1 ? "Concluir" : "Próxima"}
+              {!salvando && atual < TOTAL - 1 && <ChevronRight size={16} />}
             </Button>
           </div>
         </div>
