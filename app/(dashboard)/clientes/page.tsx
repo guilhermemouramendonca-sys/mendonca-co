@@ -19,7 +19,7 @@ export type Cliente = {
   setor?: string;
   porte?: string;
   num_funcionarios?: number;
-  faturamento_estimado?: string;
+  faturamento_estimado?: number | string;
   modelo_trabalho?: string;
   data_inicio_contrato?: string;
   status: string;

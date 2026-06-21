@@ -29,7 +29,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
     setor: cliente?.setor ?? "",
     porte: cliente?.porte ?? "",
     num_funcionarios: cliente?.num_funcionarios?.toString() ?? "",
-    faturamento_estimado: cliente?.faturamento_estimado ?? "",
+    faturamento_estimado: cliente?.faturamento_estimado ? String(cliente.faturamento_estimado).replace(/\D/g, "") : "",
     modelo_trabalho: cliente?.modelo_trabalho ?? "",
     data_inicio_contrato: cliente?.data_inicio_contrato ?? "",
     status: cliente?.status ?? "ativo",
@@ -42,6 +42,18 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
     setForm((p) => ({ ...p, [field]: value }));
   }
 
+  function handleFaturamento(e: React.ChangeEvent<HTMLInputElement>) {
+    const apenasNumeros = e.target.value.replace(/\D/g, "");
+    setForm((p) => ({ ...p, faturamento_estimado: apenasNumeros }));
+  }
+
+  function faturamentoFormatado() {
+    if (!form.faturamento_estimado) return "";
+    const num = parseInt(form.faturamento_estimado);
+    if (isNaN(num)) return "";
+    return num.toLocaleString("pt-BR") + ",00";
+  }
+
   async function salvar() {
     if (!form.nome.trim()) return;
     setSalvando(true);
@@ -49,6 +61,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
     const payload = {
       ...form,
       num_funcionarios: form.num_funcionarios ? parseInt(form.num_funcionarios) : null,
+      faturamento_estimado: form.faturamento_estimado ? parseInt(form.faturamento_estimado) : null,
       atualizado_em: new Date().toISOString(),
     };
 
@@ -116,8 +129,18 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
               <Input type="number" value={form.num_funcionarios} onChange={(e) => set("num_funcionarios", e.target.value)} placeholder="Ex: 50" />
             </div>
             <div className="space-y-1.5">
-              <Label>Faturamento estimado</Label>
-              <Input value={form.faturamento_estimado} onChange={(e) => set("faturamento_estimado", e.target.value)} placeholder="Ex: R$ 5M/ano" />
+              <Label>Faturamento / ano</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-text-muted pointer-events-none">R$</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={faturamentoFormatado()}
+                  onChange={handleFaturamento}
+                  placeholder="0,00"
+                  className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface pl-9 pr-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold"
+                />
+              </div>
             </div>
             <div className="space-y-1.5">
               <Label>Modelo de trabalho</Label>

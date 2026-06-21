@@ -264,7 +264,7 @@ export default function ClienteFichaPage() {
                 { label: "Razão social", value: cliente.razao_social },
                 { label: "CNPJ", value: cliente.cnpj },
                 { label: "Setor", value: cliente.setor },
-                { label: "Faturamento estimado", value: cliente.faturamento_estimado },
+                { label: "Faturamento / ano", value: cliente.faturamento_estimado ? `R$ ${Number(cliente.faturamento_estimado).toLocaleString("pt-BR")},00` : undefined },
                 { label: "Modelo de trabalho", value: cliente.modelo_trabalho },
                 { label: "Cliente desde", value: cliente.data_inicio_contrato ? formatDate(cliente.data_inicio_contrato) : undefined },
               ].map(({ label, value }) => value ? (
