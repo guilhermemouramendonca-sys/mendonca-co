@@ -724,13 +724,6 @@ function ResultadoDISCCard({ resultado }: { resultado: Record<string, unknown> }
   );
 }
 
-const PIRAMIDE_Q12 = [
-  { dim: "Crescimento",        cor: "#2D6A4F", nivel: 4, desc: "Aprendizado e desenvolvimento" },
-  { dim: "Trabalho em Equipe", cor: "#2980B9", nivel: 3, desc: "Pertencimento e propósito" },
-  { dim: "Suporte Individual", cor: "#C9A84C", nivel: 2, desc: "Reconhecimento e suporte" },
-  { dim: "Necessidades Básicas", cor: "#C0392B", nivel: 1, desc: "Clareza e recursos" },
-];
-
 // Layers ordered bottom→top for SVG rendering (bottom = widest = nivel 1)
 const PIRAMIDE_LAYERS = [
   {
