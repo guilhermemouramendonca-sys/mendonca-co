@@ -220,9 +220,9 @@ export default function LeadsPage() {
 
   // Opções de filtro (só as que existem nos dados)
   const servicosDisponiveis = useMemo(() =>
-    [...new Set(leads.map((l) => l.tipo_servico).filter(Boolean))] as string[], [leads]);
+    Array.from(new Set(leads.map((l) => l.tipo_servico).filter(Boolean))) as string[], [leads]);
   const canaisDisponiveis   = useMemo(() =>
-    [...new Set(leads.map((l) => l.canal).filter(Boolean))] as string[], [leads]);
+    Array.from(new Set(leads.map((l) => l.canal).filter(Boolean))) as string[], [leads]);
 
   const temFiltroAtivo = busca || filtroServico || filtroCanal || filtroEtapa;
 
