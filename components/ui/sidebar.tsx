@@ -26,6 +26,7 @@ import {
   RadioTower,
   GraduationCap,
   Sprout,
+  CheckSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -40,6 +41,7 @@ const navItems = [
   { href: "/pesquisas", label: "Pesquisas", icon: BarChart2 },
   { href: "/rodadas", label: "Rodadas", icon: Layers },
   { href: "/plano-acao", label: "Plano de Ação", icon: ListChecks },
+  { href: "/tarefas", label: "Tarefas", icon: CheckSquare },
   { href: "/canvas", label: "Canvas Estratégico", icon: LayoutTemplate },
   { href: "/benchmarks", label: "Benchmarks", icon: LineChart },
   { href: "/sdr", label: "SDR / Prospecção", icon: Megaphone },
