@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
+import { notificarNovoLead } from "@/lib/email/notificar-lead";
 import type { ResultadoRadar360 } from "@/lib/radar360/dimensoes";
 import { DIMENSOES } from "@/lib/radar360/dimensoes";
 
@@ -62,6 +63,8 @@ export async function POST(req: NextRequest) {
       whatsapp: whatsapp || null,
       instagram: instagram || null,
     });
+
+    notificarNovoLead({ nome, email, empresa, cargo, whatsapp, instagram, origem: "radar_publico", observacoes: `Score geral: ${resultado.geral.toFixed(1)}/5 | Porta: ${resultado.portaEntrada}` }).catch(() => {});
 
     return NextResponse.json({ ok: true, tipo: "lead_criado" });
   } catch (err) {

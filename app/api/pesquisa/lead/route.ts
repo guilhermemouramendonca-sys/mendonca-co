@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { notificarNovoLead } from "@/lib/email/notificar-lead";
 
 export async function POST(req: NextRequest) {
   const { nome, email, empresa, cargo, tipo, observacoes, utm_source, utm_medium, utm_campaign, utm_content, whatsapp, instagram } = await req.json();
@@ -49,6 +50,8 @@ export async function POST(req: NextRequest) {
   });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  notificarNovoLead({ nome, email, empresa, cargo, whatsapp, instagram, origem: "pesquisa_publica", observacoes: observacoes || null }).catch(() => {});
 
   return NextResponse.json({ status: "lead_criado" });
 }

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X, MessageCircle, Mail, Phone, Users, FileText, Plus } from "lucide-react";
+import { X, MessageCircle, Mail, Phone, Users, FileText, Plus, ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/utils";
 import type { Lead, Etapa } from "@/lib/crm/tipos";
@@ -351,11 +351,27 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-[#E8D5A3]/50">
-          <Button variant="secondary" onClick={onClose}>Cancelar</Button>
-          <Button onClick={salvar} disabled={salvando || !form.nome || !form.email}>
-            {salvando ? "Salvando..." : isNovo ? "Criar Lead" : "Salvar"}
-          </Button>
+        <div className="flex items-center justify-between gap-3 p-6 border-t border-[#E8D5A3]/50">
+          <div>
+            {form.whatsapp && (
+              <a
+                href={`https://wa.me/55${form.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Olá ${form.nome}, tudo bem? Vi que você preencheu nosso formulário e gostaria de conversar sobre como podemos ajudar você e a ${form.empresa || "sua empresa"}. Quando tiver um momento?`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-btn bg-[#25D366] text-white text-sm font-medium hover:bg-[#1ebe5d] transition-colors"
+              >
+                <MessageCircle size={16} />
+                Abrir no WhatsApp
+                <ExternalLink size={12} />
+              </a>
+            )}
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant="secondary" onClick={onClose}>Cancelar</Button>
+            <Button onClick={salvar} disabled={salvando || !form.nome || !form.email}>
+              {salvando ? "Salvando..." : isNovo ? "Criar Lead" : "Salvar"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
