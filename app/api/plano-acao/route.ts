@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
   if (error || !plano) return NextResponse.json({ error: error?.message }, { status: 500 });
 
-  await supabase.from("plano_acao_itens").insert(
+  const { error: erroItens } = await supabase.from("plano_acao_itens").insert(
     itens.map((item) => ({
       plano_id: plano.id,
       dimensao: item.dimensao,
@@ -35,6 +35,8 @@ export async function POST(req: NextRequest) {
       status: "pendente",
     }))
   );
+
+  if (erroItens) return NextResponse.json({ error: erroItens.message }, { status: 500 });
 
   return NextResponse.json({ id: plano.id, criado: true });
 }

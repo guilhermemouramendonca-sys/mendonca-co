@@ -1,9 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { enviarEmailFollowup } from "@/lib/email/followup";
 
-// Chamado pelo cron diário — dispara follow-ups do dia
-export async function GET() {
+// Chamado pelo cron diário — requer CRON_SECRET
+export async function GET(req: NextRequest) {
+  const auth = req.headers.get("authorization");
+  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
   const supabase = createServiceClient();
   const hoje = new Date().toISOString().split("T")[0];
 

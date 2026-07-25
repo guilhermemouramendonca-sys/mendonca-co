@@ -46,6 +46,8 @@ export default function PesquisaPublicaPage() {
   const [categoria, setCategoria] = useState("");
   const [segmento, setSegmento] = useState("");
   const [faturamento, setFaturamento] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [erro, setErro] = useState("");
   const [atual, setAtual] = useState(0);
   const [salvando, setSalvando] = useState(false);
@@ -55,6 +57,8 @@ export default function PesquisaPublicaPage() {
   const [respostasQ12, setRespostasQ12] = useState<RespostasQ12>({});
   const [respostasGptw, setRespostasGptw] = useState<RespostasGPTW>({});
   const [resultado, setResultado] = useState<Record<string, unknown> | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [gerandoPdf, setGerandoPdf] = useState(false);
 
   useEffect(() => {
     async function carregarPesquisa() {
@@ -72,6 +76,22 @@ export default function PesquisaPublicaPage() {
     carregarPesquisa();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // PDF automático ao concluir
+  useEffect(() => {
+    if (fase !== "concluido" || !pesquisaId) return;
+    setGerandoPdf(true);
+    fetch("/api/pesquisa/gerar-pdf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pesquisaId }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (d.pdfUrl) setPdfUrl(d.pdfUrl); })
+      .catch(() => {})
+      .finally(() => setGerandoPdf(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fase, pesquisaId]);
 
   function iniciar() {
     if (!nome.trim() || !email.trim()) { setErro("Nome e e-mail são obrigatórios."); return; }
@@ -129,6 +149,8 @@ export default function PesquisaPublicaPage() {
             ? `${(res as Record<string, unknown>).percentual}%`
             : `Trust Index ${(res as Record<string, unknown>).trustIndex}%`
         }`,
+        whatsapp: whatsapp || null,
+        instagram: instagram || null,
       }),
     }).catch(() => {});
 
@@ -184,6 +206,14 @@ export default function PesquisaPublicaPage() {
                 categoria={categoria} segmento={segmento} faturamento={faturamento}
                 onCategoria={setCategoria} onSegmento={setSegmento} onFaturamento={setFaturamento}
               />
+              <div className="space-y-1.5">
+                <Label>WhatsApp</Label>
+                <Input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+55 (11) 99999-9999" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Instagram</Label>
+                <Input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@seuperfil" />
+              </div>
               {erro && <p className="text-sm text-danger">{erro}</p>}
               <Button className="w-full mt-2" onClick={iniciar} disabled={!tipo}>
                 Iniciar Pesquisa →
@@ -197,27 +227,30 @@ export default function PesquisaPublicaPage() {
 
   if (fase === "concluido") {
     return (
-      <div className="min-h-screen bg-primary flex items-center justify-center p-4">
-        <div className="w-full max-w-lg">
+      <div className="min-h-screen bg-primary py-8 px-4">
+        <div className="w-full max-w-xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="font-display text-4xl font-bold text-gold">Mendonça & Co</h1>
           </div>
-          <div className="bg-surface rounded-card p-8 shadow-lg text-center">
-            <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-6">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-            <h2 className="font-display text-3xl font-bold text-text-main mb-2">Pesquisa concluída!</h2>
-            <p className="text-text-muted text-sm mb-8">
-              {nome ? <>Obrigado, <strong>{nome}</strong>. </> : ""}
-              Suas respostas foram registradas com sucesso.
-            </p>
 
-            {/* Resultado resumido por tipo */}
-            {resultado && tipo === "disc" && (
-              <ResultadoDISCCard resultado={resultado} />
-            )}
+          <div className="space-y-5">
+            {/* Header */}
+            <div className="bg-surface rounded-card p-6 text-center shadow-lg">
+              <div className="w-14 h-14 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <h2 className="font-display text-2xl font-bold text-text-main mb-1">
+                {tipo === "disc" ? "Perfil DISC concluído!" : tipo === "q12" ? "Q12 concluído!" : "GPTW concluído!"}
+              </h2>
+              <p className="text-text-muted text-sm">
+                {nome ? <>Obrigado, <strong>{nome}</strong>. Aqui está seu resultado.</> : "Suas respostas foram registradas."}
+              </p>
+            </div>
+
+            {/* Cards de resultado por tipo */}
+            {resultado && tipo === "disc" && <ResultadoDISCCard resultado={resultado} />}
             {resultado && tipo === "q12" && (
               <>
                 <ResultadoQ12Card resultado={resultado} />
@@ -241,7 +274,30 @@ export default function PesquisaPublicaPage() {
               </>
             )}
 
-            <p className="text-text-muted text-sm mt-6">Em breve entraremos em contato com uma análise detalhada.</p>
+            {/* PDF */}
+            {(gerandoPdf || pdfUrl) && (
+              <div className="bg-surface rounded-card p-4 shadow-lg text-center">
+                {gerandoPdf ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+                    <p className="text-gold/60 text-sm">Gerando seu PDF...</p>
+                  </div>
+                ) : pdfUrl ? (
+                  <a href={pdfUrl} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 py-2 rounded-btn bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-all">
+                    Baixar PDF da Pesquisa
+                  </a>
+                ) : null}
+              </div>
+            )}
+
+            {/* CTA */}
+            <div className="bg-surface rounded-card p-5 shadow-lg text-center">
+              <p className="text-text-muted text-sm leading-relaxed">
+                Nossa equipe vai entrar em contato com uma análise detalhada e recomendações personalizadas para o seu contexto.
+              </p>
+              <p className="text-gold text-xs font-medium mt-2">guilherme@mendonca.co</p>
+            </div>
           </div>
         </div>
       </div>
@@ -370,6 +426,13 @@ function StepperDISC({ atual, setAtual, respostas, setRespostas, onFinalizar, sa
 // Q12 STEPPER
 // ─────────────────────────────────────────────────────────────
 
+const Q12_DIMS = [
+  { dim: "Necessidades Básicas", cor: "#C0392B" },
+  { dim: "Suporte Individual", cor: "#C9A84C" },
+  { dim: "Trabalho em Equipe", cor: "#2980B9" },
+  { dim: "Crescimento", cor: "#27AE60" },
+] as const;
+
 function StepperQ12({ atual, setAtual, respostas, setRespostas, onFinalizar, salvando }: {
   atual: number; setAtual: (n: number) => void;
   respostas: RespostasQ12; setRespostas: (r: RespostasQ12) => void;
@@ -379,6 +442,7 @@ function StepperQ12({ atual, setAtual, respostas, setRespostas, onFinalizar, sal
   const total = PERGUNTAS_Q12.length;
   const resp = respostas[pergunta.id];
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dimAtual = pergunta.dimensao;
 
   function selecionar(valor: number) {
     setRespostas({ ...respostas, [pergunta.id]: valor });
@@ -400,10 +464,22 @@ function StepperQ12({ atual, setAtual, respostas, setRespostas, onFinalizar, sal
           <h1 className="font-display text-lg font-bold text-gold">Pesquisa Q12</h1>
           <span className="text-gold/60 text-sm font-mono-data">{atual + 1}/{total}</span>
         </div>
-        <div className="max-w-2xl mx-auto">
-          <div className="w-full bg-gold/10 rounded-full h-1.5">
-            <div className="h-1.5 rounded-full bg-gold transition-all duration-300" style={{ width: `${((atual + 1) / total) * 100}%` }} />
-          </div>
+        <div className="max-w-2xl mx-auto flex gap-2">
+          {Q12_DIMS.map(({ dim, cor }) => {
+            const pergs = PERGUNTAS_Q12.filter((p) => p.dimensao === dim);
+            const isAtivo = dimAtual === dim;
+            return (
+              <div key={dim} className="flex-1">
+                <p className={`text-[9px] mb-1 truncate ${isAtivo ? "text-gold" : "text-gold/30"}`}>{dim.split(" ")[0]}</p>
+                <div className="flex flex-col gap-0.5">
+                  {pergs.map((p) => (
+                    <div key={p.id} className="h-1.5 rounded-full transition-all"
+                      style={{ backgroundColor: respostas[p.id] !== undefined ? cor : cor + "25" }} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -450,6 +526,14 @@ function StepperQ12({ atual, setAtual, respostas, setRespostas, onFinalizar, sal
 // GPTW STEPPER
 // ─────────────────────────────────────────────────────────────
 
+const GPTW_DIMS_CORES: Record<string, string> = {
+  "Credibilidade": "#0D2B2E",
+  "Respeito": "#2980B9",
+  "Imparcialidade": "#8E44AD",
+  "Orgulho": "#C9A84C",
+  "Camaradagem": "#27AE60",
+};
+
 function StepperGPTW({ atual, setAtual, respostas, setRespostas, onFinalizar, salvando }: {
   atual: number; setAtual: (n: number) => void;
   respostas: RespostasGPTW; setRespostas: (r: RespostasGPTW) => void;
@@ -459,6 +543,8 @@ function StepperGPTW({ atual, setAtual, respostas, setRespostas, onFinalizar, sa
   const total = AFIRMACOES_GPTW.length;
   const resp = respostas[afirmacao.id];
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const dimAtual = afirmacao.dimensao;
+  const gptwDims = Object.keys(GPTW_DIMS_CORES);
 
   function selecionar(valor: number) {
     setRespostas({ ...respostas, [afirmacao.id]: valor });
@@ -480,10 +566,23 @@ function StepperGPTW({ atual, setAtual, respostas, setRespostas, onFinalizar, sa
           <h1 className="font-display text-lg font-bold text-gold">Trust Index — GPTW</h1>
           <span className="text-gold/60 text-sm font-mono-data">{atual + 1}/{total}</span>
         </div>
-        <div className="max-w-2xl mx-auto">
-          <div className="w-full bg-gold/10 rounded-full h-1.5">
-            <div className="h-1.5 rounded-full bg-gold transition-all duration-300" style={{ width: `${((atual + 1) / total) * 100}%` }} />
-          </div>
+        <div className="max-w-2xl mx-auto flex gap-2">
+          {gptwDims.map((dim) => {
+            const cor = GPTW_DIMS_CORES[dim];
+            const pergs = AFIRMACOES_GPTW.filter((a) => a.dimensao === dim);
+            const isAtivo = dimAtual === dim;
+            return (
+              <div key={dim} className="flex-1">
+                <p className={`text-[9px] mb-1 truncate ${isAtivo ? "text-gold" : "text-gold/30"}`}>{dim}</p>
+                <div className="flex flex-col gap-0.5">
+                  {pergs.map((a) => (
+                    <div key={a.id} className="h-1 rounded-full transition-all"
+                      style={{ backgroundColor: respostas[a.id] !== undefined ? cor : cor + "25" }} />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -530,24 +629,96 @@ function StepperGPTW({ atual, setAtual, respostas, setRespostas, onFinalizar, sa
 // CARDS DE RESULTADO
 // ─────────────────────────────────────────────────────────────
 
+const DISC_INFO: Record<FatorDISC, { label: string; descricao: string; forcas: string[]; atencao: string; lideranca: string }> = {
+  D: {
+    label: "Dominância",
+    descricao: "Orientado a resultados, direto e decisivo. Age com rapidez, gosta de desafios e assume o controle. Não tem medo de tomar decisões difíceis.",
+    forcas: ["Foco em resultados", "Tomada de decisão rápida", "Alta energia para superar obstáculos"],
+    atencao: "Pode parecer impaciente ou pouco empático. Lembre-se de ouvir antes de decidir.",
+    lideranca: "Você lidera pelo resultado. Seu time precisa entender o porquê das metas — não só o o quê.",
+  },
+  I: {
+    label: "Influência",
+    descricao: "Comunicativo, otimista e entusiasta. Inspira pessoas com facilidade, cria conexões rápidas e motiva equipes com energia genuína.",
+    forcas: ["Comunicação e persuasão", "Criação de engajamento", "Ambiente positivo e colaborativo"],
+    atencao: "Pode prometer demais ou evitar conflitos necessários. Disciplina na execução é seu ponto de atenção.",
+    lideranca: "Você lidera pela inspiração. Seu time precisa ver consistência entre o que você prega e o que você faz.",
+  },
+  S: {
+    label: "Estabilidade",
+    descricao: "Paciente, leal e confiável. Cria ambientes harmoniosos, é consistente na entrega e constrói relacionamentos duradouros.",
+    forcas: ["Confiabilidade e constância", "Escuta ativa e empatia", "Estabilidade em momentos de crise"],
+    atencao: "Pode resistir a mudanças necessárias. Desenvolver assertividade é essencial para liderar crescimento.",
+    lideranca: "Você lidera pelo exemplo silencioso. Seu time precisa que você tome posição quando necessário.",
+  },
+  C: {
+    label: "Conformidade",
+    descricao: "Analítico, preciso e sistemático. Toma decisões baseadas em dados, garante qualidade e cria processos que sustentam o crescimento.",
+    forcas: ["Análise e precisão", "Planejamento detalhado", "Controle de qualidade rigoroso"],
+    atencao: "Pode paralisar por excesso de análise. Decisões boas tomadas rápido valem mais que decisões perfeitas tomadas tarde.",
+    lideranca: "Você lidera pela competência. Seu time precisa de clareza e previsibilidade — e você entrega isso naturalmente.",
+  },
+};
+
 function ResultadoDISCCard({ resultado }: { resultado: Record<string, unknown> }) {
   const percentual = resultado.percentual as Record<FatorDISC, number>;
   const perfilDominante = resultado.perfilDominante as FatorDISC;
-  const LABELS: Record<FatorDISC, string> = { D: "Dominância", I: "Influência", S: "Estabilidade", C: "Conformidade" };
+  const info = DISC_INFO[perfilDominante];
+
   return (
-    <div className="bg-bg rounded-card p-6 text-left">
-      <p className="text-text-muted text-xs uppercase tracking-wide mb-4 text-center">Seu Perfil DISC</p>
-      <div className="space-y-3">
-        {(["D", "I", "S", "C"] as FatorDISC[]).map((f) => (
-          <div key={f} className="flex items-center gap-3">
-            <span className="font-mono-data text-sm font-bold w-4" style={{ color: CORES_DISC[f] }}>{f}</span>
-            <div className="flex-1 bg-[#E8D5A3]/30 rounded-full h-2">
-              <div className="h-2 rounded-full transition-all" style={{ width: `${percentual?.[f] ?? 0}%`, backgroundColor: CORES_DISC[f] }} />
+    <div className="space-y-4">
+      {/* Perfil dominante */}
+      <div className="bg-surface rounded-card p-6 shadow-lg" style={{ borderLeft: `4px solid ${CORES_DISC[perfilDominante]}` }}>
+        <p className="text-text-muted text-xs uppercase tracking-wide mb-1">Perfil Dominante</p>
+        <p className="font-display text-2xl font-bold mb-2" style={{ color: CORES_DISC[perfilDominante] }}>
+          {perfilDominante} — {info.label}
+        </p>
+        <p className="text-text-main text-sm leading-relaxed">{info.descricao}</p>
+      </div>
+
+      {/* Gráfico de barras */}
+      <div className="bg-surface rounded-card p-5 shadow-lg">
+        <p className="text-text-muted text-xs uppercase tracking-wide mb-4">Distribuição DISC</p>
+        <div className="space-y-3">
+          {(["D", "I", "S", "C"] as FatorDISC[]).map((f) => (
+            <div key={f}>
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-mono-data text-sm font-bold" style={{ color: CORES_DISC[f] }}>{f}</span>
+                  <span className="text-xs text-text-muted">{DISC_INFO[f].label}</span>
+                  {f === perfilDominante && <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: CORES_DISC[f] + "20", color: CORES_DISC[f] }}>Dominante</span>}
+                </div>
+                <span className="font-mono-data text-sm font-bold text-text-main">{percentual?.[f] ?? 0}%</span>
+              </div>
+              <div className="w-full bg-gold/10 rounded-full h-2.5">
+                <div className="h-2.5 rounded-full transition-all" style={{ width: `${percentual?.[f] ?? 0}%`, backgroundColor: CORES_DISC[f] }} />
+              </div>
             </div>
-            <span className="text-xs text-text-muted w-10 text-right">{percentual?.[f] ?? 0}%</span>
-            {f === perfilDominante && <span className="text-[10px] text-gold font-medium">{LABELS[f]}</span>}
-          </div>
-        ))}
+          ))}
+        </div>
+      </div>
+
+      {/* Forças e liderança */}
+      <div className="bg-surface rounded-card p-5 shadow-lg">
+        <p className="text-text-muted text-xs uppercase tracking-wide mb-3">Seus pontos fortes como líder</p>
+        <div className="space-y-2 mb-4">
+          {info.forcas.map((f, i) => (
+            <div key={i} className="flex gap-2">
+              <span style={{ color: CORES_DISC[perfilDominante] }} className="text-sm font-bold">▸</span>
+              <span className="text-text-main text-sm">{f}</span>
+            </div>
+          ))}
+        </div>
+        <div className="p-3 rounded-btn" style={{ backgroundColor: CORES_DISC[perfilDominante] + "12", border: `1px solid ${CORES_DISC[perfilDominante]}30` }}>
+          <p className="text-xs font-semibold mb-1" style={{ color: CORES_DISC[perfilDominante] }}>Ponto de atenção</p>
+          <p className="text-text-muted text-sm">{info.atencao}</p>
+        </div>
+      </div>
+
+      {/* Liderança */}
+      <div className="bg-surface rounded-card p-5 shadow-lg">
+        <p className="text-text-muted text-xs uppercase tracking-wide mb-2">Como você lidera</p>
+        <p className="text-text-main text-sm leading-relaxed">{info.lideranca}</p>
       </div>
     </div>
   );
@@ -560,11 +731,138 @@ const PIRAMIDE_Q12 = [
   { dim: "Necessidades Básicas", cor: "#C0392B", nivel: 1, desc: "Clareza e recursos" },
 ];
 
+// Layers ordered bottom→top for SVG rendering (bottom = widest = nivel 1)
+const PIRAMIDE_LAYERS = [
+  {
+    dim: "Necessidades Básicas", cor: "#C0392B", nivel: 1,
+    desc: "Clareza e recursos",
+    alerta: "Esta é a base de tudo — sem clareza de papel e recursos adequados, nenhum outro esforço de engajamento funciona. O que cada pessoa do seu time sabe exatamente que precisa entregar? Elas têm o que precisam para fazer isso bem feito?",
+  },
+  {
+    dim: "Suporte Individual", cor: "#C9A84C", nivel: 2,
+    desc: "Reconhecimento e suporte",
+    alerta: "Seu time sente que alguém se importa com eles como pessoas — não só como entregadores de resultado. Fortalecer esse nível sustenta todos os andares acima. Com que frequência você tem conversas individuais estruturadas com cada pessoa? Quando foi a última vez que reconheceu alguém pelo que ele fez, não pelo que entregou?",
+  },
+  {
+    dim: "Trabalho em Equipe", cor: "#2980B9", nivel: 3,
+    desc: "Pertencimento e propósito",
+    alerta: "O time ainda não sente que tem um melhor amigo no trabalho ou que sua opinião conta de verdade. Isso corrói o senso de pertencimento silenciosamente. O que você pode mudar na dinâmica das reuniões para que mais vozes sejam ouvidas? Existe espaço seguro para discordar?",
+  },
+  {
+    dim: "Crescimento", cor: "#2D6A4F", nivel: 4,
+    desc: "Aprendizado e desenvolvimento",
+    alerta: "As pessoas do seu time não enxergam com clareza para onde estão crescendo — e isso acelera a saída dos melhores talentos. Você tem conversas regulares sobre desenvolvimento individual, não apenas sobre metas? Cada pessoa sabe qual é o próximo passo da sua carreira dentro da empresa?",
+  },
+];
+
+function PiramideQ12SVG({ porDimensao }: { porDimensao: Record<string, number> }) {
+  // SVG dimensions
+  const W = 320, H = 260;
+  const tipX = W / 2, tipY = 12;
+  const baseY = H - 8;
+  const baseLeft = 10, baseRight = W - 10;
+  const nLayers = 4;
+  const layerH = (baseY - tipY) / nLayers;
+
+  // Y boundaries: y0=tip, y4=base
+  const ys = Array.from({ length: nLayers + 1 }, (_, i) => tipY + i * layerH);
+
+  // X boundaries at each y: interpolate from tip to base
+  function xAt(y: number): { left: number; right: number } {
+    const t = (y - tipY) / (baseY - tipY);
+    return {
+      left:  tipX + (baseLeft  - tipX) * t,
+      right: tipX + (baseRight - tipX) * t,
+    };
+  }
+
+  // Weakest layer (lowest score, 1-5 scale)
+  const scores = PIRAMIDE_LAYERS.map(l => ({ ...l, score: porDimensao[l.dim] ?? 1 }));
+  const weakest = scores.reduce((a, b) => a.score < b.score ? a : b);
+
+  return (
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" className="max-w-sm mx-auto">
+      {scores.map((layer, i) => {
+        // i=0 is bottom (Necessidades Básicas), i=3 is top (Crescimento)
+        const svgI = nLayers - 1 - i; // flip: bottom layer → last svgIndex
+        const y1 = ys[svgI];
+        const y2 = ys[svgI + 1];
+        const top1 = xAt(y1);
+        const top2 = xAt(y2);
+        const points =
+          svgI === 0
+            ? `${tipX},${y1} ${top2.left},${y2} ${top2.right},${y2}` // triangle at top
+            : `${top1.left},${y1} ${top1.right},${y1} ${top2.right},${y2} ${top2.left},${y2}`;
+        const Tag = svgI === 0 ? "polygon" : "polygon";
+        const pct = Math.round(((layer.score - 1) / 4) * 100);
+        const isWeakest = layer.dim === weakest.dim;
+        const cY = (y1 + y2) / 2;
+        const cX = W / 2;
+        const fillOpacity = 0.25 + (pct / 100) * 0.55; // 0.25 (empty) → 0.80 (full)
+
+        return (
+          <g key={layer.dim}>
+            {/* Layer fill */}
+            <Tag
+              points={points}
+              fill={layer.cor}
+              fillOpacity={fillOpacity}
+              stroke="white"
+              strokeWidth="1.5"
+              strokeOpacity="0.6"
+            />
+            {/* Weakest layer highlight */}
+            {isWeakest && (
+              <Tag
+                points={points}
+                fill="none"
+                stroke={layer.cor}
+                strokeWidth="2.5"
+                strokeDasharray="5 3"
+                strokeOpacity="0.9"
+              />
+            )}
+            {/* Label */}
+            <text x={cX} y={cY - (svgI === 0 ? 6 : 8)} textAnchor="middle" fill="white" fontSize={svgI === 0 ? 9 : 11} fontWeight="600" style={{ textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
+              {layer.dim}
+            </text>
+            {/* Score */}
+            <text x={cX} y={cY + (svgI === 0 ? 6 : 8)} textAnchor="middle" fill="white" fontSize={svgI === 0 ? 9 : 12} fontWeight="700" opacity="0.9">
+              {pct}%
+            </text>
+            {/* Weakest badge */}
+            {isWeakest && svgI > 0 && (
+              <text x={cX + 48} y={cY + 5} textAnchor="middle" fill={layer.cor} fontSize="10" fontWeight="700">⚠</text>
+            )}
+          </g>
+        );
+      })}
+      {/* Side labels */}
+      {scores.map((layer, i) => {
+        const svgI = nLayers - 1 - i;
+        const y1 = ys[svgI], y2 = ys[svgI + 1];
+        const cY = (y1 + y2) / 2;
+        const edge = xAt(cY);
+        return (
+          <text key={`desc-${layer.dim}`} x={edge.left - 4} y={cY + 3} textAnchor="end" fill={layer.cor} fontSize="8" opacity="0.8">
+            {layer.desc}
+          </text>
+        );
+      })}
+    </svg>
+  );
+}
+
 function ResultadoQ12Card({ resultado }: { resultado: Record<string, unknown> }) {
   const percentual = resultado.percentual as number;
   const nivel = resultado.nivel as string;
   const cor = resultado.cor as string;
   const porDimensao = resultado.porDimensao as Record<string, number> | undefined;
+
+  const scores = porDimensao
+    ? PIRAMIDE_LAYERS.map(l => ({ ...l, score: porDimensao[l.dim] ?? 1 }))
+    : [];
+  const weakest = scores.length ? scores.reduce((a, b) => a.score < b.score ? a : b) : null;
 
   return (
     <div className="space-y-4">
@@ -575,51 +873,168 @@ function ResultadoQ12Card({ resultado }: { resultado: Record<string, unknown> })
         <span className="text-sm font-medium" style={{ color: cor }}>{nivel}</span>
       </div>
 
-      {/* Pirâmide Q12 */}
+      {/* Pirâmide SVG */}
       {porDimensao && (
         <div className="bg-bg rounded-card p-5">
-          <p className="text-text-muted text-xs uppercase tracking-wide mb-4 text-center">Pirâmide de Engajamento</p>
-          <div className="space-y-2">
-            {PIRAMIDE_Q12.map((camada, i) => {
-              const score = porDimensao[camada.dim];
-              const pct = score !== undefined ? Math.round(((score - 1) / 4) * 100) : 0;
-              const largura = [50, 65, 80, 100][i]; // topo menor, base maior
-              return (
-                <div key={camada.dim} className="flex flex-col items-center gap-1">
-                  <div style={{ width: `${largura}%` }}>
-                    <div className="flex items-center justify-between mb-0.5 px-1">
-                      <span className="text-[10px] font-medium" style={{ color: camada.cor }}>{camada.dim}</span>
-                      {score !== undefined && (
-                        <span className="text-[10px] font-mono-data text-text-muted">{pct}%</span>
-                      )}
-                    </div>
-                    <div className="h-7 rounded-btn flex items-center px-2" style={{ backgroundColor: camada.cor + "20", border: `1px solid ${camada.cor}40` }}>
-                      <div className="h-3 rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: camada.cor }} />
-                    </div>
-                    <p className="text-[9px] text-text-muted text-center mt-0.5">{camada.desc}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <p className="text-[10px] text-text-muted/60 text-center mt-3">
-            Nível {PIRAMIDE_Q12.find(c => (porDimensao[c.dim] ?? 0) < 3)?.nivel ?? 4} — base a fortalecer primeiro
-          </p>
+          <p className="text-text-muted text-xs uppercase tracking-wide mb-1 text-center">Pirâmide de Engajamento Gallup Q12</p>
+          <p className="text-text-muted/60 text-[10px] text-center mb-4">Do topo (Crescimento) à base (Necessidades Básicas)</p>
+          <PiramideQ12SVG porDimensao={porDimensao} />
+          {weakest && (
+            <div className="mt-4 p-4 rounded-btn text-left" style={{ backgroundColor: weakest.cor + "12", border: `1px solid ${weakest.cor}40` }}>
+              <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: weakest.cor }}>
+                ⚠ Prioridade: {weakest.dim}
+              </p>
+              <p className="text-[12px] text-text-main leading-relaxed">{weakest.alerta}</p>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 }
 
+const GPTW_PLANOS: Record<string, { diagnostico: string; acoes: string[] }> = {
+  Credibilidade: {
+    diagnostico: "Seu time não sente que os líderes comunicam com clareza, cumprem promessas ou têm competência para conduzir o negócio.",
+    acoes: [
+      "Compartilhe semanalmente com o time o que está acontecendo na empresa — boas e más notícias.",
+      "Liste 3 compromissos que você assumiu e ainda não cumpriu — resolva-os esta semana.",
+      "Peça feedback direto: 'O que eu poderia fazer diferente como líder?'",
+    ],
+  },
+  Respeito: {
+    diagnostico: "O time sente falta de reconhecimento, suporte e interesse genuíno dos líderes nas pessoas.",
+    acoes: [
+      "Reconheça publicamente 1 pessoa por semana — pelo esforço, não só pelo resultado.",
+      "Pergunte a cada liderado: 'O que você precisa que não está tendo para fazer seu trabalho melhor?'",
+      "Revise se todos têm os recursos necessários (ferramentas, tempo, clareza) para entregar bem.",
+    ],
+  },
+  Imparcialidade: {
+    diagnostico: "Há percepção de favoritismo, promoções injustas ou falta de equidade na empresa.",
+    acoes: [
+      "Documente os critérios de promoção e reconhecimento — e comunique ao time.",
+      "Crie um canal seguro para reportar tratamento injusto (pode ser anônimo).",
+      "Revise os salários e benefícios: há discrepâncias injustificadas para funções equivalentes?",
+    ],
+  },
+  Orgulho: {
+    diagnostico: "As pessoas não sentem que fazem diferença ou que o trabalho tem um significado maior.",
+    acoes: [
+      "Conecte o trabalho do time ao impacto real: mostre exemplos de clientes ou resultados gerados.",
+      "Celebre conquistas — mesmo as pequenas — em reunião de equipe.",
+      "Compartilhe a visão da empresa com mais frequência: para onde estamos indo e por quê importa.",
+    ],
+  },
+  Camaradagem: {
+    diagnostico: "O time não sente um clima de colaboração, confiança ou senso de comunidade.",
+    acoes: [
+      "Crie 1 momento de conexão não-profissional por mês (almoço, happy hour, dinâmica simples).",
+      "Quebre silos: promova projetos ou reuniões entre áreas diferentes.",
+      "Incentive que pessoas se ajudem: reconheça publicamente quem coopera além do esperado.",
+    ],
+  },
+};
+
 function ResultadoGPTWCard({ resultado }: { resultado: Record<string, unknown> }) {
   const trustIndex = resultado.trustIndex as number;
   const nivel = resultado.nivel as string;
   const cor = resultado.cor as string;
+  const porDimensao = resultado.porDimensao as Record<string, number> | undefined;
+
+  const dims = ["Credibilidade", "Respeito", "Imparcialidade", "Orgulho", "Camaradagem"];
+  const CORES_GPTW: Record<string, string> = {
+    Credibilidade: "#0D2B2E", Respeito: "#2980B9", Imparcialidade: "#8E44AD",
+    Orgulho: "#C9A84C", Camaradagem: "#27AE60",
+  };
+
+  const ordenadas = porDimensao
+    ? [...dims].sort((a, b) => (porDimensao[a] ?? 0) - (porDimensao[b] ?? 0))
+    : [];
+  const [primaria, secundaria] = ordenadas;
+
   return (
-    <div className="bg-bg rounded-card p-6 text-center">
-      <p className="text-text-muted text-xs uppercase tracking-wide mb-2">Trust Index</p>
-      <p className="font-mono-data text-5xl font-bold text-text-main mb-1">{trustIndex}<span className="text-xl text-text-muted font-normal">%</span></p>
-      <span className="text-sm font-medium" style={{ color: cor }}>{nivel}</span>
+    <div className="space-y-4">
+      {/* Trust Index */}
+      <div className="bg-surface rounded-card p-6 shadow-lg text-center">
+        <p className="text-text-muted text-xs uppercase tracking-wide mb-3">Trust Index — GPTW</p>
+        <div className="flex items-end justify-center gap-2 mb-2">
+          <p className="font-mono-data text-6xl font-bold text-text-main">{trustIndex}</p>
+          <p className="text-text-muted text-xl mb-2">%</p>
+        </div>
+        <p className="text-sm font-medium" style={{ color: cor }}>{nivel}</p>
+      </div>
+
+      {/* Barras por dimensão */}
+      {porDimensao && (
+        <div className="bg-surface rounded-card p-5 shadow-lg">
+          <p className="text-text-muted text-xs uppercase tracking-wide mb-4">As 5 Dimensões GPTW</p>
+          <div className="space-y-3">
+            {dims.map((dim) => {
+              const score = porDimensao[dim] ?? 0;
+              const cor = CORES_GPTW[dim];
+              const isPrimaria = dim === primaria;
+              const isSecundaria = dim === secundaria;
+              return (
+                <div key={dim}>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium text-text-main">{dim}</span>
+                      {isPrimaria && <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: cor + "20", color: cor }}>Prioridade 1</span>}
+                      {isSecundaria && <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: cor + "20", color: cor }}>Prioridade 2</span>}
+                    </div>
+                    <span className="font-mono-data text-sm font-bold text-text-main">{score}%</span>
+                  </div>
+                  <div className="w-full bg-gold/10 rounded-full h-2">
+                    <div className="h-2 rounded-full transition-all" style={{ width: `${score}%`, backgroundColor: isPrimaria || isSecundaria ? cor : cor + "80" }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Plano Primário */}
+      {primaria && GPTW_PLANOS[primaria] && (
+        <div className="bg-surface rounded-card p-6 shadow-lg" style={{ borderLeft: `4px solid ${CORES_GPTW[primaria]}` }}>
+          <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: CORES_GPTW[primaria] }}>
+            Plano de Ação Primário — {primaria}
+          </p>
+          <p className="text-text-muted text-sm leading-relaxed mb-4">{GPTW_PLANOS[primaria].diagnostico}</p>
+          <p className="text-text-main text-xs font-semibold uppercase tracking-wide mb-3">O que fazer agora:</p>
+          <div className="space-y-3">
+            {GPTW_PLANOS[primaria].acoes.map((acao, i) => (
+              <div key={i} className="flex gap-3">
+                <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-white mt-0.5" style={{ backgroundColor: CORES_GPTW[primaria] }}>
+                  {i + 1}
+                </div>
+                <p className="text-text-main text-sm leading-relaxed">{acao}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Plano Secundário */}
+      {secundaria && GPTW_PLANOS[secundaria] && (
+        <div className="bg-surface rounded-card p-5 shadow-lg" style={{ borderLeft: `4px solid ${CORES_GPTW[secundaria]}80` }}>
+          <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: CORES_GPTW[secundaria] }}>
+            Plano de Ação Secundário — {secundaria}
+          </p>
+          <p className="text-text-muted text-sm leading-relaxed mb-3">{GPTW_PLANOS[secundaria].diagnostico}</p>
+          <div className="space-y-2">
+            {GPTW_PLANOS[secundaria].acoes.map((acao, i) => (
+              <div key={i} className="flex gap-3">
+                <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-white mt-0.5" style={{ backgroundColor: CORES_GPTW[secundaria] + "99" }}>
+                  {i + 1}
+                </div>
+                <p className="text-text-muted text-sm leading-relaxed">{acao}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

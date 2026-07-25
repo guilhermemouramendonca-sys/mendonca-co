@@ -32,6 +32,8 @@ export default function CanvasPublicoPage() {
   const [categoria, setCategoria] = useState("");
   const [segmento, setSegmento] = useState("");
   const [faturamento, setFaturamento] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [respostas, setRespostas] = useState<RespostasCanvas>({});
@@ -71,7 +73,7 @@ export default function CanvasPublicoPage() {
     const analise = gerarAnaliseCanvas(respostasCompletas);
     const resultado = { respostas: respostasCompletas, analise };
 
-    await supabase.from("canvas_estrategico").update({
+    const { error: errSave } = await supabase.from("canvas_estrategico").update({
       respondente_nome: nome,
       respondente_email: email,
       respondente_empresa: empresa || null,
@@ -84,11 +86,16 @@ export default function CanvasPublicoPage() {
       concluido_em: new Date().toISOString(),
     }).eq("id", canvasId);
 
+    if (errSave) {
+      setSalvando(false);
+      return;
+    }
+
     // CRM lead
     fetch("/api/canvas/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, empresa: empresa || null, cargo: cargo || null, ...utm }),
+      body: JSON.stringify({ nome, email, empresa: empresa || null, cargo: cargo || null, whatsapp: whatsapp || null, instagram: instagram || null, ...utm }),
     }).catch(() => {});
 
     setSalvando(false);
@@ -140,6 +147,14 @@ export default function CanvasPublicoPage() {
                 categoria={categoria} segmento={segmento} faturamento={faturamento}
                 onCategoria={setCategoria} onSegmento={setSegmento} onFaturamento={setFaturamento}
               />
+              <div className="space-y-1.5">
+                <Label>WhatsApp</Label>
+                <Input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+55 (11) 99999-9999" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Instagram</Label>
+                <Input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@seuperfil" />
+              </div>
               {erro && <p className="text-sm text-red-600">{erro}</p>}
               <Button className="w-full mt-2" onClick={iniciar}>
                 Iniciar Canvas →

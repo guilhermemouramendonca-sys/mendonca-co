@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
-  const { nome, email, empresa, cargo, utm_source, utm_medium, utm_campaign, utm_content } = await req.json();
+  const { nome, email, empresa, cargo, utm_source, utm_medium, utm_campaign, utm_content, whatsapp, instagram } = await req.json();
   const supabase = await createClient();
 
   const { data: cliente } = await supabase
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
 
   if (leadExistente) return NextResponse.json({ status: "lead_existente" });
 
-  await supabase.from("leads").insert({
+  const { error } = await supabase.from("leads").insert({
     nome,
     email,
     empresa: empresa || null,
@@ -33,7 +33,11 @@ export async function POST(req: NextRequest) {
     utm_medium: utm_medium || null,
     utm_campaign: utm_campaign || null,
     utm_content: utm_content || null,
+    whatsapp: whatsapp || null,
+    instagram: instagram || null,
   });
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   return NextResponse.json({ status: "lead_criado" });
 }

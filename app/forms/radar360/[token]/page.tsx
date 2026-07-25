@@ -38,11 +38,33 @@ export default function Radar360PublicoPage() {
   const [faturamento, setFaturamento] = useState("");
   const [categoria, setCategoria] = useState("");
   const [segmento, setSegmento] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [atual, setAtual] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
+  const [radar360Id, setRadar360Id] = useState<string | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [gerandoPdf, setGerandoPdf] = useState(false);
+  const [scoresAnteriores, setScoresAnteriores] = useState<Record<string, number> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // PDF automático ao concluir
+  useEffect(() => {
+    if (fase !== "concluido" || !radar360Id) return;
+    setGerandoPdf(true);
+    fetch("/api/radar360/gerar-pdf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ radar360Id }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (d.pdfUrl) setPdfUrl(d.pdfUrl); })
+      .catch(() => {})
+      .finally(() => setGerandoPdf(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fase, radar360Id]);
 
   const pergunta = PERGUNTAS_RADAR[atual];
   const dim = DIMENSOES.find((d) => d.id === pergunta.dimensaoId)!;
@@ -88,22 +110,42 @@ export default function Radar360PublicoPage() {
       resultado,
     };
 
+    // Buscar resultado anterior (evolução longitudinal)
+    if (email) {
+      const { data: ant } = await supabase
+        .from("radar360")
+        .select("resultado")
+        .eq("respondente_email", email)
+        .neq("token", token)
+        .not("resultado", "is", null)
+        .order("criado_em", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (ant?.resultado) {
+        const r = ant.resultado as { scores?: Record<string, number> };
+        if (r.scores) setScoresAnteriores(r.scores);
+      }
+    }
+
     const { data: existente } = await supabase
       .from("radar360")
       .select("id")
       .eq("token", token)
       .single();
 
+    let r360Id: string | null = existente?.id ?? null;
     if (existente) {
       await supabase.from("radar360").update(campos).eq("token", token);
     } else {
-      await supabase.from("radar360").insert({ token, ...campos });
+      const { data: novo } = await supabase.from("radar360").insert({ token, ...campos }).select("id").single();
+      r360Id = novo?.id ?? null;
     }
+    if (r360Id) setRadar360Id(r360Id);
 
     await fetch("/api/radar360/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, email, empresa, cargo, faturamento, resultado, ...utm }),
+      body: JSON.stringify({ nome, email, empresa, cargo, faturamento, resultado, whatsapp: whatsapp || null, instagram: instagram || null, ...utm }),
     });
 
     setSalvando(false);
@@ -157,6 +199,14 @@ export default function Radar360PublicoPage() {
                 categoria={categoria} segmento={segmento} faturamento={faturamento}
                 onCategoria={setCategoria} onSegmento={setSegmento} onFaturamento={setFaturamento}
               />
+              <div className="space-y-1.5">
+                <Label>WhatsApp</Label>
+                <Input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+55 (11) 99999-9999" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Instagram</Label>
+                <Input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@seuperfil" />
+              </div>
               {erro && <p className="text-sm text-danger">{erro}</p>}
               <Button className="w-full mt-2" onClick={iniciar}>
                 Iniciar Diagnóstico →
@@ -173,64 +223,234 @@ export default function Radar360PublicoPage() {
     const resultado = calcularRadar360(respostas);
     const geralCor = corScore(Math.round(resultado.geral));
 
+    const ordenadas = [...DIMENSOES].sort((a, b) => resultado.scores[a.id] - resultado.scores[b.id]);
+    const [dimPrimaria, dimSecundaria] = ordenadas;
+
+    const PLANOS_RADAR: Record<string, { diagnostico: string; acoes: string[] }> = {
+      estrategia: {
+        diagnostico: "Sua empresa opera sem um plano estratégico claro. Decisões importantes são tomadas no improviso e o time não tem visibilidade de longo prazo.",
+        acoes: [
+          "Reserve um dia fora do escritório para definir sua estratégia dos próximos 12 meses.",
+          "Documente 3 apostas estratégicas e 3 coisas que a empresa vai parar de fazer.",
+          "Comunique a estratégia ao time de forma simples — 1 página, lida em 5 minutos.",
+        ],
+      },
+      lideranca: {
+        diagnostico: "A empresa ainda depende muito de você. Seu time não opera com autonomia suficiente, o que limita o crescimento de ambos.",
+        acoes: [
+          "Mapeie as 5 decisões que você toma toda semana que poderiam ser tomadas por alguém do time.",
+          "Instale 1-on-1s semanais de 30 minutos com cada liderança direta.",
+          "Defina critérios claros de quando alguém pode decidir sozinho e quando precisa de você.",
+        ],
+      },
+      cultura: {
+        diagnostico: "Os valores da empresa não estão sendo vividos no dia a dia. Há um gap entre o que é declarado e o que é tolerado.",
+        acoes: [
+          "Liste 3 comportamentos que você tolera hoje mas que contradizem os valores da empresa — e pare de tolerá-los.",
+          "Celebre publicamente alguém que agiu de acordo com a cultura esta semana.",
+          "Inclua cultura no processo de contratação: defina 2 perguntas que revelam fit cultural real.",
+        ],
+      },
+      gestao: {
+        diagnostico: "Faltam rituais de gestão instalados. Sem reuniões fixas, métricas claras e accountability, o time opera sem ritmo.",
+        acoes: [
+          "Instale uma reunião semanal de 45 minutos com o time de gestão: o que foi feito, o que trava, o que entra.",
+          "Defina 5 indicadores que você vai olhar toda semana — não mais que isso.",
+          "Crie um sistema simples de accountability: quem é dono de quê e até quando.",
+        ],
+      },
+      processos: {
+        diagnostico: "Os processos críticos vivem na cabeça das pessoas. Quando alguém sai, o trabalho para — e você volta para dentro da operação.",
+        acoes: [
+          "Mapeie os 3 processos mais críticos e documente em um fluxo simples (Notion, Google Docs).",
+          "Identifique qual processo depende só de você e crie um protocolo para delegá-lo.",
+          "Teste: se você sumisse por 2 semanas, o que quebraria? Comece por aí.",
+        ],
+      },
+      marketing: {
+        diagnostico: "Seu marketing não gera demanda previsível. Você depende de indicações ou picos de esforço — o que torna o crescimento imprevisível.",
+        acoes: [
+          "Defina seu posicionamento em 1 frase: para quem, o quê e por que você (não um concorrente).",
+          "Escolha 1 canal de aquisição e seja consistente por 90 dias — profundidade antes de amplitude.",
+          "Crie um calendário de conteúdo simples: 3 publicações por semana que educam seu cliente ideal.",
+        ],
+      },
+      vendas: {
+        diagnostico: "Seu funil de vendas não é previsível. Vendas acontecem, mas você não consegue projetar o próximo mês com confiança.",
+        acoes: [
+          "Mapeie o funil atual: quantos leads entram, qual a taxa de conversão, qual o tempo médio de fechamento.",
+          "Instale uma revisão semanal de pipeline: o que avançou, o que travou, o que precisa de ação.",
+          "Defina um processo de follow-up padrão — a maioria das vendas morre na falta de continuidade.",
+        ],
+      },
+      financeiro: {
+        diagnostico: "Sua gestão financeira precisa de mais estrutura. Sem clareza sobre margem, fluxo de caixa e projeções, decisões de crescimento são feitas no escuro.",
+        acoes: [
+          "Implante uma DRE mensal simples — você precisa saber sua margem bruta e líquida todo mês.",
+          "Crie uma projeção de caixa para os próximos 90 dias e atualize semanalmente.",
+          "Defina seu ponto de equilíbrio: quantas vendas você precisa para cobrir todos os custos.",
+        ],
+      },
+    };
+
     return (
-      <div className="min-h-screen bg-primary flex items-center justify-center p-4">
-        <div className="w-full max-w-lg">
+      <div className="min-h-screen bg-primary py-8 px-4">
+        <div className="w-full max-w-xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="font-display text-4xl font-bold text-gold">Mendonça & Co</h1>
           </div>
-          <div className="bg-surface rounded-card p-8 shadow-lg text-center">
-            <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-6">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-            <h2 className="font-display text-3xl font-bold text-text-main mb-2">Diagnóstico concluído!</h2>
-            <p className="text-text-muted text-sm mb-8">
-              Obrigado, <strong>{nome}</strong>. Seu relatório está sendo preparado e entraremos em contato em breve.
-            </p>
 
-            {/* Score geral */}
-            <div className="bg-bg rounded-card p-6 mb-6">
-              <p className="text-text-muted text-xs uppercase tracking-wide mb-2">Score Geral</p>
-              <p className="font-mono-data text-5xl font-bold text-text-main mb-1">
-                {resultado.geral.toFixed(1)}
-                <span className="text-xl text-text-muted font-normal">/5</span>
-              </p>
-              <span className="text-sm font-medium" style={{ color: geralCor }}>
+          <div className="space-y-5">
+            {/* Header */}
+            <div className="bg-surface rounded-card p-6 text-center shadow-lg">
+              <div className="w-14 h-14 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <h2 className="font-display text-2xl font-bold text-text-main mb-1">Diagnóstico concluído!</h2>
+              <p className="text-text-muted text-sm">Obrigado, <strong>{nome}</strong>. Aqui está seu Radar 360.</p>
+              {scoresAnteriores && (
+                <p className="text-xs text-gold/60 mt-1">↕ Comparando com seu diagnóstico anterior</p>
+              )}
+            </div>
+
+            {/* Score geral + benchmark */}
+            <div className="bg-surface rounded-card p-6 shadow-lg">
+              <p className="text-text-muted text-xs uppercase tracking-wide mb-3 text-center">Score Geral — Radar 360</p>
+              <div className="flex items-end justify-center gap-2 mb-2">
+                <p className="font-mono-data text-6xl font-bold text-text-main">{resultado.geral.toFixed(1)}</p>
+                <p className="text-text-muted text-xl mb-2">/5</p>
+              </div>
+              <p className="text-center text-sm font-medium mb-5" style={{ color: geralCor }}>
                 {labelScore(Math.round(resultado.geral))}
-              </span>
+              </p>
+
+              <BenchmarkComparacao
+                tipo="radar_360" metrica="score_geral"
+                valorAtual={parseFloat(resultado.geral.toFixed(1))}
+                categoria={categoria || null} segmento={segmento || null} porte={faturamento || null}
+                unidade="/5"
+                label="Score Geral"
+              />
             </div>
 
-            <BenchmarkComparacao
-              tipo="radar_360" metrica="score_geral"
-              valorAtual={parseFloat(resultado.geral.toFixed(1))}
-              categoria={categoria || null} segmento={segmento || null} porte={faturamento || null}
-              unidade="/5"
-              label="Score Geral"
-            />
+            {/* Todos os pilares */}
+            <div className="bg-surface rounded-card p-6 shadow-lg">
+              <p className="text-text-muted text-xs uppercase tracking-wide mb-4">Os 8 Pilares</p>
+              <div className="space-y-3">
+                {DIMENSOES.map((d) => {
+                  const score = resultado.scores[d.id];
+                  const cor = corScore(score);
+                  const isPrimaria = d.id === dimPrimaria.id;
+                  const isSecundaria = d.id === dimSecundaria.id;
+                  return (
+                    <div key={d.id}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-medium text-text-main">{d.titulo}</span>
+                          {isPrimaria && (
+                            <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: cor + "20", color: cor }}>Prioridade 1</span>
+                          )}
+                          {isSecundaria && (
+                            <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: cor + "20", color: cor }}>Prioridade 2</span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {scoresAnteriores?.[d.id] !== undefined && (() => {
+                            const delta = score - scoresAnteriores[d.id];
+                            const dcor = delta > 0.1 ? "#27AE60" : delta < -0.1 ? "#C0392B" : "#6B6B6B";
+                            return (
+                              <span className="text-[11px] font-medium" style={{ color: dcor }}>
+                                {delta > 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1)}
+                              </span>
+                            );
+                          })()}
+                          <span className="font-mono-data text-sm font-bold text-text-main">{score.toFixed(1)}</span>
+                        </div>
+                      </div>
+                      <div className="w-full bg-gold/10 rounded-full h-2">
+                        <div
+                          className="h-2 rounded-full transition-all"
+                          style={{ width: `${(score / 5) * 100}%`, backgroundColor: isPrimaria || isSecundaria ? cor : cor + "80" }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
             {/* Porta de entrada */}
-            <div className="bg-bg rounded-btn p-4 mb-6 text-left">
+            <div className="bg-surface rounded-card p-4 shadow-lg">
               <p className="text-xs text-text-muted mb-1 uppercase tracking-wide">Porta de entrada identificada</p>
               <p className="font-semibold text-text-main">Entrada {resultado.portaEntrada}</p>
             </div>
 
-            {/* Scores por dimensão */}
-            <div className="grid grid-cols-4 gap-2">
-              {DIMENSOES.map((d) => {
-                const score = resultado.scores[d.id];
-                const cor = corScore(score);
-                return (
-                  <div key={d.id} className="bg-bg rounded-btn p-2 text-center">
-                    <p className="text-[9px] text-text-muted mb-1 leading-tight">{d.titulo}</p>
-                    <p className="font-mono-data text-lg font-bold text-text-main">{score.toFixed(1)}</p>
-                    <div className="w-full bg-[#E8D5A3]/30 rounded-full h-1 mt-1">
-                      <div className="h-1 rounded-full" style={{ width: `${(score / 5) * 100}%`, backgroundColor: cor }} />
+            {/* Plano Primário */}
+            {PLANOS_RADAR[dimPrimaria.id] && (
+              <div className="bg-surface rounded-card p-6 shadow-lg" style={{ borderLeft: `4px solid ${dimPrimaria.corHex}` }}>
+                <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: dimPrimaria.corHex }}>
+                  Plano de Ação Primário — {dimPrimaria.titulo}
+                </p>
+                <p className="text-text-muted text-sm leading-relaxed mb-4">{PLANOS_RADAR[dimPrimaria.id].diagnostico}</p>
+                <p className="text-text-main text-xs font-semibold uppercase tracking-wide mb-3">O que fazer agora:</p>
+                <div className="space-y-3">
+                  {PLANOS_RADAR[dimPrimaria.id].acoes.map((acao, i) => (
+                    <div key={i} className="flex gap-3">
+                      <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-white mt-0.5" style={{ backgroundColor: dimPrimaria.corHex }}>
+                        {i + 1}
+                      </div>
+                      <p className="text-text-main text-sm leading-relaxed">{acao}</p>
                     </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Plano Secundário */}
+            {PLANOS_RADAR[dimSecundaria.id] && (
+              <div className="bg-surface rounded-card p-5 shadow-lg" style={{ borderLeft: `4px solid ${dimSecundaria.corHex}80` }}>
+                <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: dimSecundaria.corHex }}>
+                  Plano de Ação Secundário — {dimSecundaria.titulo}
+                </p>
+                <p className="text-text-muted text-sm leading-relaxed mb-3">{PLANOS_RADAR[dimSecundaria.id].diagnostico}</p>
+                <div className="space-y-2">
+                  {PLANOS_RADAR[dimSecundaria.id].acoes.map((acao, i) => (
+                    <div key={i} className="flex gap-3">
+                      <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-white mt-0.5" style={{ backgroundColor: dimSecundaria.corHex + "99" }}>
+                        {i + 1}
+                      </div>
+                      <p className="text-text-muted text-sm leading-relaxed">{acao}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* PDF */}
+            {(gerandoPdf || pdfUrl) && (
+              <div className="bg-surface rounded-card p-4 shadow-lg text-center">
+                {gerandoPdf ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+                    <p className="text-gold/60 text-sm">Gerando seu PDF...</p>
                   </div>
-                );
-              })}
+                ) : pdfUrl ? (
+                  <a href={pdfUrl} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 py-2 rounded-btn bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-all">
+                    Baixar PDF do Radar 360
+                  </a>
+                ) : null}
+              </div>
+            )}
+
+            {/* CTA */}
+            <div className="bg-surface rounded-card p-5 shadow-lg text-center">
+              <p className="text-text-muted text-sm leading-relaxed">
+                Nossa equipe vai entrar em contato em breve com uma análise aprofundada e um plano de aceleração personalizado para o seu negócio.
+              </p>
+              <p className="text-gold text-xs font-medium mt-2">guilherme@mendonca.co</p>
             </div>
           </div>
         </div>

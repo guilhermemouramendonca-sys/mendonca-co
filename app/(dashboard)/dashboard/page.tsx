@@ -29,6 +29,7 @@ type Dados = {
   leadsNovos24h: number;
   totalLeads: number;
   clientesAtivos: number;
+  clientesSemInteracao30d: number;
   mrr: number;
   cobrancasVencendo7d: { id: string; cliente_nome: string; valor: number; vencimento: string }[];
   cobrancasAtrasadas: number;
@@ -65,11 +66,12 @@ export default function DashboardPage() {
     const em7dias = new Date(agora.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
     const hoje = agora.toISOString().split("T")[0];
     const inicioMes = new Date(agora.getFullYear(), agora.getMonth(), 1).toISOString();
+    const em30diasAtras = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
     const [
       leadsRes, clientesRes, contratosRes, cobrancasRes,
       pesquisasRes, diagnosticosRes, radar360Res, canvasRes, rodadasRes,
-      planosRes,
+      planosRes, sessoesRecentesRes,
     ] = await Promise.all([
       supabase.from("leads").select("id, nome, empresa, tipo_servico, etapa, criado_em").order("criado_em", { ascending: false }),
       supabase.from("clientes").select("id, status"),
@@ -80,12 +82,17 @@ export default function DashboardPage() {
       supabase.from("radar360").select("id, criado_em").gte("criado_em", inicioMes),
       supabase.from("canvas_estrategico").select("id, concluido_em").not("concluido_em", "is", null).gte("concluido_em", inicioMes),
       supabase.from("rodadas").select("id, tipo, criado_em").gte("criado_em", inicioMes),
-      supabase.from("itens_plano_acao").select("id, status"),
+      supabase.from("plano_acao_itens").select("id, status"),
+      supabase.from("sessoes").select("cliente_id").gte("data", em30diasAtras),
     ]);
 
     const leads = leadsRes.data ?? [];
     const leadsNovos24h = leads.filter((l) => l.criado_em >= ontemISO).length;
-    const clientesAtivos = (clientesRes.data ?? []).filter((c) => c.status === "ativo").length;
+    const todosClientes = clientesRes.data ?? [];
+    const clientesAtivos = todosClientes.filter((c) => c.status === "ativo").length;
+    const ativosIds = new Set(todosClientes.filter((c) => c.status === "ativo").map((c) => c.id));
+    const sessoesRecentes30d = new Set((sessoesRecentesRes.data ?? []).map((s) => s.cliente_id));
+    const clientesSemInteracao30d = Array.from(ativosIds).filter((id) => !sessoesRecentes30d.has(id)).length;
     const mrr = (contratosRes.data ?? [])
       .filter((c) => c.tipo === "retainer" && c.status === "ativo")
       .reduce((s, c) => s + (c.valor_mensal ?? 0), 0);
@@ -139,7 +146,7 @@ export default function DashboardPage() {
 
     setDados({
       leadsNovos24h, totalLeads: leads.length,
-      clientesAtivos, mrr,
+      clientesAtivos, clientesSemInteracao30d, mrr,
       cobrancasVencendo7d, cobrancasAtrasadas,
       ferramentasMes, totalDiagnosticosMes,
       funnelCounts, taxaConversao,
@@ -183,7 +190,9 @@ export default function DashboardPage() {
     },
     {
       label: "Clientes ativos", value: d.clientesAtivos, icon: Users,
-      cor: "#27AE60", href: "/clientes", sub: "com contrato ativo",
+      cor: d.clientesSemInteracao30d > 0 ? "#C9A84C" : "#27AE60", href: "/clientes",
+      sub: d.clientesSemInteracao30d > 0 ? `${d.clientesSemInteracao30d} sem sessão há 30d` : "todos com sessão recente",
+      alerta: d.clientesSemInteracao30d > 0,
     },
     {
       label: "MRR", value: formatCurrency(d.mrr), icon: DollarSign,

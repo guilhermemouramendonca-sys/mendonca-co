@@ -5,10 +5,11 @@ import { DIMENSOES } from "@/lib/radar360/dimensoes";
 
 export async function POST(req: NextRequest) {
   try {
-    const { nome, email, empresa, cargo, faturamento, resultado, utm_source, utm_medium, utm_campaign, utm_content } = await req.json() as {
+    const { nome, email, empresa, cargo, faturamento, resultado, utm_source, utm_medium, utm_campaign, utm_content, whatsapp, instagram } = await req.json() as {
       nome: string; email: string; empresa?: string; cargo?: string;
       faturamento?: string; resultado: ResultadoRadar360;
       utm_source?: string; utm_medium?: string; utm_campaign?: string; utm_content?: string;
+      whatsapp?: string; instagram?: string;
     };
 
     if (!email) return NextResponse.json({ ok: false });
@@ -58,6 +59,8 @@ export async function POST(req: NextRequest) {
       utm_campaign: utm_campaign || null,
       utm_content: utm_content || null,
       observacoes: `Radar 360 — Score geral: ${resultado.geral.toFixed(1)}/5 | Porta: ${resultado.portaEntrada}${faturamento ? ` | Fat: ${fatLabels[faturamento] ?? faturamento}` : ""}\n${resumo}`,
+      whatsapp: whatsapp || null,
+      instagram: instagram || null,
     });
 
     return NextResponse.json({ ok: true, tipo: "lead_criado" });

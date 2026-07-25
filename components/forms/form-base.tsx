@@ -13,6 +13,7 @@ const baseSchema = z.object({
   nome: z.string().min(2, "Nome obrigatório"),
   email: z.string().email("E-mail inválido"),
   whatsapp: z.string().min(10, "WhatsApp obrigatório"),
+  instagram: z.string().optional(),
   cargo: z.string().min(1, "Cargo obrigatório"),
   empresa: z.string().min(1, "Empresa obrigatória"),
   como_encontrou: z.string().min(1, "Selecione uma opção"),
@@ -64,6 +65,7 @@ export function FormBase({ titulo, subtitulo, origem, tipoServico, camposExtras,
       nome: data.nome,
       email: data.email,
       whatsapp: data.whatsapp,
+      instagram: data.instagram || null,
       cargo: data.cargo,
       empresa: data.empresa,
       como_encontrou: data.como_encontrou,
@@ -138,6 +140,13 @@ export function FormBase({ titulo, subtitulo, origem, tipoServico, camposExtras,
                 <Input {...register("whatsapp")} placeholder="(11) 99999-9999" />
                 {errors.whatsapp && <p className="text-xs text-danger">{errors.whatsapp.message}</p>}
               </div>
+              <div className="space-y-1.5">
+                <Label>Instagram</Label>
+                <Input {...register("instagram")} placeholder="@seuperfil" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
                 <Label>Cargo *</Label>
                 <Input {...register("cargo")} placeholder="CEO, Diretor..." />

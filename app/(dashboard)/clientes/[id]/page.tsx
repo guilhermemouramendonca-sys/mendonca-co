@@ -119,7 +119,7 @@ export default function ClienteFichaPage() {
   async function compartilharDoc() {
     if (!formComp.titulo || !formComp.arquivo_url) return;
     setSalvandoComp(true);
-    await supabase.from("compartilhamentos").insert({
+    const { error } = await supabase.from("compartilhamentos").insert({
       cliente_id: id,
       titulo: formComp.titulo,
       descricao: formComp.descricao || null,
@@ -127,6 +127,7 @@ export default function ClienteFichaPage() {
       tipo: formComp.tipo,
     });
     setSalvandoComp(false);
+    if (error) { alert("Erro ao compartilhar documento."); return; }
     setModalCompartilhar(false);
     setFormComp({ titulo: "", descricao: "", arquivo_url: "", tipo: "documento" });
     carregar();
@@ -134,13 +135,15 @@ export default function ClienteFichaPage() {
 
   async function removerCompartilhamento(cid: string) {
     if (!confirm("Remover acesso do cliente a este documento?")) return;
-    await supabase.from("compartilhamentos").delete().eq("id", cid);
+    const { error } = await supabase.from("compartilhamentos").delete().eq("id", cid);
+    if (error) { alert("Erro ao remover documento."); return; }
     carregar();
   }
 
   async function salvarContato() {
     if (!novoContato.nome.trim()) return;
-    await supabase.from("contatos_cliente").insert({ ...novoContato, cliente_id: id });
+    const { error } = await supabase.from("contatos_cliente").insert({ ...novoContato, cliente_id: id });
+    if (error) { alert("Erro ao salvar contato."); return; }
     setNovoContato({ nome: "", cargo: "", email: "", whatsapp: "", papel: "outro" });
     setAdicionandoContato(false);
     carregar();
@@ -148,13 +151,14 @@ export default function ClienteFichaPage() {
 
   async function deletarContato(cid: string) {
     if (!confirm("Remover este contato?")) return;
-    await supabase.from("contatos_cliente").delete().eq("id", cid);
+    const { error } = await supabase.from("contatos_cliente").delete().eq("id", cid);
+    if (error) { alert("Erro ao remover contato."); return; }
     carregar();
   }
 
   async function salvarSessao() {
     if (!novaSessao.data) return;
-    await supabase.from("sessoes").insert({
+    const { error } = await supabase.from("sessoes").insert({
       cliente_id: id,
       tipo: novaSessao.tipo,
       data: novaSessao.data,
@@ -162,6 +166,7 @@ export default function ClienteFichaPage() {
       anotacoes: novaSessao.anotacoes,
       proximos_passos: novaSessao.proximos_passos,
     });
+    if (error) { alert("Erro ao salvar sessão."); return; }
     setNovaSessao({ tipo: "mentoria", data: "", duracao_minutos: "", anotacoes: "", proximos_passos: "" });
     setAdicionandoSessao(false);
     carregar();
@@ -169,7 +174,8 @@ export default function ClienteFichaPage() {
 
   async function registrarInteracao() {
     if (!novaInteracao.descricao.trim()) return;
-    await supabase.from("interacoes").insert({ cliente_id: id, ...novaInteracao });
+    const { error } = await supabase.from("interacoes").insert({ cliente_id: id, ...novaInteracao });
+    if (error) { alert("Erro ao registrar interação."); return; }
     setNovaInteracao({ tipo: "nota", descricao: "" });
     carregar();
   }

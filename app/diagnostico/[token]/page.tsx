@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { PERGUNTAS, calcularResultado, faixaScore } from "@/lib/diagnostico/perguntas";
 import { createClient } from "@/lib/supabase/client";
@@ -35,11 +35,33 @@ export default function DiagnosticoPublicoPage() {
   const [empresa, setEmpresa] = useState("");
   const [cargo, setCargo] = useState("");
   const [faturamento, setFaturamento] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
+  const [instagram, setInstagram] = useState("");
   const [atual, setAtual] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [salvando, setSalvando] = useState(false);
   const [erro, setErro] = useState("");
+  const [diagnosticoId, setDiagnosticoId] = useState<string | null>(null);
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [gerandoPdf, setGerandoPdf] = useState(false);
+  const [scoresAnteriores, setScoresAnteriores] = useState<Record<string, number> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // PDF automático ao concluir
+  useEffect(() => {
+    if (fase !== "concluido" || !diagnosticoId) return;
+    setGerandoPdf(true);
+    fetch("/api/diagnostico/gerar-pdf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ diagnosticoId }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (d.pdfUrl) setPdfUrl(d.pdfUrl); })
+      .catch(() => {})
+      .finally(() => setGerandoPdf(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fase, diagnosticoId]);
 
   const pergunta = PERGUNTAS[atual];
   const total = PERGUNTAS.length;
@@ -92,6 +114,23 @@ export default function DiagnosticoPublicoPage() {
       resultado,
     };
 
+    // Buscar resultado anterior (evolução longitudinal)
+    if (email) {
+      const { data: ant } = await supabase
+        .from("diagnosticos")
+        .select("resultado")
+        .eq("respondente_email", email)
+        .neq("token", token)
+        .not("resultado", "is", null)
+        .order("criado_em", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (ant?.resultado) {
+        const r = ant.resultado as { scores?: Record<string, number> };
+        if (r.scores) setScoresAnteriores(r.scores);
+      }
+    }
+
     // Verificar se já existe pelo token (diagnóstico criado via link)
     const { data: existente } = await supabase
       .from("diagnosticos")
@@ -99,14 +138,17 @@ export default function DiagnosticoPublicoPage() {
       .eq("token", token)
       .single();
 
+    let diagId: string | null = existente?.id ?? null;
     if (existente) {
       await supabase
         .from("diagnosticos")
         .update({ respostas, resultado, ...camposRespondente })
         .eq("token", token);
     } else {
-      await supabase.from("diagnosticos").insert(payload);
+      const { data: novo } = await supabase.from("diagnosticos").insert(payload).select("id").single();
+      diagId = novo?.id ?? null;
     }
+    if (diagId) setDiagnosticoId(diagId);
 
     // CRM lead
     await fetch("/api/pesquisa/lead", {
@@ -118,6 +160,8 @@ export default function DiagnosticoPublicoPage() {
         cargo: cargo || null,
         tipo: "diagnostico_3d",
         observacoes: `Diagnóstico 3D concluído. Score geral: ${resultado.geral.toFixed(1)}/10`,
+        whatsapp: whatsapp || null,
+        instagram: instagram || null,
       }),
     }).catch(() => {});
 
@@ -182,6 +226,14 @@ export default function DiagnosticoPublicoPage() {
                   <option value="acima_100m">Acima de R$100M/ano</option>
                 </select>
               </div>
+              <div className="space-y-1.5">
+                <Label>WhatsApp</Label>
+                <Input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+55 (11) 99999-9999" />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Instagram</Label>
+                <Input value={instagram} onChange={(e) => setInstagram(e.target.value)} placeholder="@seuperfil" />
+              </div>
 
               {erro && <p className="text-sm text-danger">{erro}</p>}
 
@@ -200,64 +252,176 @@ export default function DiagnosticoPublicoPage() {
     const resultado = calcularResultado(respostas);
     const faixaGeral = faixaScore(resultado.geral);
 
+    const DIMS_3D = ["disciplina", "direcao", "dominio"] as const;
+    const ordenadas = [...DIMS_3D].sort((a, b) => resultado.scores[a] - resultado.scores[b]);
+    const [primaria, secundaria] = ordenadas;
+
+    const PLANOS_3D: Record<string, { cor: string; diagnostico: string; acoes: string[] }> = {
+      disciplina: {
+        cor: "#C9A84C",
+        diagnostico: "Sua execução está inconsistente. Você sabe o que precisa ser feito, mas o dia a dia consome sua agenda antes que você chegue no que realmente importa.",
+        acoes: [
+          "Bloqueie na agenda as 3 tarefas mais importantes do dia — toda manhã, antes de abrir e-mail ou WhatsApp.",
+          "Instale uma revisão semanal de 30 minutos (toda segunda-feira) para checar o que ficou pendente e o que entra na semana.",
+          "Identifique 1 hábito que está sabotando sua performance e elimine-o esta semana — só um.",
+        ],
+      },
+      direcao: {
+        cor: "#0D2B2E",
+        diagnostico: "Sua empresa opera sem uma bússola clara. Decisões são tomadas no improviso e o time não sabe para onde está indo — o que gera retrabalho, desalinhamento e saída de talentos.",
+        acoes: [
+          "Escreva em 1 parágrafo onde a empresa estará em 3 anos — seja específico: faturamento, mercado, posicionamento.",
+          "Defina 3 metas trimestrais não-negociáveis e comunique ao time esta semana.",
+          "Agende uma reunião de alinhamento de cultura: o que você tolera e o que não aceita mais.",
+        ],
+      },
+      dominio: {
+        cor: "#2D6A4F",
+        diagnostico: "Há gaps importantes no seu conhecimento técnico, de liderança ou financeiro que estão limitando o crescimento da empresa. O que você não sabe está custando caro.",
+        acoes: [
+          "Identifique o maior gap hoje — técnico, liderança ou financeiro — e contrate ou estude para fechar em 90 dias.",
+          "Implante uma revisão financeira mensal (DRE, fluxo de caixa, margem) — mesmo que simples.",
+          "Mapeie quem no time tem potencial de liderança e inicie um processo de desenvolvimento, mesmo que informal.",
+        ],
+      },
+    };
+
     return (
-      <div className="min-h-screen bg-primary flex items-center justify-center p-4">
-        <div className="w-full max-w-lg">
+      <div className="min-h-screen bg-primary py-8 px-4">
+        <div className="w-full max-w-xl mx-auto">
           <div className="text-center mb-8">
             <h1 className="font-display text-4xl font-bold text-gold">Mendonça & Co</h1>
           </div>
 
-          <div className="bg-surface rounded-card p-8 shadow-lg text-center">
-            <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-6">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+          <div className="space-y-5">
+            {/* Header */}
+            <div className="bg-surface rounded-card p-6 text-center shadow-lg">
+              <div className="w-14 h-14 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <h2 className="font-display text-2xl font-bold text-text-main mb-1">Diagnóstico concluído!</h2>
+              <p className="text-text-muted text-sm">Obrigado, <strong>{nome}</strong>. Aqui está seu resultado.</p>
+              {scoresAnteriores && (
+                <p className="text-xs text-gold/60 mt-1">↕ Comparando com seu diagnóstico anterior</p>
+              )}
             </div>
-
-            <h2 className="font-display text-3xl font-bold text-text-main mb-2">
-              Diagnóstico concluído!
-            </h2>
-            <p className="text-text-muted text-sm mb-8">
-              Obrigado, <strong>{nome}</strong>. Seu resultado foi registrado com sucesso.
-            </p>
 
             {/* Score geral */}
-            <div className="bg-bg rounded-card p-6 mb-6">
-              <p className="text-text-muted text-xs uppercase tracking-wide mb-2">Score Geral</p>
-              <p className="font-mono-data text-5xl font-bold text-text-main mb-1">
-                {resultado.geral.toFixed(1)}
-                <span className="text-xl text-text-muted font-normal">/10</span>
-              </p>
-              <span className="text-sm font-medium" style={{ color: faixaGeral.cor }}>
+            <div className="bg-surface rounded-card p-6 shadow-lg">
+              <p className="text-text-muted text-xs uppercase tracking-wide mb-3 text-center">Score Geral — Diagnóstico 3D</p>
+              <div className="flex items-end justify-center gap-2 mb-2">
+                <p className="font-mono-data text-6xl font-bold text-text-main">{resultado.geral.toFixed(1)}</p>
+                <p className="text-text-muted text-xl mb-2">/10</p>
+              </div>
+              <p className="text-center text-sm font-medium mb-5" style={{ color: faixaGeral.cor }}>
                 {faixaGeral.label} — {faixaGeral.descricao}
-              </span>
-            </div>
+              </p>
 
-            {/* Scores por dimensão */}
-            <div className="grid grid-cols-3 gap-3 mb-8">
-              {(["disciplina", "direcao", "dominio"] as const).map((dim) => {
-                const score = resultado.scores[dim];
-                const faixa = faixaScore(score);
-                return (
-                  <div key={dim} className="bg-bg rounded-btn p-3 text-center">
-                    <p className="text-xs text-text-muted mb-1">{DIMENSAO_LABELS[dim]}</p>
-                    <p className="font-mono-data text-2xl font-bold text-text-main">
-                      {score.toFixed(1)}
-                    </p>
-                    <div className="w-full bg-[#E8D5A3]/30 rounded-full h-1.5 mt-2">
-                      <div
-                        className="h-1.5 rounded-full transition-all"
-                        style={{ width: `${(score / 10) * 100}%`, backgroundColor: faixa.cor }}
-                      />
+              {/* Barras por dimensão */}
+              <div className="space-y-3">
+                {DIMS_3D.map((dim) => {
+                  const score = resultado.scores[dim];
+                  const faixa = faixaScore(score);
+                  const isPrimaria = dim === primaria;
+                  return (
+                    <div key={dim}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-medium text-text-main">{DIMENSAO_LABELS[dim]}</span>
+                          {isPrimaria && (
+                            <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: faixa.cor + "20", color: faixa.cor }}>
+                              Prioridade
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {scoresAnteriores?.[dim] !== undefined && (() => {
+                            const delta = score - scoresAnteriores[dim];
+                            const cor = delta > 0.1 ? "#27AE60" : delta < -0.1 ? "#C0392B" : "#6B6B6B";
+                            return (
+                              <span className="text-[11px] font-medium" style={{ color: cor }}>
+                                {delta > 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1)}
+                              </span>
+                            );
+                          })()}
+                          <span className="font-mono-data text-sm font-bold text-text-main">{score.toFixed(1)}</span>
+                        </div>
+                      </div>
+                      <div className="w-full bg-gold/10 rounded-full h-2.5">
+                        <div
+                          className="h-2.5 rounded-full transition-all"
+                          style={{ width: `${(score / 10) * 100}%`, backgroundColor: faixa.cor }}
+                        />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
 
-            <p className="text-text-muted text-sm leading-relaxed">
-              Em breve entraremos em contato com uma análise detalhada e recomendações personalizadas.
-            </p>
+            {/* Plano Primário */}
+            <div className="bg-surface rounded-card p-6 shadow-lg" style={{ borderLeft: `4px solid ${PLANOS_3D[primaria].cor}` }}>
+              <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: PLANOS_3D[primaria].cor }}>
+                Plano de Ação Primário — {DIMENSAO_LABELS[primaria]}
+              </p>
+              <p className="text-text-muted text-sm leading-relaxed mb-4">{PLANOS_3D[primaria].diagnostico}</p>
+              <p className="text-text-main text-xs font-semibold uppercase tracking-wide mb-3">O que fazer agora:</p>
+              <div className="space-y-3">
+                {PLANOS_3D[primaria].acoes.map((acao, i) => (
+                  <div key={i} className="flex gap-3">
+                    <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-white mt-0.5" style={{ backgroundColor: PLANOS_3D[primaria].cor }}>
+                      {i + 1}
+                    </div>
+                    <p className="text-text-main text-sm leading-relaxed">{acao}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Plano Secundário */}
+            <div className="bg-surface rounded-card p-5 shadow-lg" style={{ borderLeft: `4px solid ${PLANOS_3D[secundaria].cor}80` }}>
+              <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: PLANOS_3D[secundaria].cor }}>
+                Plano de Ação Secundário — {DIMENSAO_LABELS[secundaria]}
+              </p>
+              <p className="text-text-muted text-sm leading-relaxed mb-3">{PLANOS_3D[secundaria].diagnostico}</p>
+              <div className="space-y-2">
+                {PLANOS_3D[secundaria].acoes.map((acao, i) => (
+                  <div key={i} className="flex gap-3">
+                    <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-white mt-0.5" style={{ backgroundColor: PLANOS_3D[secundaria].cor + "99" }}>
+                      {i + 1}
+                    </div>
+                    <p className="text-text-muted text-sm leading-relaxed">{acao}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* PDF */}
+            {(gerandoPdf || pdfUrl) && (
+              <div className="bg-surface rounded-card p-4 shadow-lg text-center">
+                {gerandoPdf ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-gold border-t-transparent rounded-full animate-spin" />
+                    <p className="text-gold/60 text-sm">Gerando seu PDF...</p>
+                  </div>
+                ) : pdfUrl ? (
+                  <a href={pdfUrl} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 py-2 rounded-btn bg-gold/10 text-gold text-sm font-medium hover:bg-gold/20 transition-all">
+                    Baixar PDF do Diagnóstico
+                  </a>
+                ) : null}
+              </div>
+            )}
+
+            {/* CTA */}
+            <div className="bg-surface rounded-card p-5 shadow-lg text-center">
+              <p className="text-text-muted text-sm leading-relaxed">
+                Nossa equipe vai entrar em contato em breve com uma análise aprofundada e um plano de aceleração personalizado para o seu negócio.
+              </p>
+              <p className="text-gold text-xs font-medium mt-2">guilherme@mendonca.co</p>
+            </div>
           </div>
         </div>
       </div>

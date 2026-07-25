@@ -37,6 +37,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
   });
 
   const [salvando, setSalvando] = useState(false);
+  const [erro, setErro] = useState("");
 
   function set(field: string, value: string) {
     setForm((p) => ({ ...p, [field]: value }));
@@ -57,6 +58,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
   async function salvar() {
     if (!form.nome.trim()) return;
     setSalvando(true);
+    setErro("");
 
     const payload = {
       ...form,
@@ -65,10 +67,14 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
       atualizado_em: new Date().toISOString(),
     };
 
-    if (isNovo) {
-      await supabase.from("clientes").insert(payload);
-    } else {
-      await supabase.from("clientes").update(payload).eq("id", cliente!.id);
+    const { error } = isNovo
+      ? await supabase.from("clientes").insert(payload)
+      : await supabase.from("clientes").update(payload).eq("id", cliente!.id);
+
+    if (error) {
+      setErro("Erro ao salvar. Tente novamente.");
+      setSalvando(false);
+      return;
     }
 
     onSave();
@@ -181,6 +187,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
         </div>
 
         <div className="flex items-center justify-end gap-3 p-6 border-t border-[#E8D5A3]/50">
+          {erro && <p className="text-sm text-danger flex-1">{erro}</p>}
           <Button variant="secondary" onClick={onClose}>Cancelar</Button>
           <Button onClick={salvar} disabled={salvando || !form.nome.trim()}>
             {salvando ? "Salvando..." : isNovo ? "Cadastrar Cliente" : "Salvar"}
