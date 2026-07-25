@@ -227,7 +227,7 @@ function TarefaModal({ tarefa, statusInicial, colunas, clientes, usuarios, onClo
   // Carregar contatos quando cliente muda
   useEffect(() => {
     if (!form.cliente_id) { setContatos([]); return; }
-    supabase.from("contatos").select("id, nome, cargo").eq("cliente_id", form.cliente_id).order("principal", { ascending: false })
+    supabase.from("contatos_cliente").select("id, nome, cargo").eq("cliente_id", form.cliente_id).order("principal", { ascending: false })
       .then(({ data }) => setContatos(data ?? []));
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.cliente_id]);
