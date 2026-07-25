@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   TrendingUp, Users, DollarSign, AlertCircle, Clock,
-  ClipboardList, BarChart2, FileText, ListChecks, ChevronRight,
+  ClipboardList, BarChart2, FileText, ListChecks, ChevronRight, CheckSquare,
 } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import Link from "next/link";
@@ -23,6 +23,14 @@ const ETAPA_COR: Record<Etapa, string> = {
 const FUNIL_ETAPAS: Etapa[] = ["novo", "contato", "diagnostico", "proposta", "negociacao", "fechado"];
 
 type StatusPlano = "pendente" | "em_andamento" | "concluido";
+
+type TarefaDash = {
+  id: string;
+  titulo: string;
+  data_prazo: string | null;
+  prioridade: string;
+  cliente_nome: string | null;
+};
 
 type Dados = {
   // KPIs
@@ -45,6 +53,10 @@ type Dados = {
   // Atividade recente
   ultimosLeads: { id: string; nome: string; empresa: string; tipo_servico: string; etapa: string; criado_em: string }[];
   cobrancasProximas: { id: string; cliente_nome: string; valor: number; vencimento: string }[];
+  // Tarefas
+  tarefasHoje: TarefaDash[];
+  tarefasAtrasadas: TarefaDash[];
+  tarefasPendentesTotal: number;
 };
 
 export default function DashboardPage() {
@@ -71,7 +83,7 @@ export default function DashboardPage() {
     const [
       leadsRes, clientesRes, contratosRes, cobrancasRes,
       pesquisasRes, diagnosticosRes, radar360Res, canvasRes, rodadasRes,
-      planosRes, sessoesRecentesRes,
+      planosRes, sessoesRecentesRes, tarefasRes, kanbanColunasRes,
     ] = await Promise.all([
       supabase.from("leads").select("id, nome, empresa, tipo_servico, etapa, criado_em").order("criado_em", { ascending: false }),
       supabase.from("clientes").select("id, status"),
@@ -84,6 +96,8 @@ export default function DashboardPage() {
       supabase.from("rodadas").select("id, tipo, criado_em").gte("criado_em", inicioMes),
       supabase.from("plano_acao_itens").select("id, status"),
       supabase.from("sessoes").select("cliente_id").gte("data", em30diasAtras),
+      supabase.from("tarefas").select("id, titulo, data_prazo, prioridade, status, clientes(nome)").order("data_prazo", { ascending: true, nullsFirst: false }),
+      supabase.from("kanban_colunas").select("id, nome"),
     ]);
 
     const leads = leadsRes.data ?? [];
@@ -136,6 +150,20 @@ export default function DashboardPage() {
       ? Math.round((funnelCounts["fechado"] / leads.length) * 100)
       : 0;
 
+    // Tarefas
+    const todasTarefas = tarefasRes.data ?? [];
+    const colunas = kanbanColunasRes.data ?? [];
+    const colunaConcluido = colunas.find((c) => c.nome?.toLowerCase().includes("conclu"))?.id;
+    const tarefasAbertas = todasTarefas.filter((t) => t.status !== colunaConcluido);
+    const tarefasAtrasadas: TarefaDash[] = tarefasAbertas
+      .filter((t) => t.data_prazo && t.data_prazo < hoje)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((t) => ({ id: t.id, titulo: t.titulo, data_prazo: t.data_prazo, prioridade: t.prioridade, cliente_nome: (t.clientes as any)?.nome ?? null }));
+    const tarefasHoje: TarefaDash[] = tarefasAbertas
+      .filter((t) => t.data_prazo === hoje)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((t) => ({ id: t.id, titulo: t.titulo, data_prazo: t.data_prazo, prioridade: t.prioridade, cliente_nome: (t.clientes as any)?.nome ?? null }));
+
     // Plano de ação
     const itens = planosRes.data ?? [];
     const planoPorStatus: Record<StatusPlano, number> = {
@@ -154,6 +182,9 @@ export default function DashboardPage() {
       planoPorStatus,
       ultimosLeads: leads.slice(0, 5),
       cobrancasProximas: cobrancasVencendo7d,
+      tarefasHoje,
+      tarefasAtrasadas,
+      tarefasPendentesTotal: tarefasAbertas.length,
     });
     setCarregando(false);
   }
@@ -220,9 +251,10 @@ export default function DashboardPage() {
       href: "/plano-acao", sub: `${d.planoPorStatus.concluido}/${d.planoTotal} ações concluídas`,
     },
     {
-      label: "Pesquisas pendentes", value: 0, icon: ClipboardList,
-      cor: "#8E44AD", href: "/pesquisas", sub: "aguardando resposta",
-      // recalculated below
+      label: "Tarefas pendentes", value: d.tarefasPendentesTotal, icon: CheckSquare,
+      cor: d.tarefasAtrasadas.length > 0 ? "#C0392B" : "#27AE60", href: "/tarefas",
+      sub: d.tarefasAtrasadas.length > 0 ? `${d.tarefasAtrasadas.length} atrasada${d.tarefasAtrasadas.length > 1 ? "s" : ""}` : "tudo em dia",
+      alerta: d.tarefasAtrasadas.length > 0,
     },
   ];
 
@@ -241,7 +273,7 @@ export default function DashboardPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {kpis.slice(0, 7).map((kpi) => {
+        {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (
             <Link key={kpi.label} href={kpi.href}>
@@ -332,8 +364,46 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Linha 3: Plano de ação + Leads recentes + Cobranças */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Linha 3: Tarefas + Plano de ação + Leads recentes + Cobranças */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+
+        {/* Tarefas do dia */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between">
+            <CardTitle>Tarefas do dia</CardTitle>
+            <Link href="/tarefas" className="text-xs text-gold hover:underline">Ver todas →</Link>
+          </CardHeader>
+          <CardContent>
+            {d.tarefasAtrasadas.length === 0 && d.tarefasHoje.length === 0 ? (
+              <p className="text-sm text-text-muted text-center py-6">Nenhuma tarefa para hoje.</p>
+            ) : (
+              <div className="space-y-1">
+                {d.tarefasAtrasadas.map((t) => (
+                  <Link key={t.id} href="/tarefas"
+                    className="flex items-start gap-2 py-1.5 border-b border-[#E8D5A3]/30 last:border-0 group">
+                    <span className="w-1.5 h-1.5 rounded-full bg-danger mt-1.5 shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-danger truncate group-hover:underline">{t.titulo}</p>
+                      {t.cliente_nome && <p className="text-[10px] text-text-muted">{t.cliente_nome}</p>}
+                    </div>
+                    <span className="text-[10px] text-danger shrink-0 font-semibold">Atrasada</span>
+                  </Link>
+                ))}
+                {d.tarefasHoje.map((t) => (
+                  <Link key={t.id} href="/tarefas"
+                    className="flex items-start gap-2 py-1.5 border-b border-[#E8D5A3]/30 last:border-0 group">
+                    <span className="w-1.5 h-1.5 rounded-full bg-gold mt-1.5 shrink-0" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-text-main truncate group-hover:underline">{t.titulo}</p>
+                      {t.cliente_nome && <p className="text-[10px] text-text-muted">{t.cliente_nome}</p>}
+                    </div>
+                    <span className="text-[10px] text-gold shrink-0">Hoje</span>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Plano de ação */}
         <Card>
