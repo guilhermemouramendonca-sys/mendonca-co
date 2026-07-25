@@ -151,15 +151,15 @@ export default function DiagnosticoPublicoPage() {
     if (diagId) setDiagnosticoId(diagId);
 
     // CRM lead
-    await fetch("/api/pesquisa/lead", {
+    fetch("/api/diagnostico/lead", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nome, email,
         empresa: empresa || null,
         cargo: cargo || null,
-        tipo: "diagnostico_3d",
-        observacoes: `Diagnóstico 3D concluído. Score geral: ${resultado.geral.toFixed(1)}/10`,
+        faturamento: faturamento || null,
+        score: resultado.geral,
         whatsapp: whatsapp || null,
         instagram: instagram || null,
       }),
