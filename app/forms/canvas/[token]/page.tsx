@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,9 @@ export default function CanvasPublicoPage() {
   const [erro, setErro] = useState("");
   const [salvando, setSalvando] = useState(false);
   const [respostas, setRespostas] = useState<RespostasCanvas>({});
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [gerandoPdf, setGerandoPdf] = useState(false);
+  const pdfGerado = useRef(false);
 
   useEffect(() => {
     async function carregar() {
@@ -101,6 +104,22 @@ export default function CanvasPublicoPage() {
     setSalvando(false);
     setFase("concluido");
   }
+
+  useEffect(() => {
+    if (fase !== "concluido" || !canvasId || pdfGerado.current) return;
+    pdfGerado.current = true;
+    setGerandoPdf(true);
+    fetch("/api/canvas/gerar-pdf", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ canvasId }),
+    })
+      .then((r) => r.json())
+      .then((d) => { if (d.pdfUrl) setPdfUrl(d.pdfUrl); })
+      .catch(() => {})
+      .finally(() => setGerandoPdf(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fase, canvasId]);
 
   if (fase === "erro") {
     return (
@@ -181,6 +200,23 @@ export default function CanvasPublicoPage() {
             <p className="text-[#6B6B6B] text-sm leading-relaxed mb-6">
               Sua resposta foi registrada. Em breve entraremos em contato com o Canvas completo e uma análise estratégica personalizada.
             </p>
+
+            {(gerandoPdf || pdfUrl) && (
+              <div className="mb-4 p-4 rounded-xl bg-[#F5F0E8] text-center">
+                {gerandoPdf ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 border-2 border-[#C9A84C] border-t-transparent rounded-full animate-spin" />
+                    <p className="text-[#6B6B6B] text-sm">Gerando seu PDF...</p>
+                  </div>
+                ) : pdfUrl ? (
+                  <a href={pdfUrl} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 py-2 rounded-lg bg-[#C9A84C]/20 text-[#0D2B2E] text-sm font-medium hover:bg-[#C9A84C]/30 transition-all">
+                    Baixar PDF do Canvas
+                  </a>
+                ) : null}
+              </div>
+            )}
+
             <p className="text-xs text-[#6B6B6B]">guilherme@mendonca.co</p>
           </div>
         </div>

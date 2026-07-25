@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   TrendingUp,
@@ -54,10 +55,33 @@ const navItems = [
   { href: "/configuracoes", label: "Configurações", icon: Settings },
 ];
 
+const BADGE_HREFS = ["/diagnosticos", "/radar360", "/pesquisas", "/canvas"];
+
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const supabase = createClient();
+  const [badges, setBadges] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    async function carregarBadges() {
+      const sete = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      const [diag, r360, pesq, canvas] = await Promise.all([
+        supabase.from("diagnosticos").select("id", { count: "exact", head: true }).gte("criado_em", sete).not("resultado", "is", null),
+        supabase.from("radar360").select("id", { count: "exact", head: true }).gte("criado_em", sete).not("resultado", "is", null),
+        supabase.from("pesquisas").select("id", { count: "exact", head: true }).gte("criado_em", sete).not("resultado", "is", null),
+        supabase.from("canvas_estrategico").select("id", { count: "exact", head: true }).gte("criado_em", sete).not("resultado", "is", null),
+      ]);
+      setBadges({
+        "/diagnosticos": diag.count ?? 0,
+        "/radar360": r360.count ?? 0,
+        "/pesquisas": pesq.count ?? 0,
+        "/canvas": canvas.count ?? 0,
+      });
+    }
+    carregarBadges();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function sair() {
     await supabase.auth.signOut();
@@ -78,6 +102,7 @@ export function Sidebar() {
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+          const badge = BADGE_HREFS.includes(item.href) ? (badges[item.href] ?? 0) : 0;
           return (
             <Link
               key={item.href}
@@ -90,7 +115,12 @@ export function Sidebar() {
               )}
             >
               <Icon size={18} />
-              {item.label}
+              <span className="flex-1">{item.label}</span>
+              {badge > 0 && (
+                <span className="text-[10px] font-bold bg-gold text-primary rounded-full w-5 h-5 flex items-center justify-center">
+                  {badge > 9 ? "9+" : badge}
+                </span>
+              )}
             </Link>
           );
         })}

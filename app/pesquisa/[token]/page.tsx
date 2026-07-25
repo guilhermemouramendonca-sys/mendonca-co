@@ -59,6 +59,7 @@ export default function PesquisaPublicaPage() {
   const [resultado, setResultado] = useState<Record<string, unknown> | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [gerandoPdf, setGerandoPdf] = useState(false);
+  const [scoresAnteriores, setScoresAnteriores] = useState<Record<string, number> | null>(null);
 
   useEffect(() => {
     async function carregarPesquisa() {
@@ -118,6 +119,24 @@ export default function PesquisaPublicaPage() {
       const r = calcularGPTW(respostasGptw);
       res = r as unknown as Record<string, unknown>;
       respostasPayload = respostasGptw;
+    }
+
+    // Busca resultado anterior do mesmo email + tipo para evolução
+    if (email && (tipo === "q12" || tipo === "gptw")) {
+      const { data: ant } = await supabase
+        .from("pesquisas")
+        .select("resultado")
+        .eq("respondente_email", email)
+        .eq("tipo", tipo)
+        .neq("id", pesquisaId)
+        .not("resultado", "is", null)
+        .order("criado_em", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (ant?.resultado) {
+        const r = ant.resultado as { porDimensao?: Record<string, number> };
+        if (r.porDimensao) setScoresAnteriores(r.porDimensao);
+      }
     }
 
     await supabase.from("pesquisas").update({
@@ -253,7 +272,10 @@ export default function PesquisaPublicaPage() {
             {resultado && tipo === "disc" && <ResultadoDISCCard resultado={resultado} />}
             {resultado && tipo === "q12" && (
               <>
-                <ResultadoQ12Card resultado={resultado} />
+                {scoresAnteriores && (
+                  <p className="text-center text-xs text-text-muted mb-2">↕ Comparando com sua pesquisa Q12 anterior</p>
+                )}
+                <ResultadoQ12Card resultado={resultado} scoresAnteriores={scoresAnteriores} />
                 <BenchmarkComparacao
                   tipo="q12" metrica="percentual_geral"
                   valorAtual={resultado.percentual as number}
@@ -264,7 +286,10 @@ export default function PesquisaPublicaPage() {
             )}
             {resultado && tipo === "gptw" && (
               <>
-                <ResultadoGPTWCard resultado={resultado} />
+                {scoresAnteriores && (
+                  <p className="text-center text-xs text-text-muted mb-2">↕ Comparando com sua pesquisa GPTW anterior</p>
+                )}
+                <ResultadoGPTWCard resultado={resultado} scoresAnteriores={scoresAnteriores} />
                 <BenchmarkComparacao
                   tipo="gptw" metrica="trust_index"
                   valorAtual={resultado.trustIndex as number}
@@ -846,7 +871,7 @@ function PiramideQ12SVG({ porDimensao }: { porDimensao: Record<string, number> }
   );
 }
 
-function ResultadoQ12Card({ resultado }: { resultado: Record<string, unknown> }) {
+function ResultadoQ12Card({ resultado, scoresAnteriores }: { resultado: Record<string, unknown>; scoresAnteriores?: Record<string, number> | null }) {
   const percentual = resultado.percentual as number;
   const nivel = resultado.nivel as string;
   const cor = resultado.cor as string;
@@ -872,6 +897,24 @@ function ResultadoQ12Card({ resultado }: { resultado: Record<string, unknown> })
           <p className="text-text-muted text-xs uppercase tracking-wide mb-1 text-center">Pirâmide de Engajamento Gallup Q12</p>
           <p className="text-text-muted/60 text-[10px] text-center mb-4">Do topo (Crescimento) à base (Necessidades Básicas)</p>
           <PiramideQ12SVG porDimensao={porDimensao} />
+          {scoresAnteriores && (
+            <div className="mt-3 space-y-1.5">
+              {PIRAMIDE_LAYERS.slice().reverse().map((l) => {
+                const ant = scoresAnteriores[l.dim];
+                if (ant === undefined) return null;
+                const delta = Math.round((porDimensao[l.dim] ?? 0) - ant);
+                const dcor = delta > 0 ? "#27AE60" : delta < 0 ? "#C0392B" : "#6B6B6B";
+                return (
+                  <div key={l.dim} className="flex items-center justify-between text-xs">
+                    <span className="text-text-muted">{l.dim}</span>
+                    <span className="font-medium" style={{ color: dcor }}>
+                      {delta > 0 ? `+${delta}` : delta}%
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           {weakest && (
             <div className="mt-4 p-4 rounded-btn text-left" style={{ backgroundColor: weakest.cor + "12", border: `1px solid ${weakest.cor}40` }}>
               <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: weakest.cor }}>
@@ -929,7 +972,7 @@ const GPTW_PLANOS: Record<string, { diagnostico: string; acoes: string[] }> = {
   },
 };
 
-function ResultadoGPTWCard({ resultado }: { resultado: Record<string, unknown> }) {
+function ResultadoGPTWCard({ resultado, scoresAnteriores }: { resultado: Record<string, unknown>; scoresAnteriores?: Record<string, number> | null }) {
   const trustIndex = resultado.trustIndex as number;
   const nivel = resultado.nivel as string;
   const cor = resultado.cor as string;
@@ -976,7 +1019,14 @@ function ResultadoGPTWCard({ resultado }: { resultado: Record<string, unknown> }
                       {isPrimaria && <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: cor + "20", color: cor }}>Prioridade 1</span>}
                       {isSecundaria && <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded" style={{ backgroundColor: cor + "20", color: cor }}>Prioridade 2</span>}
                     </div>
-                    <span className="font-mono-data text-sm font-bold text-text-main">{score}%</span>
+                    <div className="flex items-center gap-2">
+                      {scoresAnteriores?.[dim] !== undefined && (() => {
+                        const delta = score - scoresAnteriores[dim];
+                        const dcor = delta > 0.5 ? "#27AE60" : delta < -0.5 ? "#C0392B" : "#6B6B6B";
+                        return <span className="text-[11px] font-medium" style={{ color: dcor }}>{delta > 0 ? `+${delta.toFixed(0)}` : delta.toFixed(0)}%</span>;
+                      })()}
+                      <span className="font-mono-data text-sm font-bold text-text-main">{score}%</span>
+                    </div>
                   </div>
                   <div className="w-full bg-gold/10 rounded-full h-2">
                     <div className="h-2 rounded-full transition-all" style={{ width: `${score}%`, backgroundColor: isPrimaria || isSecundaria ? cor : cor + "80" }} />

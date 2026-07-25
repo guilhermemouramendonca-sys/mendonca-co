@@ -45,6 +45,7 @@ export default function ClientesPage() {
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [busca, setBusca] = useState("");
   const [filtroResponsavel, setFiltroResponsavel] = useState<"todos" | "meus">("todos");
+  const [filtroStatus, setFiltroStatus] = useState<"todos" | "ativo" | "pausado" | "encerrado">("todos");
   const [userId, setUserId] = useState<string | null>(null);
   const [modalAberto, setModalAberto] = useState(false);
   const supabase = createClient();
@@ -68,7 +69,8 @@ export default function ClientesPage() {
       c.setor?.toLowerCase().includes(busca.toLowerCase());
     const responsavelOk = filtroResponsavel === "todos" ||
       (c as unknown as Record<string, unknown>).responsavel_id === userId;
-    return buscaOk && responsavelOk;
+    const statusOk = filtroStatus === "todos" || c.status === filtroStatus;
+    return buscaOk && responsavelOk && statusOk;
   });
 
   return (
@@ -78,7 +80,7 @@ export default function ClientesPage() {
           <h1 className="font-display text-4xl font-bold text-text-main">Clientes</h1>
           <p className="text-text-muted mt-1">{clientes.length} empresa{clientes.length !== 1 ? "s" : ""} cadastrada{clientes.length !== 1 ? "s" : ""}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <div className="flex rounded-btn border border-[#E8D5A3]/50 overflow-hidden text-xs">
             {(["todos", "meus"] as const).map((f) => (
               <button
@@ -87,6 +89,17 @@ export default function ClientesPage() {
                 className={`px-3 py-1.5 transition-all ${filtroResponsavel === f ? "bg-primary text-gold" : "bg-surface text-text-muted hover:text-text-main"}`}
               >
                 {f === "todos" ? "Todos" : "Minha carteira"}
+              </button>
+            ))}
+          </div>
+          <div className="flex rounded-btn border border-[#E8D5A3]/50 overflow-hidden text-xs">
+            {(["todos", "ativo", "pausado", "encerrado"] as const).map((s) => (
+              <button
+                key={s}
+                onClick={() => setFiltroStatus(s)}
+                className={`px-3 py-1.5 transition-all ${filtroStatus === s ? "bg-primary text-gold" : "bg-surface text-text-muted hover:text-text-main"}`}
+              >
+                {s === "todos" ? "Status" : s.charAt(0).toUpperCase() + s.slice(1)}
               </button>
             ))}
           </div>
