@@ -5,6 +5,7 @@ import { Radar360PDF } from "@/lib/pdf/radar360-pdf";
 import { createServiceClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import { enviarEmailPDF } from "@/lib/email/sender";
+import { notificarPDFGerado } from "@/lib/email/notificar-lead";
 
 export async function POST(req: NextRequest) {
   try {
@@ -52,6 +53,13 @@ export async function POST(req: NextRequest) {
         tipo: "radar_360",
         pdfUrl,
       });
+      notificarPDFGerado({
+        nome: r.respondente_nome ?? "Respondente",
+        email: r.respondente_email,
+        empresa: r.respondente_empresa ?? null,
+        tipo: "radar_360",
+        pdfUrl,
+      }).catch(() => {});
     }
 
     await fetch(`${req.nextUrl.origin}/api/plano-acao`, {

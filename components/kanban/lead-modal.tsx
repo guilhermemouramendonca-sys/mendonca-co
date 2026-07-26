@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { X, MessageCircle, Mail, Phone, Users, FileText, Plus, ExternalLink } from "lucide-react";
+import { X, MessageCircle, Mail, Phone, Users, FileText, Plus, ExternalLink, Download } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/utils";
 import type { Lead, Etapa } from "@/lib/crm/tipos";
@@ -14,6 +14,22 @@ type Interacao = {
   tipo: string;
   descricao: string;
   data: string;
+};
+
+type Documento = {
+  tipo: string;
+  label: string;
+  data: string;
+  pdf_url: string | null;
+};
+
+const DOC_LABELS: Record<string, string> = {
+  diagnostico_3d: "Diagnóstico 3D",
+  radar_360: "Radar 360",
+  disc: "Perfil DISC",
+  q12: "Pesquisa Q12",
+  gptw: "Trust Index GPTW",
+  canvas_estrategico: "Canvas Estratégico",
 };
 
 type Props = {
@@ -69,12 +85,13 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
   });
 
   const [interacoes, setInteracoes] = useState<Interacao[]>([]);
+  const [documentos, setDocumentos] = useState<Documento[]>([]);
   const [novaInteracao, setNovaInteracao] = useState({ tipo: "nota", descricao: "" });
   const [salvando, setSalvando] = useState(false);
-  const [aba, setAba] = useState<"dados" | "historico">("dados");
+  const [aba, setAba] = useState<"dados" | "historico" | "documentos">("dados");
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { if (lead) carregarInteracoes(); }, [lead?.id]);
+  useEffect(() => { if (lead) { carregarInteracoes(); carregarDocumentos(); } }, [lead?.id]);
 
   async function carregarInteracoes() {
     if (!lead) return;
@@ -84,6 +101,24 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
       .eq("lead_id", lead.id)
       .order("data", { ascending: false });
     if (data) setInteracoes(data as Interacao[]);
+  }
+
+  async function carregarDocumentos() {
+    if (!lead?.email) return;
+    const email = lead.email;
+    const [diag, radar, pesq, canvas] = await Promise.all([
+      supabase.from("diagnosticos").select("criado_em, pdf_url").ilike("respondente_email", email).order("criado_em", { ascending: false }),
+      supabase.from("radar360").select("criado_em, pdf_url").ilike("respondente_email", email).order("criado_em", { ascending: false }),
+      supabase.from("pesquisas").select("criado_em, pdf_url, tipo").ilike("respondente_email", email).order("criado_em", { ascending: false }),
+      supabase.from("canvas_estrategico").select("criado_em, pdf_url").ilike("respondente_email", email).order("criado_em", { ascending: false }),
+    ]);
+    const todos: Documento[] = [
+      ...(diag.data ?? []).map(d => ({ tipo: "diagnostico_3d", label: DOC_LABELS["diagnostico_3d"], data: d.criado_em, pdf_url: d.pdf_url })),
+      ...(radar.data ?? []).map(d => ({ tipo: "radar_360", label: DOC_LABELS["radar_360"], data: d.criado_em, pdf_url: d.pdf_url })),
+      ...(pesq.data ?? []).map(d => ({ tipo: d.tipo, label: DOC_LABELS[d.tipo] ?? d.tipo, data: d.criado_em, pdf_url: d.pdf_url })),
+      ...(canvas.data ?? []).map(d => ({ tipo: "canvas_estrategico", label: DOC_LABELS["canvas_estrategico"], data: d.criado_em, pdf_url: d.pdf_url })),
+    ].sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
+    setDocumentos(todos);
   }
 
   function handleEtapaChange(novaEtapa: string) {
@@ -153,17 +188,26 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
         {/* Abas */}
         {!isNovo && (
           <div className="flex border-b border-[#E0D0B4]/50 px-6">
-            {["dados", "historico"].map((a) => (
+            {(["dados", "historico", "documentos"] as const).map((a) => (
               <button
                 key={a}
-                onClick={() => setAba(a as "dados" | "historico")}
+                onClick={() => setAba(a)}
                 className={`py-3 px-4 text-sm font-medium border-b-2 transition-colors ${
                   aba === a
                     ? "border-gold text-gold"
                     : "border-transparent text-text-muted hover:text-text-main"
                 }`}
               >
-                {a === "dados" ? "Dados" : "Histórico"}
+                {a === "dados" ? "Dados" : a === "historico" ? "Histórico" : (
+                  <span className="flex items-center gap-1.5">
+                    Documentos
+                    {documentos.length > 0 && (
+                      <span className="bg-gold text-primary text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                        {documentos.length}
+                      </span>
+                    )}
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -293,6 +337,41 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
                   <p className="text-sm text-text-main">{lead.motivo_perda}</p>
                   {lead.data_perda && <p className="text-xs text-text-muted">{formatDate(lead.data_perda)}</p>}
                 </div>
+              )}
+            </div>
+          )}
+
+          {aba === "documentos" && (
+            <div className="space-y-3">
+              {documentos.length === 0 ? (
+                <p className="text-sm text-text-muted text-center py-8">Nenhum documento encontrado para este lead.</p>
+              ) : (
+                documentos.map((doc, i) => (
+                  <div key={i} className="flex items-center justify-between p-4 bg-bg rounded-btn border border-[#E0D0B4]/50">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-btn bg-primary/10 flex items-center justify-center">
+                        <FileText size={16} className="text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-text-main">{doc.label}</p>
+                        <p className="text-xs text-text-muted">{formatDate(doc.data)}</p>
+                      </div>
+                    </div>
+                    {doc.pdf_url ? (
+                      <a
+                        href={doc.pdf_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-btn bg-primary text-gold text-xs font-medium hover:bg-primary/90 transition-colors"
+                      >
+                        <Download size={13} />
+                        PDF
+                      </a>
+                    ) : (
+                      <span className="text-xs text-text-muted italic">PDF pendente</span>
+                    )}
+                  </div>
+                ))
               )}
             </div>
           )}

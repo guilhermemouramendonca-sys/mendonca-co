@@ -2,6 +2,54 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const TITULOS_PDF: Record<string, string> = {
+  diagnostico_3d: "Diagnóstico 3D de Liderança",
+  radar_360: "Radar 360",
+  disc: "Perfil DISC",
+  q12: "Pesquisa de Engajamento Q12",
+  gptw: "Trust Index GPTW",
+  canvas_estrategico: "Canvas Estratégico",
+};
+
+export async function notificarPDFGerado({
+  nome,
+  email,
+  empresa,
+  tipo,
+  pdfUrl,
+}: {
+  nome: string;
+  email: string;
+  empresa?: string | null;
+  tipo: string;
+  pdfUrl: string;
+}) {
+  if (!process.env.RESEND_API_KEY) return;
+  const titulo = TITULOS_PDF[tipo] ?? tipo;
+  await resend.emails.send({
+    from: "Mendonça & Co <onboarding@resend.dev>",
+    to: "guilherme.moura.mendonca@gmail.com",
+    subject: `📄 PDF gerado: ${nome} — ${titulo}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
+        <div style="background:#1A2E3A;padding:24px 32px;border-radius:8px 8px 0 0">
+          <h1 style="color:#C2A878;margin:0;font-size:20px">Mendonça & Co</h1>
+          <p style="color:#E0D0B4;opacity:0.7;margin:4px 0 0;font-size:13px">PDF gerado — ${titulo}</p>
+        </div>
+        <div style="background:#fff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #E0D0B4;border-top:none;line-height:1.8;color:#1a1a1a;font-size:14px">
+          <p style="margin:0 0 16px"><b>Lead:</b> ${nome}${empresa ? ` · ${empresa}` : ""}</p>
+          <p style="margin:0 0 24px"><b>E-mail:</b> ${email}</p>
+          <a href="${pdfUrl}" target="_blank"
+            style="display:inline-block;background:#C2A878;color:#1A2E3A;text-decoration:none;padding:12px 28px;border-radius:6px;font-size:14px;font-weight:700">
+            Ver PDF →
+          </a>
+          <p style="margin:20px 0 0;font-size:11px;color:#9B9B9B;word-break:break-all">${pdfUrl}</p>
+        </div>
+      </div>
+    `,
+  }).catch(() => {});
+}
+
 type NotificarLeadParams = {
   nome: string;
   email: string;

@@ -5,6 +5,7 @@ import { DiagnosticoPDF } from "@/lib/pdf/diagnostico-pdf";
 import { createServiceClient } from "@/lib/supabase/server";
 import { formatDate } from "@/lib/utils";
 import { enviarEmailPDF } from "@/lib/email/sender";
+import { notificarPDFGerado } from "@/lib/email/notificar-lead";
 
 export async function POST(req: NextRequest) {
   try {
@@ -58,6 +59,13 @@ export async function POST(req: NextRequest) {
         tipo: "diagnostico_3d",
         pdfUrl,
       });
+      notificarPDFGerado({
+        nome: diag.respondente_nome ?? "Respondente",
+        email: diag.respondente_email,
+        empresa: diag.respondente_empresa ?? null,
+        tipo: "diagnostico_3d",
+        pdfUrl,
+      }).catch(() => {});
     }
 
     // Plano de ação automático

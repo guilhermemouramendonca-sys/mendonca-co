@@ -4,6 +4,7 @@ import { createElement, type ReactElement, type JSXElementConstructor } from "re
 import { createClient } from "@/lib/supabase/server";
 import { CanvasPDF } from "@/lib/pdf/canvas-pdf";
 import { enviarEmailPDF } from "@/lib/email/sender";
+import { notificarPDFGerado } from "@/lib/email/notificar-lead";
 
 export async function POST(req: NextRequest) {
   const { canvasId } = await req.json();
@@ -55,6 +56,13 @@ export async function POST(req: NextRequest) {
       tipo: "canvas_estrategico",
       pdfUrl,
     });
+    notificarPDFGerado({
+      nome: c.respondente_nome ?? "Respondente",
+      email: c.respondente_email,
+      empresa: c.respondente_empresa ?? null,
+      tipo: "canvas_estrategico",
+      pdfUrl,
+    }).catch(() => {});
   }
 
   await fetch(`${req.nextUrl.origin}/api/plano-acao`, {

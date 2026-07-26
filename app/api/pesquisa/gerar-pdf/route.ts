@@ -7,6 +7,7 @@ import { DISCPDF } from "@/lib/pdf/disc-pdf";
 import { Q12PDF } from "@/lib/pdf/q12-pdf";
 import { GPTWPDF } from "@/lib/pdf/gptw-pdf";
 import { enviarEmailPDF } from "@/lib/email/sender";
+import { notificarPDFGerado } from "@/lib/email/notificar-lead";
 
 export async function POST(req: NextRequest) {
   const { pesquisaId } = await req.json();
@@ -67,6 +68,13 @@ export async function POST(req: NextRequest) {
       tipo: tipo as "disc" | "q12" | "gptw",
       pdfUrl,
     });
+    notificarPDFGerado({
+      nome: p.respondente_nome ?? "Respondente",
+      email: p.respondente_email,
+      empresa: p.respondente_empresa ?? null,
+      tipo,
+      pdfUrl,
+    }).catch(() => {});
   }
 
   await fetch(`${req.nextUrl.origin}/api/plano-acao`, {
