@@ -40,7 +40,7 @@ type CadenciaItem = {
 const CANAL_CONFIG: Record<string, { label: string; icon: React.ReactNode; cor: string }> = {
   linkedin:      { label: "LinkedIn",      icon: <Link2 size={13} />,         cor: "#0A66C2" },
   whatsapp:      { label: "WhatsApp",      icon: <MessageCircle size={13} />, cor: "#25D366" },
-  email:         { label: "E-mail",        icon: <Mail size={13} />,          cor: "#C9A84C" },
+  email:         { label: "E-mail",        icon: <Mail size={13} />,          cor: "#C2A878" },
   ligacao:       { label: "Ligação",       icon: <Phone size={13} />,         cor: "#8E44AD" },
   whatsapp_ativo:{ label: "WhatsApp Ativo",icon: <MessageCircle size={13} />, cor: "#25D366" },
   email_frio:    { label: "E-mail Frio",   icon: <Mail size={13} />,          cor: "#E67E22" },
@@ -218,12 +218,12 @@ export default function SDRPage() {
                 </button>
               )}
             </div>
-            <div className="h-3 bg-[#E8D5A3]/30 rounded-full overflow-hidden">
+            <div className="h-3 bg-[#E0D0B4]/30 rounded-full overflow-hidden">
               <div
                 className="h-3 rounded-full transition-all duration-700"
                 style={{
                   width: `${pctMeta}%`,
-                  backgroundColor: pctMeta >= 100 ? "#27AE60" : pctMeta >= 60 ? "#C9A84C" : "#C0392B",
+                  backgroundColor: pctMeta >= 100 ? "#27AE60" : pctMeta >= 60 ? "#C2A878" : "#C0392B",
                 }}
               />
             </div>
@@ -279,8 +279,8 @@ export default function SDRPage() {
                     <div
                       className="w-12 h-12 rounded-btn flex flex-col items-center justify-center shrink-0 font-bold"
                       style={{
-                        backgroundColor: atrasado ? "#C0392B18" : "#C9A84C18",
-                        color: atrasado ? "#C0392B" : "#C9A84C",
+                        backgroundColor: atrasado ? "#C0392B18" : "#C2A87818",
+                        color: atrasado ? "#C0392B" : "#C2A878",
                       }}
                     >
                       <span className="text-xs">D</span>
@@ -310,7 +310,7 @@ export default function SDRPage() {
                               key={dia}
                               className="text-[9px] px-1.5 py-0.5 rounded font-bold"
                               style={{
-                                backgroundColor: item?.status === "feito" ? "#27AE6018" : item?.status === "sem_resposta" ? "#C0392B18" : "#E8D5A3/40",
+                                backgroundColor: item?.status === "feito" ? "#27AE6018" : item?.status === "sem_resposta" ? "#C0392B18" : "#E0D0B4/40",
                                 color: item?.status === "feito" ? "#27AE60" : item?.status === "sem_resposta" ? "#C0392B" : "#6B6B6B",
                               }}
                             >
@@ -335,7 +335,7 @@ export default function SDRPage() {
                                 style={{
                                   backgroundColor: canalAcao === c ? ci.cor + "20" : "transparent",
                                   color: canalAcao === c ? ci.cor : "#6B6B6B",
-                                  border: `1.5px solid ${canalAcao === c ? ci.cor : "#E8D5A3"}`,
+                                  border: `1.5px solid ${canalAcao === c ? ci.cor : "#E0D0B4"}`,
                                 }}
                                 title={ci.label}
                               >
@@ -369,7 +369,7 @@ export default function SDRPage() {
                             href={`https://wa.me/55${lead.whatsapp.replace(/\D/g, "")}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="p-2 rounded-btn border border-[#E8D5A3]/50 text-[#25D366] hover:bg-[#25D366]/10 transition-all"
+                            className="p-2 rounded-btn border border-[#E0D0B4]/50 text-[#25D366] hover:bg-[#25D366]/10 transition-all"
                             title="Abrir WhatsApp"
                           >
                             <MessageCircle size={16} />
@@ -505,7 +505,7 @@ function LeadMiniCard({
                 const item = cadencia.find((c) => c.dia === dia);
                 return (
                   <span key={dia} className="text-[9px] font-bold"
-                    style={{ color: item?.status === "feito" ? "#27AE60" : item?.status === "sem_resposta" ? "#C0392B" : "#C9A84C60" }}>
+                    style={{ color: item?.status === "feito" ? "#27AE60" : item?.status === "sem_resposta" ? "#C0392B" : "#C2A87860" }}>
                     D{dia}{item?.status === "feito" ? "✓" : item?.status === "sem_resposta" ? "✗" : ""}
                   </span>
                 );

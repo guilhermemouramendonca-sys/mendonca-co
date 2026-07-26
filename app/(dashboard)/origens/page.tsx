@@ -29,11 +29,11 @@ const CANAL_LABELS: Record<string, string> = {
 };
 
 const CANAL_CORES: Record<string, string> = {
-  indicacao: "#0D2B2E",
+  indicacao: "#1A2E3A",
   linkedin: "#0A66C2",
   instagram: "#E1306C",
   organico: "#2D6A4F",
-  evento: "#C9A84C",
+  evento: "#C2A878",
   google: "#4285F4",
   whatsapp_ativo: "#25D366",
   email_frio: "#6B7280",
@@ -166,7 +166,7 @@ export default function OrigensPage() {
           <h1 className="font-display text-4xl font-bold text-text-main">Origens & Canais</h1>
           <p className="text-text-muted mt-1">De onde vêm seus leads e qual canal converte mais</p>
         </div>
-        <div className="flex rounded-btn border border-[#E8D5A3]/50 overflow-hidden text-xs">
+        <div className="flex rounded-btn border border-[#E0D0B4]/50 overflow-hidden text-xs">
           {(["30", "90", "365", "tudo"] as const).map((p) => (
             <button
               key={p}
@@ -232,7 +232,7 @@ export default function OrigensPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Volume por canal */}
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
           <h3 className="font-display text-base font-semibold text-text-main mb-4">Volume por canal</h3>
           {stats.length === 0 ? (
             <p className="text-text-muted text-sm text-center py-8">Nenhum lead no período.</p>
@@ -254,7 +254,7 @@ export default function OrigensPage() {
                         </span>
                       </div>
                     </div>
-                    <div className="w-full bg-[#E8D5A3]/30 rounded-full h-2">
+                    <div className="w-full bg-[#E0D0B4]/30 rounded-full h-2">
                       <div className="h-2 rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: s.cor }} />
                     </div>
                   </div>
@@ -265,7 +265,7 @@ export default function OrigensPage() {
         </div>
 
         {/* Histórico mensal */}
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
           <h3 className="font-display text-base font-semibold text-text-main mb-4">Leads por mês — últimos 6 meses</h3>
           <div className="flex items-end gap-2 h-36 mb-2">
             {historico.map((h) => {
@@ -288,7 +288,7 @@ export default function OrigensPage() {
       </div>
 
       {/* Tabela detalhada por canal */}
-      <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+      <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
         <h3 className="font-display text-base font-semibold text-text-main mb-4">Funil por canal</h3>
         {stats.length === 0 ? (
           <p className="text-text-muted text-sm text-center py-8">Cadastre leads com canal de origem para ver o funil.</p>
@@ -296,7 +296,7 @@ export default function OrigensPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-[#E8D5A3]/50">
+                <tr className="border-b border-[#E0D0B4]/50">
                   <th className="text-left py-2 pr-4 text-xs text-text-muted font-medium">Canal</th>
                   <th className="text-center py-2 px-2 text-xs text-text-muted font-medium">Total</th>
                   {ETAPAS_ORDEM.slice(0, 5).map((e) => (
@@ -309,7 +309,7 @@ export default function OrigensPage() {
               </thead>
               <tbody>
                 {stats.map((s) => (
-                  <tr key={s.canal} className="border-b border-[#E8D5A3]/20 hover:bg-bg/50 transition-colors">
+                  <tr key={s.canal} className="border-b border-[#E0D0B4]/20 hover:bg-bg/50 transition-colors">
                     <td className="py-3 pr-4">
                       <div className="flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: s.cor }} />
@@ -343,7 +343,7 @@ export default function OrigensPage() {
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t-2 border-[#E8D5A3]/50">
+                <tr className="border-t-2 border-[#E0D0B4]/50">
                   <td className="py-3 pr-4 font-bold text-text-main text-xs">Total</td>
                   <td className="text-center py-3 px-2 font-bold text-text-main">{totalLeads}</td>
                   {ETAPAS_ORDEM.slice(0, 5).map((e) => (

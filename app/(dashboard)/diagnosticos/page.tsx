@@ -172,7 +172,7 @@ export default function DiagnosticosPage() {
           <h2 className="font-display text-xl font-semibold text-text-main mb-4">Aguardando resposta</h2>
           <div className="space-y-2">
             {pendentes.map((d) => (
-              <div key={d.id} className="flex items-center justify-between p-4 bg-surface rounded-btn border border-[#E8D5A3]/50">
+              <div key={d.id} className="flex items-center justify-between p-4 bg-surface rounded-btn border border-[#E0D0B4]/50">
                 <div className="flex items-center gap-3">
                   <FileText size={16} className="text-text-muted" />
                   <div>

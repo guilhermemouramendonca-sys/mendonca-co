@@ -42,13 +42,13 @@ type Contato = { id: string; nome: string; cargo?: string };
 // ── Constants ──────────────────────────────────────────────────────
 const PRIORIDADE_CONFIG: Record<Prioridade, { label: string; cor: string }> = {
   baixa: { label: "Baixa", cor: "#6B6B6B" },
-  media: { label: "Média", cor: "#C9A84C" },
+  media: { label: "Média", cor: "#C2A878" },
   alta:  { label: "Alta",  cor: "#C0392B" },
 };
 
 const CORES_PRESET = [
-  "#6B6B6B", "#C9A84C", "#27AE60", "#2980B9",
-  "#8E44AD", "#C0392B", "#E67E22", "#0D2B2E",
+  "#6B6B6B", "#C2A878", "#27AE60", "#2980B9",
+  "#8E44AD", "#C0392B", "#E67E22", "#1A2E3A",
 ];
 
 // ── TarefaCard (draggable) ─────────────────────────────────────────
@@ -61,7 +61,7 @@ function TarefaCardKanban({ tarefa, onClick }: { tarefa: Tarefa; onClick: () => 
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}
-      className={cn("bg-surface border border-[#E8D5A3]/50 rounded-btn p-3 shadow-sm transition-all",
+      className={cn("bg-surface border border-[#E0D0B4]/50 rounded-btn p-3 shadow-sm transition-all",
         isDragging ? "opacity-30" : "hover:shadow-md")}>
       <div className="flex items-start gap-2">
         <button {...listeners} className="mt-0.5 cursor-grab text-text-muted hover:text-gold flex-shrink-0 active:cursor-grabbing">
@@ -135,7 +135,7 @@ function KanbanColuna({ coluna, tarefas, onClickTarefa, onNova, onRename, onDele
             style={{ backgroundColor: coluna.cor }}
           />
           {showCores && (
-            <div className="absolute top-5 left-0 z-20 bg-surface border border-[#E8D5A3] rounded-btn p-2 shadow-lg grid grid-cols-4 gap-1.5">
+            <div className="absolute top-5 left-0 z-20 bg-surface border border-[#E0D0B4] rounded-btn p-2 shadow-lg grid grid-cols-4 gap-1.5">
               {CORES_PRESET.map((c) => (
                 <button key={c} onClick={() => { onChangeCor(c); setShowCores(false); }}
                   className={cn("w-5 h-5 rounded-full hover:scale-110 transition-transform",
@@ -185,7 +185,7 @@ function KanbanColuna({ coluna, tarefas, onClickTarefa, onNova, onRename, onDele
       {/* Drop zone */}
       <div ref={setNodeRef}
         className={cn("min-h-20 space-y-2 p-2 rounded-btn transition-colors",
-          isOver ? "bg-gold/10 border border-dashed border-gold/40" : "bg-[#E8D5A3]/10")}>
+          isOver ? "bg-gold/10 border border-dashed border-gold/40" : "bg-[#E0D0B4]/10")}>
         {tarefas.map((t) => (
           <TarefaCardKanban key={t.id} tarefa={t} onClick={() => onClickTarefa(t)} />
         ))}
@@ -266,7 +266,7 @@ function TarefaModal({ tarefa, statusInicial, colunas, clientes, usuarios, onClo
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-surface rounded-card w-full max-w-lg shadow-xl flex flex-col max-h-[90vh]">
-        <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+        <div className="flex items-center justify-between p-6 border-b border-[#E0D0B4]/50">
           <h2 className="font-display text-xl font-semibold text-text-main">
             {isNova ? "Nova Tarefa" : "Editar Tarefa"}
           </h2>
@@ -282,7 +282,7 @@ function TarefaModal({ tarefa, statusInicial, colunas, clientes, usuarios, onClo
 
           <div className="space-y-1.5">
             <Label>Descrição</Label>
-            <textarea className="w-full rounded-btn border border-[#E8D5A3] bg-bg p-3 text-sm text-text-main placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-gold/30 resize-none"
+            <textarea className="w-full rounded-btn border border-[#E0D0B4] bg-bg p-3 text-sm text-text-main placeholder:text-text-muted/60 focus:outline-none focus:ring-2 focus:ring-gold/30 resize-none"
               rows={2} placeholder="Detalhes, contexto, links..." value={form.descricao}
               onChange={(e) => set("descricao", e.target.value)} />
           </div>
@@ -291,14 +291,14 @@ function TarefaModal({ tarefa, statusInicial, colunas, clientes, usuarios, onClo
             <div className="space-y-1.5">
               <Label>Coluna</Label>
               <select value={form.status} onChange={(e) => set("status", e.target.value)}
-                className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
+                className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
                 {colunas.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
               </select>
             </div>
             <div className="space-y-1.5">
               <Label>Prioridade</Label>
               <select value={form.prioridade} onChange={(e) => set("prioridade", e.target.value)}
-                className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
+                className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
                 <option value="baixa">Baixa</option>
                 <option value="media">Média</option>
                 <option value="alta">Alta</option>
@@ -309,7 +309,7 @@ function TarefaModal({ tarefa, statusInicial, colunas, clientes, usuarios, onClo
           <div className="space-y-1.5">
             <Label>Cliente (opcional)</Label>
             <select value={form.cliente_id} onChange={(e) => { set("cliente_id", e.target.value); set("responsavel_tipo", ""); set("responsavel_id", ""); set("responsavel_externo", ""); }}
-              className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
+              className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
               <option value="">Interno (sem cliente)</option>
               {clientes.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
             </select>
@@ -326,7 +326,7 @@ function TarefaModal({ tarefa, statusInicial, colunas, clientes, usuarios, onClo
                 else if (val.startsWith("u:")) { set("responsavel_tipo", "interno"); set("responsavel_id", val.slice(2)); set("responsavel_externo", ""); }
                 else if (val.startsWith("e:")) { set("responsavel_tipo", "externo"); set("responsavel_externo", val.slice(2)); set("responsavel_id", ""); }
               }}
-              className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
+              className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
               <option value="">Sem responsável</option>
               {usuarios.length > 0 && (
                 <optgroup label="— Equipe interna">
@@ -347,7 +347,7 @@ function TarefaModal({ tarefa, statusInicial, colunas, clientes, usuarios, onClo
           </div>
         </div>
 
-        <div className="flex items-center justify-between p-6 border-t border-[#E8D5A3]/50">
+        <div className="flex items-center justify-between p-6 border-t border-[#E0D0B4]/50">
           <div>
             {!isNova && (
               <button onClick={excluir} className="text-sm text-danger hover:underline">Excluir</button>
@@ -489,7 +489,7 @@ export default function TarefasPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-btn border border-[#E8D5A3] overflow-hidden">
+          <div className="flex rounded-btn border border-[#E0D0B4] overflow-hidden">
             <button onClick={() => setView("kanban")}
               className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${view === "kanban" ? "bg-primary text-white" : "text-text-muted hover:text-text-main"}`}>
               <LayoutGrid size={13} /> Kanban
@@ -507,13 +507,13 @@ export default function TarefasPage() {
       <div className="flex items-center gap-1.5 mb-5 overflow-x-auto pb-1 scrollbar-hide">
         {[{ key: "todos", label: "Todas" }, { key: "minhas", label: "Minhas" }].map((f) => (
           <button key={f.key} onClick={() => setFiltro(f.key)}
-            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all flex-shrink-0 ${filtro === f.key ? "bg-primary text-gold" : "bg-surface border border-[#E8D5A3]/60 text-text-muted hover:text-text-main"}`}>
+            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all flex-shrink-0 ${filtro === f.key ? "bg-primary text-gold" : "bg-surface border border-[#E0D0B4]/60 text-text-muted hover:text-text-main"}`}>
             {f.label}
           </button>
         ))}
         {clientesComTarefas.map((c) => (
           <button key={c.id} onClick={() => setFiltro(c.id)}
-            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all flex-shrink-0 ${filtro === c.id ? "bg-primary text-gold" : "bg-surface border border-[#E8D5A3]/60 text-text-muted hover:text-text-main"}`}>
+            className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all flex-shrink-0 ${filtro === c.id ? "bg-primary text-gold" : "bg-surface border border-[#E0D0B4]/60 text-text-muted hover:text-text-main"}`}>
             {c.nome}
           </button>
         ))}
@@ -581,7 +581,7 @@ export default function TarefasPage() {
                   <span className="text-xs text-text-muted">({items.length})</span>
                 </div>
                 <Card>
-                  <CardContent className="p-0 divide-y divide-[#E8D5A3]/30">
+                  <CardContent className="p-0 divide-y divide-[#E0D0B4]/30">
                     {items.map((t) => {
                       const atrasada = t.data_prazo && t.data_prazo < hoje && !tarefasNaColunaConcluido(t);
                       const nomeResp = t.responsavel_externo || t.responsavel_nome;

@@ -60,7 +60,7 @@ export function consolidarQ12(respostas: RespostaIndividual[]): ConsolidadoQ12 {
 
   let nivel: string, cor: string;
   if (percentualGeral >= 80) { nivel = "Alto Engajamento"; cor = "#27AE60"; }
-  else if (percentualGeral >= 60) { nivel = "Engajamento Moderado"; cor = "#C9A84C"; }
+  else if (percentualGeral >= 60) { nivel = "Engajamento Moderado"; cor = "#C2A878"; }
   else if (percentualGeral >= 40) { nivel = "Baixo Engajamento"; cor = "#E67E22"; }
   else { nivel = "Desengajamento Crítico"; cor = "#C0392B"; }
 
@@ -125,7 +125,7 @@ export function consolidarGPTW(respostas: RespostaIndividual[]): ConsolidadoGPTW
 
   let nivel: string, cor: string;
   if (trustIndexMedio >= 80) { nivel = "Cultura de Alto Desempenho"; cor = "#27AE60"; }
-  else if (trustIndexMedio >= 65) { nivel = "Boa Cultura"; cor = "#C9A84C"; }
+  else if (trustIndexMedio >= 65) { nivel = "Boa Cultura"; cor = "#C2A878"; }
   else if (trustIndexMedio >= 50) { nivel = "Cultura em Desenvolvimento"; cor = "#E67E22"; }
   else { nivel = "Cultura em Risco"; cor = "#C0392B"; }
 

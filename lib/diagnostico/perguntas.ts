@@ -104,7 +104,7 @@ export function calcularResultado(respostas: Record<string, number>): Resultado 
 
 export function faixaScore(score: number): { label: string; cor: string; descricao: string } {
   if (score >= 8) return { label: "Zona de Excelência", cor: "#2D6A4F", descricao: "Manter e expandir" };
-  if (score >= 6) return { label: "Zona de Competência", cor: "#C9A84C", descricao: "Consolidar" };
+  if (score >= 6) return { label: "Zona de Competência", cor: "#C2A878", descricao: "Consolidar" };
   if (score >= 4) return { label: "Zona de Atenção", cor: "#E9C46A", descricao: "Desenvolver ativamente" };
   return { label: "Zona Crítica", cor: "#C1121F", descricao: "Prioridade imediata" };
 }

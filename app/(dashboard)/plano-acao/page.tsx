@@ -31,12 +31,12 @@ const TIPO_LABELS: Record<string, string> = {
 };
 
 const TIPO_COR: Record<string, string> = {
-  diagnostico_3d: "#0D2B2E",
+  diagnostico_3d: "#1A2E3A",
   radar_360: "#2980B9",
   disc: "#E67E22",
   q12: "#27AE60",
   gptw: "#8E44AD",
-  canvas_estrategico: "#C9A84C",
+  canvas_estrategico: "#C2A878",
   rodada_q12: "#27AE60",
   rodada_gptw: "#8E44AD",
 };
@@ -95,8 +95,8 @@ export default function PlanoAcaoPage() {
       {/* Métricas */}
       <div className="grid grid-cols-3 gap-4 mb-8">
         {[
-          { label: "Total de planos", value: totalPlanos, icon: CheckSquare, cor: "#0D2B2E" },
-          { label: "Em andamento", value: totalEmAndamento, icon: Clock, cor: "#C9A84C" },
+          { label: "Total de planos", value: totalPlanos, icon: CheckSquare, cor: "#1A2E3A" },
+          { label: "Em andamento", value: totalEmAndamento, icon: Clock, cor: "#C2A878" },
           { label: "Concluídos", value: totalConcluidos, icon: CheckSquare, cor: "#27AE60" },
         ].map((m) => (
           <Card key={m.label}>
@@ -122,7 +122,7 @@ export default function PlanoAcaoPage() {
             className={`px-4 py-2 rounded-btn text-sm font-medium transition-all ${
               filtro === f
                 ? "bg-primary text-gold"
-                : "bg-surface text-text-muted border border-[#E8D5A3]/50 hover:text-text-main"
+                : "bg-surface text-text-muted border border-[#E0D0B4]/50 hover:text-text-main"
             }`}
           >
             {f === "todos" ? "Todos" : f === "em_andamento" ? "Em andamento" : "Concluídos"}
@@ -134,7 +134,7 @@ export default function PlanoAcaoPage() {
       <div className="space-y-3">
         {filtrados.map((p) => {
           const progresso = p.total > 0 ? Math.round((p.concluidos / p.total) * 100) : 0;
-          const cor = TIPO_COR[p.tipo] ?? "#0D2B2E";
+          const cor = TIPO_COR[p.tipo] ?? "#1A2E3A";
           const concluido = p.concluidos === p.total && p.total > 0;
 
           return (
@@ -164,7 +164,7 @@ export default function PlanoAcaoPage() {
                       </p>
                       {/* Barra de progresso */}
                       <div className="mt-2 flex items-center gap-3">
-                        <div className="flex-1 h-2 bg-[#E8D5A3]/40 rounded-full">
+                        <div className="flex-1 h-2 bg-[#E0D0B4]/40 rounded-full">
                           <div
                             className="h-2 rounded-full transition-all"
                             style={{ width: `${progresso}%`, backgroundColor: concluido ? "#27AE60" : cor }}

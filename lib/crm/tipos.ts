@@ -31,7 +31,7 @@ export type Lead = {
 
 export const COLUNAS: { id: Etapa; label: string; cor: string; prob: number }[] = [
   { id: "novo",        label: "Novo Lead",             cor: "#6B6B6B", prob: 10 },
-  { id: "contato",     label: "Contato Realizado",      cor: "#C9A84C", prob: 25 },
+  { id: "contato",     label: "Contato Realizado",      cor: "#C2A878", prob: 25 },
   { id: "diagnostico", label: "Diagnóstico Agendado",   cor: "#2196F3", prob: 50 },
   { id: "proposta",    label: "Proposta Enviada",        cor: "#9C27B0", prob: 70 },
   { id: "negociacao",  label: "Em Negociação",           cor: "#FF9800", prob: 85 },

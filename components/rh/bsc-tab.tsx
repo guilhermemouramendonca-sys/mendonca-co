@@ -25,7 +25,7 @@ const PERSPECTIVAS: { key: Perspectiva; emoji: string; descricao: string; cor: s
   { key: "Financeira",        emoji: "💰", descricao: "Crescimento e lucratividade",  cor: "#27AE60" },
   { key: "Clientes",          emoji: "🤝", descricao: "Satisfação e retenção",         cor: "#2980B9" },
   { key: "Processos Internos",emoji: "⚙️",  descricao: "Eficiência e qualidade",       cor: "#8E44AD" },
-  { key: "Aprendizado",       emoji: "📚", descricao: "Pessoas, cultura e inovação",   cor: "#C9A84C" },
+  { key: "Aprendizado",       emoji: "📚", descricao: "Pessoas, cultura e inovação",   cor: "#C2A878" },
 ];
 
 const TENDENCIA_ICONS = {
@@ -33,7 +33,7 @@ const TENDENCIA_ICONS = {
   estavel: Minus,
   piora: TrendingDown,
 };
-const TENDENCIA_CORES = { melhora: "#27AE60", estavel: "#C9A84C", piora: "#C0392B" };
+const TENDENCIA_CORES = { melhora: "#27AE60", estavel: "#C2A878", piora: "#C0392B" };
 
 const EMPTY: Omit<BscIndicador, "id" | "cliente_id"> = {
   perspectiva: "Financeira",
@@ -49,7 +49,7 @@ function semaforo(meta: number, atual: number): string {
   if (meta <= 0) return "#95A5A6";
   const pct = (atual / meta) * 100;
   if (pct >= 90) return "#27AE60";
-  if (pct >= 70) return "#C9A84C";
+  if (pct >= 70) return "#C2A878";
   return "#C0392B";
 }
 
@@ -114,7 +114,7 @@ export default function BSCTab({ clienteId, indicadores, onRefresh }: {
     <div>
       {/* Score geral */}
       {indicadores.length > 0 && (
-        <div className="flex items-center gap-6 mb-8 p-5 bg-surface rounded-card border border-[#E8D5A3]/50">
+        <div className="flex items-center gap-6 mb-8 p-5 bg-surface rounded-card border border-[#E0D0B4]/50">
           <div className="text-center">
             <p className="text-xs text-text-muted uppercase tracking-wide mb-1">BSC Geral</p>
             <p className="font-mono-data text-4xl font-bold" style={{ color: semaforo(100, scoreGeral) }}>{scoreGeral}%</p>
@@ -144,9 +144,9 @@ export default function BSCTab({ clienteId, indicadores, onRefresh }: {
         {PERSPECTIVAS.map((persp) => {
           const inds = indicadores.filter((i) => i.perspectiva === persp.key);
           return (
-            <div key={persp.key} className="bg-surface rounded-card border border-[#E8D5A3]/50 overflow-hidden">
+            <div key={persp.key} className="bg-surface rounded-card border border-[#E0D0B4]/50 overflow-hidden">
               {/* Header da perspectiva */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8D5A3]/30" style={{ borderLeftWidth: 3, borderLeftColor: persp.cor }}>
+              <div className="flex items-center justify-between px-5 py-4 border-b border-[#E0D0B4]/30" style={{ borderLeftWidth: 3, borderLeftColor: persp.cor }}>
                 <div>
                   <div className="flex items-center gap-2">
                     <span>{persp.emoji}</span>
@@ -192,7 +192,7 @@ export default function BSCTab({ clienteId, indicadores, onRefresh }: {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <div className="flex-1 bg-[#E8D5A3]/30 rounded-full h-2">
+                            <div className="flex-1 bg-[#E0D0B4]/30 rounded-full h-2">
                               <div className="h-2 rounded-full transition-all" style={{ width: `${pct}%`, backgroundColor: cor }} />
                             </div>
                             <div className="flex items-center gap-1 flex-shrink-0">
@@ -200,7 +200,7 @@ export default function BSCTab({ clienteId, indicadores, onRefresh }: {
                                 type="number"
                                 value={ind.resultado_atual}
                                 onChange={(e) => atualizarAtual(ind.id, Number(e.target.value))}
-                                className="w-16 h-6 text-xs text-center rounded border border-[#E8D5A3] bg-bg text-text-main focus:outline-none focus:ring-1 focus:ring-gold/30"
+                                className="w-16 h-6 text-xs text-center rounded border border-[#E0D0B4] bg-bg text-text-main focus:outline-none focus:ring-1 focus:ring-gold/30"
                               />
                               <span className="text-[10px] text-text-muted">/{ind.meta} {ind.unidade}</span>
                             </div>
@@ -226,13 +226,13 @@ export default function BSCTab({ clienteId, indicadores, onRefresh }: {
       {modalAberto && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-[#E8D5A3]/30">
+            <div className="p-6 border-b border-[#E0D0B4]/30">
               <h2 className="font-display text-xl font-semibold text-text-main">{editando ? "Editar indicador" : "Novo indicador BSC"}</h2>
             </div>
             <div className="p-6 space-y-4">
               <div className="space-y-1.5">
                 <Label>Perspectiva</Label>
-                <select value={form.perspectiva} onChange={(e) => setForm({ ...form, perspectiva: e.target.value as Perspectiva })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                <select value={form.perspectiva} onChange={(e) => setForm({ ...form, perspectiva: e.target.value as Perspectiva })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                   {PERSPECTIVAS.map((p) => <option key={p.key} value={p.key}>{p.emoji} {p.key}</option>)}
                 </select>
               </div>
@@ -267,7 +267,7 @@ export default function BSCTab({ clienteId, indicadores, onRefresh }: {
                       <button
                         key={t}
                         onClick={() => setForm({ ...form, tendencia: t })}
-                        className={`flex-1 py-2 rounded-btn text-xs font-medium flex items-center justify-center gap-1.5 border transition-all ${form.tendencia === t ? "border-transparent text-white" : "border-[#E8D5A3]/50 text-text-muted hover:text-text-main"}`}
+                        className={`flex-1 py-2 rounded-btn text-xs font-medium flex items-center justify-center gap-1.5 border transition-all ${form.tendencia === t ? "border-transparent text-white" : "border-[#E0D0B4]/50 text-text-muted hover:text-text-main"}`}
                         style={form.tendencia === t ? { backgroundColor: TENDENCIA_CORES[t] } : {}}
                       >
                         <Icon size={12} /> {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -277,7 +277,7 @@ export default function BSCTab({ clienteId, indicadores, onRefresh }: {
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-[#E8D5A3]/30 flex justify-end gap-3">
+            <div className="p-6 border-t border-[#E0D0B4]/30 flex justify-end gap-3">
               <Button variant="secondary" onClick={() => setModalAberto(false)}>Cancelar</Button>
               <Button onClick={salvar} disabled={salvando || !form.nome.trim()}>{salvando ? "Salvando..." : "Salvar"}</Button>
             </div>

@@ -304,7 +304,7 @@ export default function Radar360PublicoPage() {
             {/* Header */}
             <div className="bg-surface rounded-card p-6 text-center shadow-lg">
               <div className="w-14 h-14 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C2A878" strokeWidth="2">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
@@ -460,7 +460,7 @@ export default function Radar360PublicoPage() {
 
   // ── PERGUNTAS ─────────────────────────────────────────────
   const nivelCores: Record<string, string> = {
-    "Estratégico": "#C9A84C",
+    "Estratégico": "#C2A878",
     "Tático": "#2980B9",
     "Operacional": "#27AE60",
   };
@@ -479,7 +479,7 @@ export default function Radar360PublicoPage() {
             {pilares.map((pid) => {
               const pergsDopilar = PERGUNTAS_RADAR.filter((p) => p.dimensaoId === pid);
               const respondidas = pergsDopilar.filter((p) => respostas[p.id] !== undefined).length;
-              const cor = DIMENSOES.find((d) => d.id === pid)?.corHex ?? "#C9A84C";
+              const cor = DIMENSOES.find((d) => d.id === pid)?.corHex ?? "#C2A878";
               return (
                 <div key={pid} className="flex-1 flex flex-col gap-0.5">
                   {[0, 1, 2].map((i) => (

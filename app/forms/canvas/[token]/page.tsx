@@ -141,7 +141,7 @@ export default function CanvasPublicoPage() {
             <p className="text-gold/60 mt-1 text-sm">Canvas Estratégico</p>
           </div>
           <div className="bg-white rounded-card p-8 shadow-lg">
-            <h2 className="font-display text-2xl font-semibold text-[#0D2B2E] mb-2">Antes de começar</h2>
+            <h2 className="font-display text-2xl font-semibold text-[#1A2E3A] mb-2">Antes de começar</h2>
             <p className="text-[#6B6B6B] text-sm mb-6">
               6 perguntas · ~10 minutos. Responda com honestidade — quanto mais específico, mais útil será o Canvas.
             </p>
@@ -193,24 +193,24 @@ export default function CanvasPublicoPage() {
             <h1 className="font-display text-4xl font-bold text-gold">Mendonça & Co</h1>
           </div>
           <div className="bg-white rounded-card p-10 shadow-lg">
-            <div className="w-16 h-16 rounded-full bg-[#C9A84C]/20 flex items-center justify-center mx-auto mb-6 text-3xl">
+            <div className="w-16 h-16 rounded-full bg-[#C2A878]/20 flex items-center justify-center mx-auto mb-6 text-3xl">
               🎯
             </div>
-            <h2 className="font-display text-2xl font-bold text-[#0D2B2E] mb-3">Canvas concluído!</h2>
+            <h2 className="font-display text-2xl font-bold text-[#1A2E3A] mb-3">Canvas concluído!</h2>
             <p className="text-[#6B6B6B] text-sm leading-relaxed mb-6">
               Sua resposta foi registrada. Em breve entraremos em contato com o Canvas completo e uma análise estratégica personalizada.
             </p>
 
             {(gerandoPdf || pdfUrl) && (
-              <div className="mb-4 p-4 rounded-xl bg-[#F5F0E8] text-center">
+              <div className="mb-4 p-4 rounded-xl bg-[#F5F5F3] text-center">
                 {gerandoPdf ? (
                   <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-[#C9A84C] border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-[#C2A878] border-t-transparent rounded-full animate-spin" />
                     <p className="text-[#6B6B6B] text-sm">Gerando seu PDF...</p>
                   </div>
                 ) : pdfUrl ? (
                   <a href={pdfUrl} target="_blank" rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 py-2 rounded-lg bg-[#C9A84C]/20 text-[#0D2B2E] text-sm font-medium hover:bg-[#C9A84C]/30 transition-all">
+                    className="flex items-center justify-center gap-2 py-2 rounded-lg bg-[#C2A878]/20 text-[#1A2E3A] text-sm font-medium hover:bg-[#C2A878]/30 transition-all">
                     Baixar PDF do Canvas
                   </a>
                 ) : null}
@@ -226,12 +226,12 @@ export default function CanvasPublicoPage() {
 
   // FASE: perguntas
   return (
-    <div className="min-h-screen bg-[#F5F0E8] py-12 px-4">
+    <div className="min-h-screen bg-[#F5F5F3] py-12 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <p className="text-[#0D2B2E]/60 text-sm font-medium mb-1">Mendonça & Co</p>
-          <h1 className="font-display text-3xl font-bold text-[#0D2B2E]">Canvas Estratégico</h1>
+          <p className="text-[#1A2E3A]/60 text-sm font-medium mb-1">Mendonça & Co</p>
+          <h1 className="font-display text-3xl font-bold text-[#1A2E3A]">Canvas Estratégico</h1>
           <p className="text-[#6B6B6B] text-sm mt-2">{nome} · {totalPreenchido} de {PERGUNTAS_CANVAS.length} respondidas</p>
         </div>
 
@@ -250,12 +250,12 @@ export default function CanvasPublicoPage() {
                       <span className="text-xs font-semibold text-[#6B6B6B] uppercase tracking-wide">{i + 1} / {PERGUNTAS_CANVAS.length}</span>
                       {preenchida && <span className="text-xs text-green-600 font-medium">✓ preenchida</span>}
                     </div>
-                    <h3 className="font-display text-lg font-bold text-[#0D2B2E] mt-1">{q.titulo}</h3>
+                    <h3 className="font-display text-lg font-bold text-[#1A2E3A] mt-1">{q.titulo}</h3>
                     <p className="text-[#6B6B6B] text-sm mt-1">{q.pergunta}</p>
                   </div>
                 </div>
                 <textarea
-                  className="w-full rounded-lg border border-[#E8D5A3] bg-[#F5F0E8] p-4 text-sm text-[#1A1A1A] placeholder:text-[#6B6B6B]/60 focus:outline-none focus:ring-2 focus:border-transparent resize-none"
+                  className="w-full rounded-lg border border-[#E0D0B4] bg-[#F5F5F3] p-4 text-sm text-[#1A1A1A] placeholder:text-[#6B6B6B]/60 focus:outline-none focus:ring-2 focus:border-transparent resize-none"
                   style={{ minHeight: 120 }}
                   placeholder={q.placeholder}
                   value={valor}

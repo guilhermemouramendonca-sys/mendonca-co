@@ -83,17 +83,17 @@ export default function MRRTab({ contratos, cobrancas }: { contratos: Contrato[]
           <p className="font-mono-data text-3xl font-bold text-gold">{formatCurrency(mrr)}</p>
           <p className="text-gold/50 text-xs mt-1">receita mensal recorrente</p>
         </div>
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
           <p className="text-text-muted text-xs uppercase tracking-wide mb-1">ARR</p>
           <p className="font-mono-data text-2xl font-bold text-text-main">{formatCurrency(arr)}</p>
           <p className="text-text-muted text-xs mt-1">projeção anual</p>
         </div>
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
           <p className="text-text-muted text-xs uppercase tracking-wide mb-1">Ticket médio</p>
           <p className="font-mono-data text-2xl font-bold text-text-main">{formatCurrency(ticketMedio)}</p>
           <p className="text-text-muted text-xs mt-1">{clientesAtivos} cliente{clientesAtivos !== 1 ? "s" : ""} ativo{clientesAtivos !== 1 ? "s" : ""}</p>
         </div>
-        <div className={`rounded-card border p-5 ${taxaInadimplencia > 20 ? "bg-red-50 border-red-200" : taxaInadimplencia > 5 ? "bg-yellow-50 border-yellow-200" : "bg-surface border-[#E8D5A3]/50"}`}>
+        <div className={`rounded-card border p-5 ${taxaInadimplencia > 20 ? "bg-red-50 border-red-200" : taxaInadimplencia > 5 ? "bg-yellow-50 border-yellow-200" : "bg-surface border-[#E0D0B4]/50"}`}>
           <p className="text-text-muted text-xs uppercase tracking-wide mb-1">Inadimplência</p>
           <p className={`font-mono-data text-2xl font-bold ${taxaInadimplencia > 20 ? "text-red-600" : taxaInadimplencia > 5 ? "text-yellow-600" : "text-green-600"}`}>
             {taxaInadimplencia}%
@@ -105,7 +105,7 @@ export default function MRRTab({ contratos, cobrancas }: { contratos: Contrato[]
       {/* ── Linha 2: histórico + caixa do mês ──────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Histórico 6 meses */}
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
           <h3 className="font-display text-base font-semibold text-text-main mb-5">Recebimentos — últimos 6 meses</h3>
           <div className="flex items-end gap-2 h-36">
             {historico.map((h) => {
@@ -120,7 +120,7 @@ export default function MRRTab({ contratos, cobrancas }: { contratos: Contrato[]
                       className="w-full rounded-t transition-all"
                       style={{
                         height: pct > 0 ? `${Math.max(pct, 4)}%` : "2px",
-                        backgroundColor: h.isMesAtual ? "#C9A84C" : h.recebido > 0 ? "#C9A84C60" : "#E8D5A3",
+                        backgroundColor: h.isMesAtual ? "#C2A878" : h.recebido > 0 ? "#C2A87860" : "#E0D0B4",
                         minHeight: "2px",
                       }}
                     />
@@ -134,7 +134,7 @@ export default function MRRTab({ contratos, cobrancas }: { contratos: Contrato[]
           </div>
           {/* MRR linha de referência */}
           {mrr > 0 && (
-            <p className="text-xs text-text-muted mt-3 border-t border-dashed border-[#E8D5A3] pt-2">
+            <p className="text-xs text-text-muted mt-3 border-t border-dashed border-[#E0D0B4] pt-2">
               Linha MRR: <span className="font-semibold text-gold">{formatCurrency(mrr)}/mês</span>
             </p>
           )}
@@ -142,7 +142,7 @@ export default function MRRTab({ contratos, cobrancas }: { contratos: Contrato[]
 
         {/* Caixa atual + próximas */}
         <div className="space-y-4">
-          <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+          <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
             <h3 className="font-display text-base font-semibold text-text-main mb-3">Caixa do mês</h3>
             <div className="grid grid-cols-3 gap-3">
               <div>
@@ -163,7 +163,7 @@ export default function MRRTab({ contratos, cobrancas }: { contratos: Contrato[]
           </div>
 
           {/* MRR por cliente */}
-          <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5 flex-1">
+          <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5 flex-1">
             <h3 className="font-display text-base font-semibold text-text-main mb-3">MRR por cliente</h3>
             {mrrOrdenado.length === 0 ? (
               <p className="text-text-muted text-sm text-center py-4">Nenhum retainer ativo.</p>
@@ -180,7 +180,7 @@ export default function MRRTab({ contratos, cobrancas }: { contratos: Contrato[]
                           <span className="font-mono-data text-sm font-semibold text-text-main">{formatCurrency(c.valor)}</span>
                         </div>
                       </div>
-                      <div className="w-full bg-[#E8D5A3]/30 rounded-full h-1.5">
+                      <div className="w-full bg-[#E0D0B4]/30 rounded-full h-1.5">
                         <div className="h-1.5 rounded-full bg-gold" style={{ width: `${pct}%` }} />
                       </div>
                     </div>
@@ -219,7 +219,7 @@ export default function MRRTab({ contratos, cobrancas }: { contratos: Contrato[]
           )}
 
           {proximasCobrancas.length > 0 && (
-            <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+            <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
               <h3 className="font-display text-base font-semibold text-text-main mb-3">
                 Próximas cobranças (30 dias) · {formatCurrency(totalProximas)}
               </h3>

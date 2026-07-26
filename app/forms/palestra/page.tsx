@@ -33,7 +33,7 @@ export default function PalestraPage() {
             <select
               value={tema}
               onChange={(e) => setTema(e.target.value)}
-              className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+              className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
             >
               <option value="">Selecione...</option>
               {TEMAS.map((t) => <option key={t} value={t}>{t}</option>)}
@@ -50,7 +50,7 @@ export default function PalestraPage() {
               <select
                 value={formato}
                 onChange={(e) => setFormato(e.target.value)}
-                className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 <option value="">Selecione...</option>
                 <option value="presencial">Presencial</option>

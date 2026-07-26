@@ -92,7 +92,7 @@ export function FormBase({ titulo, subtitulo, origem, tipoServico, camposExtras,
       <div className="min-h-screen bg-primary flex items-center justify-center p-4">
         <div className="w-full max-w-md text-center">
           <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-6">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C2A878" strokeWidth="2">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
@@ -164,7 +164,7 @@ export function FormBase({ titulo, subtitulo, origem, tipoServico, camposExtras,
               <Label>Como nos encontrou? *</Label>
               <select
                 {...register("como_encontrou")}
-                className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 <option value="">Selecione...</option>
                 {COMO_ENCONTROU.map((o) => <option key={o} value={o}>{o}</option>)}

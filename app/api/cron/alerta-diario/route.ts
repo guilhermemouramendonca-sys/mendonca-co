@@ -71,7 +71,7 @@ export async function GET(req: NextRequest) {
 
   const prioridadeCor: Record<string, string> = {
     alta:  "#C0392B",
-    media: "#C9A84C",
+    media: "#C2A878",
     baixa: "#6B6B6B",
   };
 
@@ -130,32 +130,32 @@ export async function GET(req: NextRequest) {
 
   const resumo = [
     tarefasAtrasadas?.length ? `<span style="color:#C0392B;font-weight:700">${tarefasAtrasadas.length} tarefa${tarefasAtrasadas.length > 1 ? "s" : ""} atrasada${tarefasAtrasadas.length > 1 ? "s" : ""}</span>` : null,
-    tarefasHoje?.length ? `<span style="color:#C9A84C;font-weight:700">${tarefasHoje.length} para hoje</span>` : null,
+    tarefasHoje?.length ? `<span style="color:#C2A878;font-weight:700">${tarefasHoje.length} para hoje</span>` : null,
     followups?.length ? `<span style="color:#2980B9;font-weight:700">${followups.length} follow-up${followups.length > 1 ? "s" : ""} comercia${followups.length > 1 ? "is" : "l"}</span>` : null,
   ].filter(Boolean).join(" · ");
 
   const html = `
     <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
-      <div style="background:#0D2B2E;padding:24px 32px;border-radius:8px 8px 0 0">
-        <h1 style="color:#C9A84C;margin:0;font-size:20px">Mendonça &amp; Co</h1>
-        <p style="color:#C9A84C;opacity:0.7;margin:6px 0 0;font-size:13px">Agenda do dia — ${dataFormatada}</p>
+      <div style="background:#1A2E3A;padding:24px 32px;border-radius:8px 8px 0 0">
+        <h1 style="color:#C2A878;margin:0;font-size:20px">Mendonça &amp; Co</h1>
+        <p style="color:#C2A878;opacity:0.7;margin:6px 0 0;font-size:13px">Agenda do dia — ${dataFormatada}</p>
       </div>
-      <div style="background:#fff;padding:28px 32px;border-radius:0 0 8px 8px;border:1px solid #e8d5a3;border-top:none;color:#1a1a1a">
+      <div style="background:#fff;padding:28px 32px;border-radius:0 0 8px 8px;border:1px solid #e0d0b4;border-top:none;color:#1a1a1a">
 
         <p style="font-size:14px;color:#555;margin:0 0 4px">Bom dia, Guiga! Aqui está o resumo de hoje:</p>
         <p style="font-size:15px;margin:0 0 24px">${resumo}</p>
 
         ${secaoTarefas(tarefasAtrasadas ?? [], "Tarefas atrasadas", "#C0392B")}
-        ${secaoTarefas(tarefasHoje ?? [], "Tarefas de hoje", "#C9A84C")}
+        ${secaoTarefas(tarefasHoje ?? [], "Tarefas de hoje", "#C2A878")}
         ${secaoFollowups(followups ?? [])}
 
-        <div style="margin-top:28px;padding-top:20px;border-top:1px solid #e8d5a3;text-align:center">
+        <div style="margin-top:28px;padding-top:20px;border-top:1px solid #e0d0b4;text-align:center">
           <a href="https://mendonca-co-b31a.vercel.app/tarefas"
-            style="display:inline-block;background:#0D2B2E;color:#C9A84C;text-decoration:none;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600;margin-right:8px">
+            style="display:inline-block;background:#1A2E3A;color:#C2A878;text-decoration:none;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600;margin-right:8px">
             Ver Tarefas
           </a>
           <a href="https://mendonca-co-b31a.vercel.app/leads"
-            style="display:inline-block;background:#0D2B2E;color:#C9A84C;text-decoration:none;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600">
+            style="display:inline-block;background:#1A2E3A;color:#C2A878;text-decoration:none;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600">
             Ver Pipeline
           </a>
         </div>

@@ -2,8 +2,8 @@ import { Document, Page, Text, View, StyleSheet, Svg, Circle } from "@react-pdf/
 import type { ResultadoGPTW } from "@/lib/pesquisas/gptw";
 
 const C = {
-  primary: "#0D2B2E", gold: "#C9A84C", goldLight: "#E8D5A3",
-  bg: "#F5F0E8", text: "#1A1A1A", muted: "#6B6B6B", white: "#FFFFFF",
+  primary: "#1A2E3A", gold: "#C2A878", goldLight: "#E0D0B4",
+  bg: "#F5F5F3", text: "#1A1A1A", muted: "#6B6B6B", white: "#FFFFFF",
   success: "#27AE60", warning: "#E67E22", danger: "#C0392B",
 };
 
@@ -123,7 +123,7 @@ function TrustGauge({ value }: { value: number }) {
 
   return (
     <Svg width={160} height={160} viewBox="0 0 160 160">
-      <Circle cx={cx} cy={cy} r={r} fill="none" stroke="#E8D5A3" strokeWidth={14} />
+      <Circle cx={cx} cy={cy} r={r} fill="none" stroke="#E0D0B4" strokeWidth={14} />
       <Circle
         cx={cx} cy={cy} r={r}
         fill="none"
@@ -216,7 +216,7 @@ export function GPTWPDF({ nome, empresa, cargo, resultado, data }: Props) {
                   <Text style={{ fontSize: 10, color: C.text }}>{dim}</Text>
                   <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: c }}>{pct}%</Text>
                 </View>
-                <View style={{ height: 8, backgroundColor: "#E8D5A3", borderRadius: 4 }}>
+                <View style={{ height: 8, backgroundColor: "#E0D0B4", borderRadius: 4 }}>
                   <View style={{ height: 8, borderRadius: 4, width: `${pct}%`, backgroundColor: c }} />
                 </View>
                 <Text style={{ fontSize: 8, color: C.muted, marginTop: 2 }}>{DIM_DESC[dim]}</Text>

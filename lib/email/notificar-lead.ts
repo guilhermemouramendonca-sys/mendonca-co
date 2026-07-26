@@ -42,16 +42,16 @@ export async function notificarNovoLead(params: NotificarLeadParams) {
     subject: `Novo lead: ${nome} — ${origemLabel}`,
     html: `
       <div style="font-family:sans-serif;max-width:560px;margin:0 auto">
-        <div style="background:#0D2B2E;padding:24px 32px;border-radius:8px 8px 0 0">
-          <h1 style="color:#C9A84C;margin:0;font-size:20px">Mendonça &amp; Co</h1>
-          <p style="color:#C9A84C;opacity:0.7;margin:4px 0 0;font-size:13px">Novo lead via ${origemLabel}</p>
+        <div style="background:#1A2E3A;padding:24px 32px;border-radius:8px 8px 0 0">
+          <h1 style="color:#C2A878;margin:0;font-size:20px">Mendonça &amp; Co</h1>
+          <p style="color:#C2A878;opacity:0.7;margin:4px 0 0;font-size:13px">Novo lead via ${origemLabel}</p>
         </div>
-        <div style="background:#fff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e8d5a3;border-top:none;line-height:1.8;color:#1a1a1a;font-size:14px">
+        <div style="background:#fff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e0d0b4;border-top:none;line-height:1.8;color:#1a1a1a;font-size:14px">
           ${linhas}
-          <div style="margin-top:24px;padding-top:20px;border-top:1px solid #e8d5a3">
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid #e0d0b4">
             <p style="margin:0 0 12px;font-size:13px;color:#555">Agende uma conversa de diagnóstico:</p>
             <a href="https://calendar.app.google/ZHeh2G1QZJvtFUYX7"
-              style="display:inline-block;background:#0D2B2E;color:#C9A84C;text-decoration:none;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600">
+              style="display:inline-block;background:#1A2E3A;color:#C2A878;text-decoration:none;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600">
               📅 Agendar Conversa de 30min
             </a>
           </div>

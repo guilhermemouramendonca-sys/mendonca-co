@@ -55,7 +55,7 @@ export function KanbanCard({ lead, onClick, isDragging }: Props) {
       {...attributes}
       onClick={onClick}
       className={cn(
-        "bg-surface rounded-btn p-3 border border-[#E8D5A3]/50 cursor-pointer hover:border-gold/50 hover:shadow-sm transition-all select-none",
+        "bg-surface rounded-btn p-3 border border-[#E0D0B4]/50 cursor-pointer hover:border-gold/50 hover:shadow-sm transition-all select-none",
         isDragging && "opacity-50 rotate-2 shadow-lg"
       )}
     >

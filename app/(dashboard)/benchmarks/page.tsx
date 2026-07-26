@@ -53,7 +53,7 @@ const METRICA_LABELS: Record<string, string> = {
 const COR_VALOR = (v: number, max = 100) => {
   const pct = (v / max) * 100;
   if (pct >= 70) return "#27AE60";
-  if (pct >= 50) return "#C9A84C";
+  if (pct >= 50) return "#C2A878";
   if (pct >= 30) return "#E67E22";
   return "#C0392B";
 };
@@ -147,7 +147,7 @@ export default function BenchmarksPage() {
             key={aba}
             onClick={() => setAbaAtiva(aba)}
             className={`px-4 py-2 rounded-btn text-sm font-medium transition-all ${
-              abaAtiva === aba ? "bg-primary text-gold" : "bg-surface text-text-muted border border-[#E8D5A3]/50"
+              abaAtiva === aba ? "bg-primary text-gold" : "bg-surface text-text-muted border border-[#E0D0B4]/50"
             }`}
           >
             {aba === "referencia" ? "📊 Referências de mercado" : "🏠 Base interna"}
@@ -197,13 +197,13 @@ export default function BenchmarksPage() {
                           <span className="text-xs px-2 py-0.5 rounded-full bg-gold/10 text-gold">{labelSegmento(r.segmento)}</span>
                         )}
                         {r.porte && (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-[#E8D5A3]/40 text-text-muted">{r.porte}</span>
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-[#E0D0B4]/40 text-text-muted">{r.porte}</span>
                         )}
                       </div>
                       <p className="text-xs text-text-muted">{r.fonte} · {r.ano}{r.notas ? ` · ${r.notas}` : ""}</p>
                     </div>
                     <div className="w-24">
-                      <div className="h-2 bg-[#E8D5A3]/30 rounded-full">
+                      <div className="h-2 bg-[#E0D0B4]/30 rounded-full">
                         <div className="h-2 rounded-full" style={{ width: `${r.valor}%`, backgroundColor: cor }} />
                       </div>
                     </div>
@@ -258,7 +258,7 @@ export default function BenchmarksPage() {
                         <p className="text-xs text-text-muted">{s.total_amostras} amostras · calculado {new Date(s.calculado_em).toLocaleDateString("pt-BR")}</p>
                       </div>
                       <div className="w-24">
-                        <div className="h-2 bg-[#E8D5A3]/30 rounded-full">
+                        <div className="h-2 bg-[#E0D0B4]/30 rounded-full">
                           <div className="h-2 rounded-full" style={{ width: `${s.valor}%`, backgroundColor: cor }} />
                         </div>
                       </div>

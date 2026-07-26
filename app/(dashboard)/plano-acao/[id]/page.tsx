@@ -42,7 +42,7 @@ const TIPO_LABELS: Record<string, string> = {
 
 const STATUS_CONFIG: Record<Status, { label: string; icon: typeof Circle; cor: string }> = {
   pendente: { label: "Pendente", icon: Circle, cor: "#6B6B6B" },
-  em_andamento: { label: "Em andamento", icon: Clock, cor: "#C9A84C" },
+  em_andamento: { label: "Em andamento", icon: Clock, cor: "#C2A878" },
   concluido: { label: "Concluído", icon: CheckCircle, cor: "#27AE60" },
 };
 
@@ -147,19 +147,19 @@ export default function PlanoAcaoDetalhe() {
             </div>
             <span className="font-mono-data text-3xl font-bold text-text-main">{progresso}%</span>
           </div>
-          <div className="h-3 bg-[#E8D5A3]/40 rounded-full">
+          <div className="h-3 bg-[#E0D0B4]/40 rounded-full">
             <div
               className="h-3 rounded-full transition-all duration-500"
               style={{
                 width: `${progresso}%`,
-                backgroundColor: progresso === 100 ? "#27AE60" : "#C9A84C",
+                backgroundColor: progresso === 100 ? "#27AE60" : "#C2A878",
               }}
             />
           </div>
           <div className="flex gap-6 mt-4">
             {[
               { label: "Pendentes", value: total - concluidos - emAndamento, cor: "#6B6B6B" },
-              { label: "Em andamento", value: emAndamento, cor: "#C9A84C" },
+              { label: "Em andamento", value: emAndamento, cor: "#C2A878" },
               { label: "Concluídas", value: concluidos, cor: "#27AE60" },
             ].map((m) => (
               <div key={m.label} className="flex items-center gap-2">
@@ -231,7 +231,7 @@ export default function PlanoAcaoDetalhe() {
                           {notaEstaAberta && (
                             <div className="mt-3">
                               <textarea
-                                className="w-full border border-[#E8D5A3] rounded-btn p-3 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-gold/30 resize-none"
+                                className="w-full border border-[#E0D0B4] rounded-btn p-3 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-gold/30 resize-none"
                                 rows={3}
                                 placeholder="Adicione uma nota, observação ou próximo passo..."
                                 value={notaTexto}

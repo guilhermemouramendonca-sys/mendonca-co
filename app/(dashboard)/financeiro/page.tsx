@@ -60,7 +60,7 @@ export default function FinanceiroPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-8 bg-surface rounded-btn p-1 w-fit border border-[#E8D5A3]/50">
+      <div className="flex gap-1 mb-8 bg-surface rounded-btn p-1 w-fit border border-[#E0D0B4]/50">
         {ABAS.map((aba) => {
           const Icon = aba.icon;
           return (
@@ -74,7 +74,7 @@ export default function FinanceiroPage() {
               <Icon size={15} />
               {aba.label}
               {aba.key === "contratos" && contratos.length > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${abaAtiva === aba.key ? "bg-gold/20 text-gold" : "bg-[#E8D5A3]/30 text-text-muted"}`}>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${abaAtiva === aba.key ? "bg-gold/20 text-gold" : "bg-[#E0D0B4]/30 text-text-muted"}`}>
                   {contratos.filter((c) => c.status === "ativo").length}
                 </span>
               )}

@@ -80,13 +80,13 @@ export default function RHPage() {
         <div className="relative">
           <button
             onClick={() => setDropdownAberto(!dropdownAberto)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-surface border border-[#E8D5A3]/50 rounded-btn text-sm font-medium text-text-main hover:border-gold/50 transition-colors min-w-52"
+            className="flex items-center gap-2 px-4 py-2.5 bg-surface border border-[#E0D0B4]/50 rounded-btn text-sm font-medium text-text-main hover:border-gold/50 transition-colors min-w-52"
           >
             <span className="flex-1 text-left truncate">{clienteSelecionado?.nome ?? "Selecionar cliente"}</span>
             <ChevronDown size={15} className={`text-text-muted transition-transform ${dropdownAberto ? "rotate-180" : ""}`} />
           </button>
           {dropdownAberto && (
-            <div className="absolute right-0 top-full mt-1 w-64 bg-surface border border-[#E8D5A3]/50 rounded-card shadow-lg z-20 overflow-hidden">
+            <div className="absolute right-0 top-full mt-1 w-64 bg-surface border border-[#E0D0B4]/50 rounded-card shadow-lg z-20 overflow-hidden">
               {clientes.map((c) => (
                 <button
                   key={c.id}
@@ -102,7 +102,7 @@ export default function RHPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-8 bg-surface rounded-btn p-1 w-fit border border-[#E8D5A3]/50">
+      <div className="flex gap-1 mb-8 bg-surface rounded-btn p-1 w-fit border border-[#E0D0B4]/50">
         {ABAS.map((aba) => {
           const Icon = aba.icon;
           return (
@@ -118,12 +118,12 @@ export default function RHPage() {
               <Icon size={15} />
               {aba.label}
               {aba.key === "funcionarios" && funcionarios.length > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${abaAtiva === aba.key ? "bg-gold/20 text-gold" : "bg-[#E8D5A3]/30 text-text-muted"}`}>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${abaAtiva === aba.key ? "bg-gold/20 text-gold" : "bg-[#E0D0B4]/30 text-text-muted"}`}>
                   {funcionarios.length}
                 </span>
               )}
               {aba.key === "okrs" && okrs.length > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${abaAtiva === aba.key ? "bg-gold/20 text-gold" : "bg-[#E8D5A3]/30 text-text-muted"}`}>
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${abaAtiva === aba.key ? "bg-gold/20 text-gold" : "bg-[#E0D0B4]/30 text-text-muted"}`}>
                   {okrs.length}
                 </span>
               )}

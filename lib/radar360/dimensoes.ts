@@ -14,29 +14,29 @@ export type PerguntaRadar = {
 
 export const PERGUNTAS_RADAR: PerguntaRadar[] = [
   // ── ESTRATÉGIA ───────────────────────────────────────────────
-  { id: "estrategia_E", dimensaoId: "estrategia", nivel: "Estratégico", corHex: "#0D2B2E",
+  { id: "estrategia_E", dimensaoId: "estrategia", nivel: "Estratégico", corHex: "#1A2E3A",
     pergunta: "Sua empresa tem uma visão de longo prazo clara e documentada?",
     ancora1: "Sem visão definida. Reagimos ao que aparece.",
     ancora5: "Visão de 3–5 anos, comunicada ao time e revisada regularmente." },
-  { id: "estrategia_T", dimensaoId: "estrategia", nivel: "Tático", corHex: "#0D2B2E",
+  { id: "estrategia_T", dimensaoId: "estrategia", nivel: "Tático", corHex: "#1A2E3A",
     pergunta: "As metas estratégicas estão desdobradas em planos trimestrais?",
     ancora1: "Sem metas formais. Cada área age por conta.",
     ancora5: "OKRs trimestrais conhecidos por todos e revisados mensalmente." },
-  { id: "estrategia_O", dimensaoId: "estrategia", nivel: "Operacional", corHex: "#0D2B2E",
+  { id: "estrategia_O", dimensaoId: "estrategia", nivel: "Operacional", corHex: "#1A2E3A",
     pergunta: "O planejamento estratégico orienta as decisões do dia a dia?",
     ancora1: "Estratégia no papel, operação no improviso.",
     ancora5: "Cada decisão operacional é avaliada com base nas metas estratégicas." },
 
   // ── LIDERANÇA ────────────────────────────────────────────────
-  { id: "lideranca_E", dimensaoId: "lideranca", nivel: "Estratégico", corHex: "#C9A84C",
+  { id: "lideranca_E", dimensaoId: "lideranca", nivel: "Estratégico", corHex: "#C2A878",
     pergunta: "Há um pipeline de liderança sendo desenvolvido na empresa?",
     ancora1: "Tudo depende de mim. Sem sucessores preparados.",
     ancora5: "Líderes de segundo nível prontos e em crescimento contínuo." },
-  { id: "lideranca_T", dimensaoId: "lideranca", nivel: "Tático", corHex: "#C9A84C",
+  { id: "lideranca_T", dimensaoId: "lideranca", nivel: "Tático", corHex: "#C2A878",
     pergunta: "Qual é o nível de autonomia do seu time de liderança?",
     ancora1: "Todas as decisões passam por mim. Time só executa.",
     ancora5: "Líderes decidem, resolvem e respondem por resultados." },
-  { id: "lideranca_O", dimensaoId: "lideranca", nivel: "Operacional", corHex: "#C9A84C",
+  { id: "lideranca_O", dimensaoId: "lideranca", nivel: "Operacional", corHex: "#C2A878",
     pergunta: "Feedbacks e 1-on-1s com líderes acontecem com regularidade?",
     ancora1: "Sem feedbacks estruturados. Líderes isolados.",
     ancora5: "1-on-1 semanal e plano de desenvolvimento por líder." },
@@ -149,7 +149,7 @@ export const DIMENSOES: {
     pergunta: "Como você avalia a estratégia da sua empresa?",
     ancora1: "Nenhum plano formal. Decisões no improviso.",
     ancora5: "Plano claro, comunicado ao time e revisado com frequência.",
-    corHex: "#0D2B2E",
+    corHex: "#1A2E3A",
   },
   {
     id: "lideranca",
@@ -157,7 +157,7 @@ export const DIMENSOES: {
     pergunta: "Qual é o nível de autonomia do seu time?",
     ancora1: "A empresa depende 100% de mim. Sem mim, ela para.",
     ancora5: "O time opera com autonomia. Consigo me afastar 30 dias.",
-    corHex: "#C9A84C",
+    corHex: "#C2A878",
   },
   {
     id: "cultura",
@@ -249,7 +249,7 @@ export function calcularRadar360(respostas: Record<string, number>): ResultadoRa
 
 export function corScore(score: number): string {
   if (score >= 4) return "#2D6A4F";
-  if (score === 3) return "#C9A84C";
+  if (score === 3) return "#C2A878";
   if (score === 2) return "#E67E22";
   return "#C0392B";
 }

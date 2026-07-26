@@ -37,7 +37,7 @@ const FONTE_CORES: Record<string, string> = {
   linkedin: "#0A66C2",
   substack: "#FF6719",
   whatsapp: "#25D366",
-  indicacao: "#0D2B2E",
+  indicacao: "#1A2E3A",
   google: "#4285F4",
   organico: "#2D6A4F",
   outro: "#9CA3AF",
@@ -93,7 +93,7 @@ export default function MarketingPage() {
       .map(([val, ls]) => ({
         val,
         label: key === "utm_source" ? (FONTE_LABELS[val] ?? val) : val,
-        cor: key === "utm_source" ? (FONTE_CORES[val] ?? "#9CA3AF") : "#C9A84C",
+        cor: key === "utm_source" ? (FONTE_CORES[val] ?? "#9CA3AF") : "#C2A878",
         total: ls.length,
         ganhos: ls.filter((l) => l.etapa === "ganho").length,
         valor: ls.reduce((s, l) => s + (l.valor_estimado ?? 0), 0),
@@ -131,7 +131,7 @@ export default function MarketingPage() {
           <p className="text-text-muted mt-1">Rastreamento UTM, fontes, campanhas e conversões</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-btn border border-[#E8D5A3] overflow-hidden text-xs">
+          <div className="flex rounded-btn border border-[#E0D0B4] overflow-hidden text-xs">
             {(["30", "90", "365", "tudo"] as const).map((p) => (
               <button key={p} onClick={() => setPeriodo(p)}
                 className={`px-3 py-1.5 transition-all ${periodo === p ? "bg-primary text-gold" : "bg-surface text-text-muted hover:text-text-main"}`}>
@@ -153,7 +153,7 @@ export default function MarketingPage() {
           { icon: Target, label: "Conversão com UTM", value: `${leadsComUTM.length > 0 ? Math.round((leadsGanhos.filter(l => l.utm_source).length / leadsComUTM.length) * 100) : 0}%`, sub: "leads rastreados → ganhos" },
           { icon: TrendingUp, label: "Receita via UTM", value: `R$ ${leadsGanhos.filter(l => l.utm_source).reduce((s, l) => s + (l.valor_fechado ?? l.valor_estimado ?? 0), 0).toLocaleString("pt-BR")}`, sub: "negócios fechados rastreados" },
         ].map((kpi) => (
-          <div key={kpi.label} className="bg-surface border border-[#E8D5A3]/50 rounded-card p-4 flex items-center gap-3">
+          <div key={kpi.label} className="bg-surface border border-[#E0D0B4]/50 rounded-card p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-btn bg-primary/10 flex items-center justify-center flex-shrink-0">
               <kpi.icon size={18} className="text-primary" />
             </div>
@@ -168,9 +168,9 @@ export default function MarketingPage() {
 
       <div className="grid grid-cols-3 gap-6 mb-6">
         {/* Tabela principal */}
-        <div className="col-span-2 bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+        <div className="col-span-2 bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
           {/* Abas */}
-          <div className="flex gap-1 mb-5 border-b border-[#E8D5A3]/50">
+          <div className="flex gap-1 mb-5 border-b border-[#E0D0B4]/50">
             {([
               { id: "fontes", label: "Fontes (utm_source)" },
               { id: "campanhas", label: "Campanhas (utm_campaign)" },
@@ -208,7 +208,7 @@ export default function MarketingPage() {
                       )}
                     </div>
                   </div>
-                  <div className="w-full bg-[#E8D5A3]/30 rounded-full h-2">
+                  <div className="w-full bg-[#E0D0B4]/30 rounded-full h-2">
                     <div className="h-2 rounded-full transition-all" style={{ width: `${(d.total / maxTotal) * 100}%`, backgroundColor: d.cor }} />
                   </div>
                 </div>
@@ -218,7 +218,7 @@ export default function MarketingPage() {
         </div>
 
         {/* Histórico mensal */}
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-5">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-5">
           <h3 className="font-display text-sm font-semibold text-text-main mb-4">Leads rastreados / mês</h3>
           <div className="flex items-end gap-1.5 h-36 mb-2">
             {historico.map((h) => {
@@ -231,10 +231,10 @@ export default function MarketingPage() {
                       const fPct = h.total > 0 ? (h.porFonte[f] ?? 0) / maxHist * 100 : 0;
                       return fPct > 0 ? (
                         <div key={f} className="w-full rounded-t transition-all"
-                          style={{ height: `${Math.max(fPct, 2)}%`, backgroundColor: FONTE_CORES[f] ?? "#C9A84C", opacity: 0.8 }} />
+                          style={{ height: `${Math.max(fPct, 2)}%`, backgroundColor: FONTE_CORES[f] ?? "#C2A878", opacity: 0.8 }} />
                       ) : null;
                     })}
-                    {pct === 0 && <div className="w-full h-0.5 bg-[#E8D5A3]/50 rounded" />}
+                    {pct === 0 && <div className="w-full h-0.5 bg-[#E0D0B4]/50 rounded" />}
                   </div>
                   <span className="text-[9px] text-text-muted">{h.mes}</span>
                 </div>
@@ -245,7 +245,7 @@ export default function MarketingPage() {
           <div className="space-y-1 mt-3">
             {fontesPrincipais.map((f) => (
               <div key={f} className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: FONTE_CORES[f] ?? "#C9A84C" }} />
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: FONTE_CORES[f] ?? "#C2A878" }} />
                 <span className="text-[10px] text-text-muted">{FONTE_LABELS[f] ?? f}</span>
               </div>
             ))}

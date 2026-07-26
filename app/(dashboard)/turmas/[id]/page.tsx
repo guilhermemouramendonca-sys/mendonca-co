@@ -33,9 +33,9 @@ type Aula = {
 };
 
 const STATUS_ALUNO: Record<string, { label: string; cor: string }> = {
-  inscrito:     { label: "Inscrito",      cor: "#C9A84C" },
+  inscrito:     { label: "Inscrito",      cor: "#C2A878" },
   confirmado:   { label: "Confirmado",    cor: "#2D6A4F" },
-  em_andamento: { label: "Em andamento",  cor: "#0D2B2E" },
+  em_andamento: { label: "Em andamento",  cor: "#1A2E3A" },
   concluido:    { label: "Concluído",     cor: "#16A34A" },
   cancelado:    { label: "Cancelado",     cor: "#DC2626" },
   desistente:   { label: "Desistente",    cor: "#6B7280" },
@@ -182,19 +182,19 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
 
       {/* KPIs */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-4">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-4">
           <p className="text-xs text-text-muted mb-1 flex items-center gap-1"><Users size={11} /> Inscritos ativos</p>
           <p className="text-2xl font-bold text-text-main">{ativos.length}<span className="text-sm text-text-muted font-normal">/{turma.vagas}</span></p>
         </div>
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-4">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-4">
           <p className="text-xs text-text-muted mb-1 flex items-center gap-1"><CheckCircle size={11} /> Pagamentos</p>
           <p className="text-2xl font-bold text-green-600">{pagos}<span className="text-sm text-text-muted font-normal">/{ativos.length}</span></p>
         </div>
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-4">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-4">
           <p className="text-xs text-text-muted mb-1 flex items-center gap-1"><BookOpen size={11} /> Aulas</p>
           <p className="text-2xl font-bold text-text-main">{aulasRealizadas}<span className="text-sm text-text-muted font-normal">/{aulas.length}</span></p>
         </div>
-        <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-4">
+        <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-4">
           <p className="text-xs text-text-muted mb-1">Receita realizada</p>
           <p className="text-xl font-bold text-text-main">
             {receitaRealizada > 0 ? receitaRealizada.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) : "—"}
@@ -203,7 +203,7 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
       </div>
 
       {/* Abas */}
-      <div className="flex gap-1 mb-6 bg-surface rounded-btn p-1 w-fit border border-[#E8D5A3]/50">
+      <div className="flex gap-1 mb-6 bg-surface rounded-btn p-1 w-fit border border-[#E0D0B4]/50">
         {(["alunos", "aulas"] as const).map((a) => (
           <button
             key={a}
@@ -234,7 +234,7 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
               {alunos.map((a) => {
                 const cfg = STATUS_ALUNO[a.status] ?? STATUS_ALUNO.inscrito;
                 return (
-                  <div key={a.id} className="bg-surface rounded-card border border-[#E8D5A3]/50 p-4 flex items-center gap-4">
+                  <div key={a.id} className="bg-surface rounded-card border border-[#E0D0B4]/50 p-4 flex items-center gap-4">
                     <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-sm flex-shrink-0">
                       {a.nome.charAt(0).toUpperCase()}
                     </div>
@@ -250,7 +250,7 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
                         defaultValue={a.status}
                         onChange={(e) => atualizarStatusAluno(a.id, e.target.value)}
                         onBlur={() => setEditandoStatus(null)}
-                        className="text-xs border border-[#E8D5A3] rounded-btn px-2 py-1 bg-surface text-text-main"
+                        className="text-xs border border-[#E0D0B4] rounded-btn px-2 py-1 bg-surface text-text-main"
                       >
                         {Object.entries(STATUS_ALUNO).map(([v, c]) => (
                           <option key={v} value={v}>{c.label}</option>
@@ -313,7 +313,7 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
           ) : (
             <div className="space-y-3">
               {aulas.map((au, i) => (
-                <div key={au.id} className={`bg-surface rounded-card border p-4 ${au.realizada ? "border-green-200 bg-green-50/30" : "border-[#E8D5A3]/50"}`}>
+                <div key={au.id} className={`bg-surface rounded-card border p-4 ${au.realizada ? "border-green-200 bg-green-50/30" : "border-[#E0D0B4]/50"}`}>
                   <div className="flex items-start gap-3">
                     <div className={`w-8 h-8 rounded-btn flex items-center justify-center text-sm font-bold flex-shrink-0 ${au.realizada ? "bg-green-100 text-green-700" : "bg-primary/10 text-primary"}`}>
                       {i + 1}
@@ -358,7 +358,7 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
       {modalAluno && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card w-full max-w-md shadow-xl">
-            <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+            <div className="flex items-center justify-between p-6 border-b border-[#E0D0B4]/50">
               <h2 className="font-display text-xl font-semibold text-text-main">Adicionar Aluno</h2>
               <button onClick={() => setModalAluno(false)} className="text-text-muted hover:text-text-main">✕</button>
             </div>
@@ -386,7 +386,7 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label>Status</Label>
-                  <select value={formAluno.status} onChange={(e) => setFormAluno((p) => ({ ...p, status: e.target.value }))} className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                  <select value={formAluno.status} onChange={(e) => setFormAluno((p) => ({ ...p, status: e.target.value }))} className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                     {Object.entries(STATUS_ALUNO).map(([v, c]) => <option key={v} value={v}>{c.label}</option>)}
                   </select>
                 </div>
@@ -400,7 +400,7 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
                 Pagamento confirmado
               </label>
             </div>
-            <div className="flex justify-end gap-3 p-6 border-t border-[#E8D5A3]/50">
+            <div className="flex justify-end gap-3 p-6 border-t border-[#E0D0B4]/50">
               <Button variant="secondary" onClick={() => setModalAluno(false)}>Cancelar</Button>
               <Button onClick={adicionarAluno} disabled={!formAluno.nome || !formAluno.email}>Adicionar</Button>
             </div>
@@ -412,7 +412,7 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
       {modalAula && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card w-full max-w-md shadow-xl">
-            <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+            <div className="flex items-center justify-between p-6 border-b border-[#E0D0B4]/50">
               <h2 className="font-display text-xl font-semibold text-text-main">Adicionar Aula</h2>
               <button onClick={() => setModalAula(false)} className="text-text-muted hover:text-text-main">✕</button>
             </div>
@@ -440,7 +440,7 @@ export default function TurmaDetalhe({ params }: { params: Promise<{ id: string 
                 <Input value={formAula.material_url} onChange={(e) => setFormAula((p) => ({ ...p, material_url: e.target.value }))} placeholder="https://drive.google.com/..." />
               </div>
             </div>
-            <div className="flex justify-end gap-3 p-6 border-t border-[#E8D5A3]/50">
+            <div className="flex justify-end gap-3 p-6 border-t border-[#E0D0B4]/50">
               <Button variant="secondary" onClick={() => setModalAula(false)}>Cancelar</Button>
               <Button onClick={adicionarAula} disabled={!formAula.titulo || !formAula.data}>Adicionar</Button>
             </div>

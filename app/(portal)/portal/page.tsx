@@ -121,7 +121,7 @@ export default function PortalDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-[#0D2B2E] text-sm opacity-60">Carregando seu portal...</div>
+        <div className="text-[#1A2E3A] text-sm opacity-60">Carregando seu portal...</div>
       </div>
     );
   }
@@ -129,11 +129,11 @@ export default function PortalDashboard() {
   const progresso = totalItens > 0 ? Math.round((itensConcluidos / totalItens) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8]">
+    <div className="min-h-screen bg-[#F5F5F3]">
       {/* Header */}
-      <header className="bg-[#0D2B2E] px-6 py-4 flex items-center justify-between">
+      <header className="bg-[#1A2E3A] px-6 py-4 flex items-center justify-between">
         <div>
-          <h1 className="text-[#C9A84C] font-display text-lg font-bold">Mendonça & Co</h1>
+          <h1 className="text-[#C2A878] font-display text-lg font-bold">Mendonça & Co</h1>
           <p className="text-white/50 text-xs">Portal do Cliente</p>
         </div>
         <div className="flex items-center gap-4">
@@ -150,7 +150,7 @@ export default function PortalDashboard() {
       <main className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         {/* Boas-vindas */}
         <div>
-          <h2 className="font-display text-3xl font-bold text-[#0D2B2E]">
+          <h2 className="font-display text-3xl font-bold text-[#1A2E3A]">
             Olá, {nomeUsuario.split(" ")[0]} 👋
           </h2>
           {cliente && (
@@ -161,11 +161,11 @@ export default function PortalDashboard() {
         {/* Cards de navegação */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Link href="/portal/plano">
-            <div className="bg-white rounded-2xl p-5 border border-[#E8D5A3]/50 hover:border-[#C9A84C]/50 hover:shadow-sm transition-all cursor-pointer">
-              <div className="w-10 h-10 rounded-xl bg-[#0D2B2E]/10 flex items-center justify-center mb-3">
-                <ListChecks size={20} className="text-[#0D2B2E]" />
+            <div className="bg-white rounded-2xl p-5 border border-[#E0D0B4]/50 hover:border-[#C2A878]/50 hover:shadow-sm transition-all cursor-pointer">
+              <div className="w-10 h-10 rounded-xl bg-[#1A2E3A]/10 flex items-center justify-center mb-3">
+                <ListChecks size={20} className="text-[#1A2E3A]" />
               </div>
-              <p className="font-semibold text-[#0D2B2E]">Plano de Ação</p>
+              <p className="font-semibold text-[#1A2E3A]">Plano de Ação</p>
               <p className="text-xs text-[#6B7280] mt-0.5">{itensPendentes.length} item{itensPendentes.length !== 1 ? "s" : ""} pendente{itensPendentes.length !== 1 ? "s" : ""}</p>
               {totalItens > 0 && (
                 <div className="mt-3">
@@ -173,8 +173,8 @@ export default function PortalDashboard() {
                     <span>{progresso}% concluído</span>
                     <span>{itensConcluidos}/{totalItens}</span>
                   </div>
-                  <div className="w-full bg-[#E8D5A3]/40 rounded-full h-1.5">
-                    <div className="h-1.5 rounded-full bg-[#C9A84C]" style={{ width: `${progresso}%` }} />
+                  <div className="w-full bg-[#E0D0B4]/40 rounded-full h-1.5">
+                    <div className="h-1.5 rounded-full bg-[#C2A878]" style={{ width: `${progresso}%` }} />
                   </div>
                 </div>
               )}
@@ -182,29 +182,29 @@ export default function PortalDashboard() {
           </Link>
 
           <Link href="/portal/documentos">
-            <div className="bg-white rounded-2xl p-5 border border-[#E8D5A3]/50 hover:border-[#C9A84C]/50 hover:shadow-sm transition-all cursor-pointer">
-              <div className="w-10 h-10 rounded-xl bg-[#C9A84C]/10 flex items-center justify-center mb-3">
-                <FileText size={20} className="text-[#C9A84C]" />
+            <div className="bg-white rounded-2xl p-5 border border-[#E0D0B4]/50 hover:border-[#C2A878]/50 hover:shadow-sm transition-all cursor-pointer">
+              <div className="w-10 h-10 rounded-xl bg-[#C2A878]/10 flex items-center justify-center mb-3">
+                <FileText size={20} className="text-[#C2A878]" />
               </div>
-              <p className="font-semibold text-[#0D2B2E]">Documentos</p>
+              <p className="font-semibold text-[#1A2E3A]">Documentos</p>
               <p className="text-xs text-[#6B7280] mt-0.5">{documentos.length} arquivo{documentos.length !== 1 ? "s" : ""} disponíve{documentos.length !== 1 ? "is" : "l"}</p>
             </div>
           </Link>
 
-          <div className="bg-white rounded-2xl p-5 border border-[#E8D5A3]/50">
+          <div className="bg-white rounded-2xl p-5 border border-[#E0D0B4]/50">
             <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center mb-3">
               <CalendarDays size={20} className="text-green-600" />
             </div>
-            <p className="font-semibold text-[#0D2B2E]">Próximas sessões</p>
+            <p className="font-semibold text-[#1A2E3A]">Próximas sessões</p>
             <p className="text-xs text-[#6B7280] mt-0.5">{proximasSessoes.length} agendada{proximasSessoes.length !== 1 ? "s" : ""}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Próximas sessões */}
-          <div className="bg-white rounded-2xl border border-[#E8D5A3]/50 p-5">
-            <h3 className="font-semibold text-[#0D2B2E] mb-4 flex items-center gap-2">
-              <CalendarDays size={16} className="text-[#C9A84C]" /> Próximas sessões
+          <div className="bg-white rounded-2xl border border-[#E0D0B4]/50 p-5">
+            <h3 className="font-semibold text-[#1A2E3A] mb-4 flex items-center gap-2">
+              <CalendarDays size={16} className="text-[#C2A878]" /> Próximas sessões
             </h3>
             {proximasSessoes.length === 0 ? (
               <p className="text-sm text-[#6B7280] py-4 text-center">Nenhuma sessão agendada.</p>
@@ -212,8 +212,8 @@ export default function PortalDashboard() {
               <div className="space-y-3">
                 {proximasSessoes.map((s) => (
                   <div key={s.id} className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#0D2B2E] flex flex-col items-center justify-center flex-shrink-0">
-                      <p className="text-[#C9A84C] text-[10px] font-bold leading-none">
+                    <div className="w-10 h-10 rounded-xl bg-[#1A2E3A] flex flex-col items-center justify-center flex-shrink-0">
+                      <p className="text-[#C2A878] text-[10px] font-bold leading-none">
                         {new Date(s.data).toLocaleDateString("pt-BR", { day: "2-digit" })}
                       </p>
                       <p className="text-white/60 text-[8px] uppercase">
@@ -221,7 +221,7 @@ export default function PortalDashboard() {
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-[#0D2B2E]">{TIPO_SESSAO[s.tipo] ?? s.tipo}</p>
+                      <p className="text-sm font-medium text-[#1A2E3A]">{TIPO_SESSAO[s.tipo] ?? s.tipo}</p>
                       <p className="text-xs text-[#6B7280]">
                         {new Date(s.data).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
                         {s.duracao_minutos ? ` · ${s.duracao_minutos} min` : ""}
@@ -234,12 +234,12 @@ export default function PortalDashboard() {
           </div>
 
           {/* Itens pendentes do plano */}
-          <div className="bg-white rounded-2xl border border-[#E8D5A3]/50 p-5">
+          <div className="bg-white rounded-2xl border border-[#E0D0B4]/50 p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-[#0D2B2E] flex items-center gap-2">
-                <ListChecks size={16} className="text-[#C9A84C]" /> Plano de ação
+              <h3 className="font-semibold text-[#1A2E3A] flex items-center gap-2">
+                <ListChecks size={16} className="text-[#C2A878]" /> Plano de ação
               </h3>
-              <Link href="/portal/plano" className="text-xs text-[#C9A84C] hover:underline flex items-center gap-0.5">
+              <Link href="/portal/plano" className="text-xs text-[#C2A878] hover:underline flex items-center gap-0.5">
                 Ver tudo <ChevronRight size={12} />
               </Link>
             </div>
@@ -253,7 +253,7 @@ export default function PortalDashboard() {
               <div className="space-y-2.5">
                 {itensPendentes.map((item) => (
                   <div key={item.id} className="flex items-start gap-2.5">
-                    <div className="w-4 h-4 rounded border-2 border-[#E8D5A3] flex-shrink-0 mt-0.5" />
+                    <div className="w-4 h-4 rounded border-2 border-[#E0D0B4] flex-shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-[#374151] leading-snug">{item.descricao}</p>
                       {item.prazo && (
@@ -272,21 +272,21 @@ export default function PortalDashboard() {
 
         {/* Últimos documentos */}
         {documentos.length > 0 && (
-          <div className="bg-white rounded-2xl border border-[#E8D5A3]/50 p-5">
+          <div className="bg-white rounded-2xl border border-[#E0D0B4]/50 p-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-[#0D2B2E] flex items-center gap-2">
-                <FileText size={16} className="text-[#C9A84C]" /> Documentos recentes
+              <h3 className="font-semibold text-[#1A2E3A] flex items-center gap-2">
+                <FileText size={16} className="text-[#C2A878]" /> Documentos recentes
               </h3>
-              <Link href="/portal/documentos" className="text-xs text-[#C9A84C] hover:underline flex items-center gap-0.5">
+              <Link href="/portal/documentos" className="text-xs text-[#C2A878] hover:underline flex items-center gap-0.5">
                 Ver todos <ChevronRight size={12} />
               </Link>
             </div>
             <div className="space-y-2">
               {documentos.map((d) => (
                 <div key={d.id} className="flex items-center gap-3 py-1">
-                  <FileText size={15} className="text-[#C9A84C] flex-shrink-0" />
+                  <FileText size={15} className="text-[#C2A878] flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-[#0D2B2E] font-medium truncate">{d.titulo}</p>
+                    <p className="text-sm text-[#1A2E3A] font-medium truncate">{d.titulo}</p>
                     <p className="text-xs text-[#6B7280]">{formatDate(d.criado_em)}</p>
                   </div>
                   <ChevronRight size={14} className="text-[#9CA3AF]" />

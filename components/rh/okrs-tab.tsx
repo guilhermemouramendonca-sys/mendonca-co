@@ -28,7 +28,7 @@ export type OKR = {
 };
 
 const STATUS_LABELS: Record<string, string> = { em_andamento: "Em andamento", concluido: "Concluído", cancelado: "Cancelado" };
-const STATUS_CORES: Record<string, string> = { em_andamento: "#C9A84C", concluido: "#27AE60", cancelado: "#95A5A6" };
+const STATUS_CORES: Record<string, string> = { em_andamento: "#C2A878", concluido: "#27AE60", cancelado: "#95A5A6" };
 
 function newKR(): KeyResult {
   return { id: crypto.randomUUID(), descricao: "", meta: 100, atual: 0, unidade: "%" };
@@ -47,7 +47,7 @@ function progressoOKR(krs: KeyResult[]): number {
 
 function corProgresso(pct: number): string {
   if (pct >= 70) return "#27AE60";
-  if (pct >= 40) return "#C9A84C";
+  if (pct >= 40) return "#C2A878";
   return "#C0392B";
 }
 
@@ -132,7 +132,7 @@ export default function OKRsTab({ clienteId, okrs, onRefresh }: {
               <div key={ciclo}>
                 <div className="flex items-center gap-3 mb-4">
                   <h3 className="font-display text-lg font-semibold text-text-main">{ciclo}</h3>
-                  <div className="flex-1 bg-[#E8D5A3]/30 rounded-full h-2 max-w-32">
+                  <div className="flex-1 bg-[#E0D0B4]/30 rounded-full h-2 max-w-32">
                     <div className="h-2 rounded-full transition-all" style={{ width: `${mediaGeral}%`, backgroundColor: corProgresso(mediaGeral) }} />
                   </div>
                   <span className="text-sm font-mono-data font-semibold" style={{ color: corProgresso(mediaGeral) }}>{mediaGeral}%</span>
@@ -142,7 +142,7 @@ export default function OKRsTab({ clienteId, okrs, onRefresh }: {
                     const pct = progressoOKR(okr.key_results);
                     const isExpanded = expandido === okr.id;
                     return (
-                      <div key={okr.id} className="bg-surface rounded-card border border-[#E8D5A3]/50 overflow-hidden">
+                      <div key={okr.id} className="bg-surface rounded-card border border-[#E0D0B4]/50 overflow-hidden">
                         {/* Header */}
                         <div
                           className="flex items-start gap-4 p-4 cursor-pointer"
@@ -175,7 +175,7 @@ export default function OKRsTab({ clienteId, okrs, onRefresh }: {
                                 {okr.key_results.slice(0, 6).map((kr) => {
                                   const p = Math.min(100, kr.meta > 0 ? (kr.atual / kr.meta) * 100 : 0);
                                   return (
-                                    <div key={kr.id} className="flex-1 bg-[#E8D5A3]/30 rounded-full h-1.5">
+                                    <div key={kr.id} className="flex-1 bg-[#E0D0B4]/30 rounded-full h-1.5">
                                       <div className="h-1.5 rounded-full" style={{ width: `${p}%`, backgroundColor: corProgresso(p) }} />
                                     </div>
                                   );
@@ -192,7 +192,7 @@ export default function OKRsTab({ clienteId, okrs, onRefresh }: {
 
                         {/* Key Results expandidos */}
                         {isExpanded && (
-                          <div className="border-t border-[#E8D5A3]/30 px-4 pb-4">
+                          <div className="border-t border-[#E0D0B4]/30 px-4 pb-4">
                             <p className="text-xs font-medium uppercase tracking-wider text-text-muted mt-4 mb-3">Key Results</p>
                             <div className="space-y-4">
                               {okr.key_results.map((kr) => {
@@ -207,13 +207,13 @@ export default function OKRsTab({ clienteId, okrs, onRefresh }: {
                                           value={kr.atual}
                                           onClick={(e) => e.stopPropagation()}
                                           onChange={(e) => atualizarProgresso(okr.id, kr.id, Number(e.target.value))}
-                                          className="w-16 h-7 text-xs text-center rounded border border-[#E8D5A3] bg-bg text-text-main focus:outline-none focus:ring-1 focus:ring-gold/30"
+                                          className="w-16 h-7 text-xs text-center rounded border border-[#E0D0B4] bg-bg text-text-main focus:outline-none focus:ring-1 focus:ring-gold/30"
                                         />
                                         <span className="text-xs text-text-muted">/ {kr.meta} {kr.unidade}</span>
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                      <div className="flex-1 bg-[#E8D5A3]/30 rounded-full h-2">
+                                      <div className="flex-1 bg-[#E0D0B4]/30 rounded-full h-2">
                                         <div className="h-2 rounded-full transition-all" style={{ width: `${p}%`, backgroundColor: corProgresso(p) }} />
                                       </div>
                                       <span className="text-xs font-mono-data w-8 text-right" style={{ color: corProgresso(p) }}>{Math.round(p)}%</span>
@@ -238,7 +238,7 @@ export default function OKRsTab({ clienteId, okrs, onRefresh }: {
       {modalAberto && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-[#E8D5A3]/30">
+            <div className="p-6 border-b border-[#E0D0B4]/30">
               <h2 className="font-display text-xl font-semibold text-text-main">{editando ? "Editar OKR" : "Novo OKR"}</h2>
             </div>
             <div className="p-6 space-y-5">
@@ -262,7 +262,7 @@ export default function OKRsTab({ clienteId, okrs, onRefresh }: {
               </div>
               <div className="space-y-1.5">
                 <Label>Status</Label>
-                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as OKR["status"] })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as OKR["status"] })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                   {Object.entries(STATUS_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                 </select>
               </div>
@@ -300,7 +300,7 @@ export default function OKRsTab({ clienteId, okrs, onRefresh }: {
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-[#E8D5A3]/30 flex justify-end gap-3">
+            <div className="p-6 border-t border-[#E0D0B4]/30 flex justify-end gap-3">
               <Button variant="secondary" onClick={() => setModalAberto(false)}>Cancelar</Button>
               <Button onClick={salvar} disabled={salvando || !form.objetivo.trim()}>{salvando ? "Salvando..." : "Salvar"}</Button>
             </div>

@@ -39,7 +39,7 @@ export default function DiagnosticoBoardPage() {
             <select
               value={estrutura}
               onChange={(e) => setEstrutura(e.target.value)}
-              className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+              className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
             >
               <option value="">Selecione...</option>
               {ESTRUTURAS.map((e) => <option key={e} value={e}>{e}</option>)}
@@ -61,7 +61,7 @@ export default function DiagnosticoBoardPage() {
               <select
                 value={faturamento}
                 onChange={(e) => setFaturamento(e.target.value)}
-                className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 <option value="">Selecione...</option>
                 {FATURAMENTOS.map((f) => <option key={f} value={f}>{f}</option>)}

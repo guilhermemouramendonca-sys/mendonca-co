@@ -23,7 +23,7 @@ export type Funcionario = {
 const NIVEIS = ["Junior", "Pleno", "Sênior", "Especialista", "Gestor", "Gerente", "Diretor", "VP", "C-Level"];
 const STATUS_OPTS = ["ativo", "ferias", "licenca", "inativo"];
 const STATUS_LABELS: Record<string, string> = { ativo: "Ativo", ferias: "Férias", licenca: "Licença", inativo: "Inativo" };
-const STATUS_CORES: Record<string, string> = { ativo: "#27AE60", ferias: "#C9A84C", licenca: "#2980B9", inativo: "#95A5A6" };
+const STATUS_CORES: Record<string, string> = { ativo: "#27AE60", ferias: "#C2A878", licenca: "#2980B9", inativo: "#95A5A6" };
 
 const EMPTY: Omit<Funcionario, "id" | "cliente_id"> = {
   nome: "", cargo: "", departamento: "", nivel: "Pleno",
@@ -105,7 +105,7 @@ export default function FuncionariosTab({ clienteId, funcionarios, onRefresh }: 
                 {lista.map((f) => {
                   const gestor = funcionarios.find((g) => g.id === f.gestor_id);
                   return (
-                    <div key={f.id} className="bg-surface rounded-card border border-[#E8D5A3]/50 p-4 flex items-start gap-3">
+                    <div key={f.id} className="bg-surface rounded-card border border-[#E0D0B4]/50 p-4 flex items-start gap-3">
                       <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
                         <span className="text-gold font-display font-bold text-sm">{f.nome.charAt(0)}</span>
                       </div>
@@ -141,7 +141,7 @@ export default function FuncionariosTab({ clienteId, funcionarios, onRefresh }: 
       {modalAberto && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-[#E8D5A3]/30">
+            <div className="p-6 border-b border-[#E0D0B4]/30">
               <h2 className="font-display text-xl font-semibold text-text-main">
                 {editando ? "Editar funcionário" : "Novo funcionário"}
               </h2>
@@ -158,7 +158,7 @@ export default function FuncionariosTab({ clienteId, funcionarios, onRefresh }: 
                 </div>
                 <div className="space-y-1.5">
                   <Label>Nível</Label>
-                  <select value={form.nivel} onChange={(e) => setForm({ ...form, nivel: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                  <select value={form.nivel} onChange={(e) => setForm({ ...form, nivel: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                     {NIVEIS.map((n) => <option key={n}>{n}</option>)}
                   </select>
                 </div>
@@ -168,13 +168,13 @@ export default function FuncionariosTab({ clienteId, funcionarios, onRefresh }: 
                 </div>
                 <div className="space-y-1.5">
                   <Label>Status</Label>
-                  <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                  <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                     {STATUS_OPTS.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                   </select>
                 </div>
                 <div className="space-y-1.5">
                   <Label>Gestor direto</Label>
-                  <select value={form.gestor_id ?? ""} onChange={(e) => setForm({ ...form, gestor_id: e.target.value || null })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                  <select value={form.gestor_id ?? ""} onChange={(e) => setForm({ ...form, gestor_id: e.target.value || null })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                     <option value="">— Nenhum —</option>
                     {funcionarios.filter((f) => f.id !== editando?.id).map((f) => (
                       <option key={f.id} value={f.id}>{f.nome} · {f.cargo}</option>
@@ -191,7 +191,7 @@ export default function FuncionariosTab({ clienteId, funcionarios, onRefresh }: 
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-[#E8D5A3]/30 flex justify-end gap-3">
+            <div className="p-6 border-t border-[#E0D0B4]/30 flex justify-end gap-3">
               <Button variant="secondary" onClick={() => setModalAberto(false)}>Cancelar</Button>
               <Button onClick={salvar} disabled={salvando || !form.nome.trim() || !form.cargo.trim()}>
                 {salvando ? "Salvando..." : "Salvar"}

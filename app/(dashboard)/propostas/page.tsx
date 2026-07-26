@@ -259,7 +259,7 @@ export default function PropostasPage() {
       {modalAberto && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-xl">
-            <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+            <div className="flex items-center justify-between p-6 border-b border-[#E0D0B4]/50">
               <h2 className="font-display text-2xl font-semibold text-text-main">Nova Proposta</h2>
               <button onClick={() => setModalAberto(false)} className="text-text-muted hover:text-text-main">✕</button>
             </div>
@@ -286,7 +286,7 @@ export default function PropostasPage() {
                 <select
                   value={form.servico}
                   onChange={(e) => set("servico", e.target.value)}
-                  className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                  className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                 >
                   {SERVICOS.map((s) => (
                     <option key={s.value} value={s.value}>{s.label}</option>
@@ -301,7 +301,7 @@ export default function PropostasPage() {
                   onChange={(e) => set("descricao", e.target.value)}
                   rows={3}
                   placeholder="Contexto específico do cliente..."
-                  className="flex w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold resize-none"
+                  className="flex w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold resize-none"
                 />
               </div>
 
@@ -321,7 +321,7 @@ export default function PropostasPage() {
                 <select
                   value={form.validadeDias}
                   onChange={(e) => set("validadeDias", e.target.value)}
-                  className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                  className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                 >
                   <option value="7">7 dias</option>
                   <option value="15">15 dias</option>
@@ -336,12 +336,12 @@ export default function PropostasPage() {
                   onChange={(e) => set("observacoes", e.target.value)}
                   rows={2}
                   placeholder="Notas que aparecerão no PDF..."
-                  className="flex w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold resize-none"
+                  className="flex w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold resize-none"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-[#E8D5A3]/50">
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-[#E0D0B4]/50">
               <Button variant="secondary" onClick={() => setModalAberto(false)}>Cancelar</Button>
               <Button onClick={gerar} disabled={gerando || !form.nomeProspect}>
                 {gerando ? "Gerando PDF..." : "Gerar Proposta"}

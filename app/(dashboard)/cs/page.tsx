@@ -193,7 +193,7 @@ export default function CSDashboard() {
             className="pl-9"
           />
         </div>
-        <div className="flex rounded-btn border border-[#E8D5A3]/50 overflow-hidden text-xs">
+        <div className="flex rounded-btn border border-[#E0D0B4]/50 overflow-hidden text-xs">
           {(["todos", "risco", "atencao", "saudavel"] as const).map((f) => (
             <button
               key={f}
@@ -271,7 +271,7 @@ export default function CSDashboard() {
 
                   {/* Expandido: detalhes por dimensão + alertas */}
                   {aberto && (
-                    <div className="px-4 pb-4 border-t border-[#E8D5A3]/30 pt-4">
+                    <div className="px-4 pb-4 border-t border-[#E0D0B4]/30 pt-4">
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                         {c.score.dimensoes.map((d) => (
                           <div key={d.nome} className="bg-bg rounded-btn p-3">

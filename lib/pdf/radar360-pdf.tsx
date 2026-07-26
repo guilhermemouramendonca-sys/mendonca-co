@@ -8,8 +8,8 @@ import {
 } from "@/lib/radar360/dimensoes";
 
 const CORES = {
-  primary: "#0D2B2E", gold: "#C9A84C", goldLight: "#E8D5A3",
-  bg: "#F5F0E8", text: "#1A1A1A", muted: "#6B6B6B",
+  primary: "#1A2E3A", gold: "#C2A878", goldLight: "#E0D0B4",
+  bg: "#F5F5F3", text: "#1A1A1A", muted: "#6B6B6B",
   success: "#2D6A4F", danger: "#C0392B", white: "#FFFFFF",
 };
 
@@ -75,7 +75,7 @@ function RadarChart8({ scores }: { scores: number[] }) {
             key={i}
             points={gridPoints(lv)}
             fill="none"
-            stroke={lv === 1.0 ? CORES.goldLight : "#E8D5A3"}
+            stroke={lv === 1.0 ? CORES.goldLight : "#E0D0B4"}
             strokeWidth={lv === 1.0 ? 1.2 : 0.6}
             strokeDasharray={lv < 1.0 ? "3 3" : "0"}
           />
@@ -139,7 +139,7 @@ function BarraDim({ titulo, score }: { titulo: string; score: number }) {
           <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: CORES.primary }}>{score}/5</Text>
         </View>
       </View>
-      <View style={{ height: 7, backgroundColor: "#E8D5A3", borderRadius: 4 }}>
+      <View style={{ height: 7, backgroundColor: "#E0D0B4", borderRadius: 4 }}>
         <View style={{ height: 7, borderRadius: 4, width: `${(score / 5) * 100}%`, backgroundColor: cor }} />
       </View>
     </View>

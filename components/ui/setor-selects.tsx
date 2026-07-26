@@ -14,7 +14,7 @@ interface SetorSelectsProps {
 }
 
 const selectCls =
-  "w-full h-10 px-3 rounded-btn border border-[#E8D5A3]/50 bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30";
+  "w-full h-10 px-3 rounded-btn border border-[#E0D0B4]/50 bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30";
 
 export function SetorSelects({
   categoria, segmento, faturamento,

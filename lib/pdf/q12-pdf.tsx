@@ -2,8 +2,8 @@ import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import type { ResultadoQ12 } from "@/lib/pesquisas/q12";
 
 const C = {
-  primary: "#0D2B2E", gold: "#C9A84C", goldLight: "#E8D5A3",
-  bg: "#F5F0E8", text: "#1A1A1A", muted: "#6B6B6B", white: "#FFFFFF",
+  primary: "#1A2E3A", gold: "#C2A878", goldLight: "#E0D0B4",
+  bg: "#F5F5F3", text: "#1A1A1A", muted: "#6B6B6B", white: "#FFFFFF",
   success: "#27AE60", warning: "#E67E22", danger: "#C0392B",
 };
 
@@ -169,7 +169,7 @@ export function Q12PDF({ nome, empresa, cargo, resultado, data }: Props) {
                     <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: C.primary }}>{pct}%</Text>
                   </View>
                 </View>
-                <View style={{ height: 8, backgroundColor: "#E8D5A3", borderRadius: 4 }}>
+                <View style={{ height: 8, backgroundColor: "#E0D0B4", borderRadius: 4 }}>
                   <View style={{ height: 8, borderRadius: 4, width: `${pct}%`, backgroundColor: c }} />
                 </View>
                 <Text style={{ fontSize: 8, color: C.muted, marginTop: 3 }}>{DIM_DESC[dim]}</Text>

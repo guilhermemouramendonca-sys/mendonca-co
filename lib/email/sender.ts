@@ -49,24 +49,24 @@ function htmlEmail(nome: string, tipo: TipoFerramenta, pdfUrl: string): string {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${titulo} — Mendonça & Co</title>
 </head>
-<body style="margin:0;padding:0;background:#F5F0E8;font-family:Georgia,serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F0E8;padding:40px 16px;">
+<body style="margin:0;padding:0;background:#F5F5F3;font-family:Georgia,serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#F5F5F3;padding:40px 16px;">
     <tr>
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
           <!-- Header -->
           <tr>
-            <td style="background:#0D2B2E;border-radius:12px 12px 0 0;padding:40px 48px;">
-              <p style="margin:0 0 4px;color:#C9A84C;font-size:22px;font-weight:700;letter-spacing:-0.5px;">Mendonça & Co</p>
-              <p style="margin:0;color:#E8D5A3;font-size:13px;opacity:0.7;">Consultoria de Board e Cultura Organizacional</p>
+            <td style="background:#1A2E3A;border-radius:12px 12px 0 0;padding:40px 48px;">
+              <p style="margin:0 0 4px;color:#C2A878;font-size:22px;font-weight:700;letter-spacing:-0.5px;">Mendonça & Co</p>
+              <p style="margin:0;color:#E0D0B4;font-size:13px;opacity:0.7;">Consultoria de Board e Cultura Organizacional</p>
             </td>
           </tr>
 
           <!-- Body -->
           <tr>
             <td style="background:#FFFFFF;padding:48px;">
-              <p style="margin:0 0 24px;font-size:26px;font-weight:700;color:#0D2B2E;line-height:1.3;">
+              <p style="margin:0 0 24px;font-size:26px;font-weight:700;color:#1A2E3A;line-height:1.3;">
                 ${primeiroNome}, seu ${titulo} está pronto.
               </p>
               <p style="margin:0 0 24px;font-size:15px;color:#4A4A4A;line-height:1.8;">
@@ -76,9 +76,9 @@ function htmlEmail(nome: string, tipo: TipoFerramenta, pdfUrl: string): string {
               <!-- CTA Button -->
               <table cellpadding="0" cellspacing="0" style="margin:32px 0;">
                 <tr>
-                  <td style="background:#C9A84C;border-radius:8px;">
+                  <td style="background:#C2A878;border-radius:8px;">
                     <a href="${pdfUrl}" target="_blank"
-                      style="display:inline-block;padding:16px 32px;color:#0D2B2E;font-size:15px;font-weight:700;text-decoration:none;font-family:Georgia,serif;">
+                      style="display:inline-block;padding:16px 32px;color:#1A2E3A;font-size:15px;font-weight:700;text-decoration:none;font-family:Georgia,serif;">
                       Baixar PDF →
                     </a>
                   </td>
@@ -91,24 +91,24 @@ function htmlEmail(nome: string, tipo: TipoFerramenta, pdfUrl: string): string {
               <p style="margin:0 0 32px;font-size:11px;color:#9B9B9B;word-break:break-all;">${pdfUrl}</p>
 
               <!-- Separator -->
-              <hr style="border:none;border-top:1px solid #E8D5A3;margin:32px 0;" />
+              <hr style="border:none;border-top:1px solid #E0D0B4;margin:32px 0;" />
 
-              <p style="margin:0 0 8px;font-size:14px;color:#0D2B2E;font-weight:700;">
+              <p style="margin:0 0 8px;font-size:14px;color:#1A2E3A;font-weight:700;">
                 Quer conversar sobre os resultados?
               </p>
               <p style="margin:0 0 16px;font-size:14px;color:#4A4A4A;line-height:1.7;">
                 Estou disponível para uma conversa de 30 minutos sobre o que o diagnóstico revelou e qual seria o próximo passo mais inteligente para o seu negócio.
               </p>
-              <p style="margin:0;font-size:14px;color:#0D2B2E;">
-                <a href="mailto:guilherme@mendonca.co" style="color:#C9A84C;text-decoration:none;font-weight:700;">guilherme@mendonca.co</a>
+              <p style="margin:0;font-size:14px;color:#1A2E3A;">
+                <a href="mailto:guilherme@mendonca.co" style="color:#C2A878;text-decoration:none;font-weight:700;">guilherme@mendonca.co</a>
               </p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="background:#0D2B2E;border-radius:0 0 12px 12px;padding:24px 48px;text-align:center;">
-              <p style="margin:0;font-size:12px;color:#E8D5A3;opacity:0.5;">
+            <td style="background:#1A2E3A;border-radius:0 0 12px 12px;padding:24px 48px;text-align:center;">
+              <p style="margin:0;font-size:12px;color:#E0D0B4;opacity:0.5;">
                 © Mendonça & Co · Este documento é confidencial e destinado exclusivamente a ${nome}.
               </p>
             </td>

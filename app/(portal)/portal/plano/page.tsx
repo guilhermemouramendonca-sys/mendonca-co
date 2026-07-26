@@ -76,14 +76,14 @@ export default function PortalPlano() {
   const vencidos = itens.filter((i) => i.status !== "concluido" && i.prazo && i.prazo < hoje).length;
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8]">
-      <header className="bg-[#0D2B2E] px-6 py-4">
+    <div className="min-h-screen bg-[#F5F5F3]">
+      <header className="bg-[#1A2E3A] px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center gap-4">
           <Link href="/portal" className="text-white/60 hover:text-white transition-colors">
             <ArrowLeft size={18} />
           </Link>
           <div>
-            <h1 className="text-[#C9A84C] font-display text-lg font-bold">Mendonça & Co</h1>
+            <h1 className="text-[#C2A878] font-display text-lg font-bold">Mendonça & Co</h1>
             <p className="text-white/50 text-xs">Plano de Ação</p>
           </div>
         </div>
@@ -91,20 +91,20 @@ export default function PortalPlano() {
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-6">
-          <h2 className="font-display text-2xl font-bold text-[#0D2B2E]">Plano de Ação</h2>
+          <h2 className="font-display text-2xl font-bold text-[#1A2E3A]">Plano de Ação</h2>
           <p className="text-[#6B7280] text-sm mt-1">{itens.length} item{itens.length !== 1 ? "s" : ""} · {concluidos} concluído{concluidos !== 1 ? "s" : ""}</p>
         </div>
 
         {/* Progresso */}
         {itens.length > 0 && (
-          <div className="bg-white rounded-2xl border border-[#E8D5A3]/50 p-5 mb-6">
+          <div className="bg-white rounded-2xl border border-[#E0D0B4]/50 p-5 mb-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-semibold text-[#0D2B2E]">Progresso geral</span>
-              <span className="text-2xl font-bold text-[#C9A84C]">{progresso}%</span>
+              <span className="text-sm font-semibold text-[#1A2E3A]">Progresso geral</span>
+              <span className="text-2xl font-bold text-[#C2A878]">{progresso}%</span>
             </div>
-            <div className="w-full bg-[#E8D5A3]/40 rounded-full h-3">
+            <div className="w-full bg-[#E0D0B4]/40 rounded-full h-3">
               <div
-                className="h-3 rounded-full bg-[#C9A84C] transition-all"
+                className="h-3 rounded-full bg-[#C2A878] transition-all"
                 style={{ width: `${progresso}%` }}
               />
             </div>
@@ -119,12 +119,12 @@ export default function PortalPlano() {
         )}
 
         {/* Filtros */}
-        <div className="flex rounded-xl border border-[#E8D5A3] overflow-hidden text-xs w-fit mb-5">
+        <div className="flex rounded-xl border border-[#E0D0B4] overflow-hidden text-xs w-fit mb-5">
           {(["todos", "pendente", "em_andamento", "concluido"] as const).map((f) => (
             <button
               key={f}
               onClick={() => setFiltro(f)}
-              className={`px-3 py-2 transition-all ${filtro === f ? "bg-[#0D2B2E] text-[#C9A84C]" : "bg-white text-[#6B7280]"}`}
+              className={`px-3 py-2 transition-all ${filtro === f ? "bg-[#1A2E3A] text-[#C2A878]" : "bg-white text-[#6B7280]"}`}
             >
               {f === "todos" ? "Todos" : STATUS_CONFIG[f]?.label ?? f}
               <span className="ml-1 opacity-60">
@@ -153,7 +153,7 @@ export default function PortalPlano() {
                   key={item.id}
                   className={`bg-white rounded-2xl border p-4 ${
                     item.status === "concluido" ? "border-green-100 opacity-70" :
-                    vencido ? "border-red-200" : "border-[#E8D5A3]/50"
+                    vencido ? "border-red-200" : "border-[#E0D0B4]/50"
                   }`}
                 >
                   <div className="flex items-start gap-3">
@@ -161,7 +161,7 @@ export default function PortalPlano() {
                       {cfg.icon}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium leading-snug ${item.status === "concluido" ? "line-through text-[#9CA3AF]" : "text-[#0D2B2E]"}`}>
+                      <p className={`text-sm font-medium leading-snug ${item.status === "concluido" ? "line-through text-[#9CA3AF]" : "text-[#1A2E3A]"}`}>
                         {item.descricao}
                       </p>
                       <div className="flex items-center gap-3 mt-1.5 flex-wrap">

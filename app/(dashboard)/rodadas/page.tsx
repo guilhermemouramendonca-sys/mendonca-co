@@ -27,7 +27,7 @@ type Rodada = {
 const TIPO_COR: Record<TipoRodada, string> = { q12: "#27AE60", gptw: "#8E44AD" };
 const TIPO_LABEL: Record<TipoRodada, string> = { q12: "Q12", gptw: "GPTW" };
 const STATUS_LABEL: Record<StatusRodada, string> = { aberta: "Aberta", consolidada: "Consolidada", encerrada: "Encerrada" };
-const STATUS_COR: Record<StatusRodada, string> = { aberta: "#27AE60", consolidada: "#C9A84C", encerrada: "#6B6B6B" };
+const STATUS_COR: Record<StatusRodada, string> = { aberta: "#27AE60", consolidada: "#C2A878", encerrada: "#6B6B6B" };
 
 export default function RodadasPage() {
   const supabase = createClient();
@@ -159,7 +159,7 @@ export default function RodadasPage() {
               <div>
                 <label className="text-xs font-semibold text-text-muted uppercase tracking-wide block mb-2">Empresa (opcional)</label>
                 <input
-                  className="w-full border border-[#E8D5A3] rounded-btn px-3 py-2 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-full border border-[#E0D0B4] rounded-btn px-3 py-2 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-gold/30"
                   value={novaEmpresa}
                   onChange={(e) => setNovaEmpresa(e.target.value)}
                   placeholder="Nome da empresa"
@@ -169,7 +169,7 @@ export default function RodadasPage() {
             <div className="mb-4">
               <label className="text-xs font-semibold text-text-muted uppercase tracking-wide block mb-2">Nome da rodada *</label>
               <input
-                className="w-full border border-[#E8D5A3] rounded-btn px-3 py-2 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-gold/30"
+                className="w-full border border-[#E0D0B4] rounded-btn px-3 py-2 text-sm bg-surface focus:outline-none focus:ring-2 focus:ring-gold/30"
                 value={novoNome}
                 onChange={(e) => setNovoNome(e.target.value)}
                 placeholder={`Ex: ${TIPO_LABEL[novoTipo]} — Time Comercial — Jun/2025`}
@@ -181,7 +181,7 @@ export default function RodadasPage() {
                 <select
                   value={novaCategoria}
                   onChange={(e) => setNovaCategoria(e.target.value)}
-                  className="w-full h-9 px-3 rounded-btn border border-[#E8D5A3] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-full h-9 px-3 rounded-btn border border-[#E0D0B4] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30"
                 >
                   <option value="">Selecionar (opcional)</option>
                   {CATEGORIAS.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
@@ -192,7 +192,7 @@ export default function RodadasPage() {
                 <select
                   value={novoSegmento}
                   onChange={(e) => setNovoSegmento(e.target.value)}
-                  className="w-full h-9 px-3 rounded-btn border border-[#E8D5A3] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-full h-9 px-3 rounded-btn border border-[#E0D0B4] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30"
                 >
                   <option value="">Selecionar (opcional)</option>
                   {SEGMENTOS.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
@@ -248,10 +248,10 @@ export default function RodadasPage() {
                 </div>
 
                 {aberto && (
-                  <div className="border-t border-[#E8D5A3]/30 p-4 bg-bg/30">
+                  <div className="border-t border-[#E0D0B4]/30 p-4 bg-bg/30">
                     {/* Score consolidado se tiver */}
                     {consolidado && (
-                      <div className="mb-4 p-4 bg-surface rounded-btn border border-[#E8D5A3]/50">
+                      <div className="mb-4 p-4 bg-surface rounded-btn border border-[#E0D0B4]/50">
                         <p className="text-xs font-semibold text-text-muted uppercase tracking-wide mb-3">Resultado Consolidado</p>
                         <div className="flex items-center gap-6">
                           <div>

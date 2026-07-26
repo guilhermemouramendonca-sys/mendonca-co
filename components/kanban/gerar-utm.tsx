@@ -85,7 +85,7 @@ export function GerarUTM({ onClose }: Props) {
                   className={`px-3 py-2 rounded-btn text-xs font-medium border transition-colors ${
                     source === f.id
                       ? "bg-primary/10 border-primary text-primary"
-                      : "border-[#E8D5A3] text-text-muted hover:text-text-main hover:border-[#C9A84C]"
+                      : "border-[#E0D0B4] text-text-muted hover:text-text-main hover:border-[#C2A878]"
                   }`}
                 >
                   {f.label}
@@ -111,7 +111,7 @@ export function GerarUTM({ onClose }: Props) {
           </div>
 
           {urlGerada && (
-            <div className="bg-background border border-[#E8D5A3] rounded-btn p-3">
+            <div className="bg-background border border-[#E0D0B4] rounded-btn p-3">
               <p className="text-[10px] text-text-muted uppercase font-medium mb-1.5">Link gerado</p>
               <p className="text-xs text-text-main break-all font-mono leading-relaxed">{urlGerada}</p>
               <button
@@ -125,7 +125,7 @@ export function GerarUTM({ onClose }: Props) {
           )}
         </div>
 
-        <div className="mt-6 pt-4 border-t border-[#E8D5A3]/50">
+        <div className="mt-6 pt-4 border-t border-[#E0D0B4]/50">
           <p className="text-[11px] text-text-muted leading-relaxed">
             Quando um lead chegar pelo link UTM, a fonte será capturada automaticamente no CRM.
             Acompanhe os resultados em Origens & Canais.

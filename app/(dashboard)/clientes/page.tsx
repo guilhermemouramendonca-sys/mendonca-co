@@ -81,7 +81,7 @@ export default function ClientesPage() {
           <p className="text-text-muted mt-1">{clientes.length} empresa{clientes.length !== 1 ? "s" : ""} cadastrada{clientes.length !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex rounded-btn border border-[#E8D5A3]/50 overflow-hidden text-xs">
+          <div className="flex rounded-btn border border-[#E0D0B4]/50 overflow-hidden text-xs">
             {(["todos", "meus"] as const).map((f) => (
               <button
                 key={f}
@@ -92,7 +92,7 @@ export default function ClientesPage() {
               </button>
             ))}
           </div>
-          <div className="flex rounded-btn border border-[#E8D5A3]/50 overflow-hidden text-xs">
+          <div className="flex rounded-btn border border-[#E0D0B4]/50 overflow-hidden text-xs">
             {(["todos", "ativo", "pausado", "encerrado"] as const).map((s) => (
               <button
                 key={s}

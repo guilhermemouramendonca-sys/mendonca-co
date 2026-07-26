@@ -64,7 +64,7 @@ export function calcularGPTW(respostas: RespostasGPTW): ResultadoGPTW {
   let nivel: string;
   let cor: string;
   if (trustIndex >= 80) { nivel = "Excelente Lugar para Trabalhar"; cor = "#27AE60"; }
-  else if (trustIndex >= 65) { nivel = "Bom Lugar para Trabalhar"; cor = "#C9A84C"; }
+  else if (trustIndex >= 65) { nivel = "Bom Lugar para Trabalhar"; cor = "#C2A878"; }
   else if (trustIndex >= 50) { nivel = "Em Desenvolvimento"; cor = "#E67E22"; }
   else { nivel = "Necessita Atenção Urgente"; cor = "#C0392B"; }
 

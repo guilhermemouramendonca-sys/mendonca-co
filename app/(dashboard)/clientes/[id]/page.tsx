@@ -239,7 +239,7 @@ export default function ClienteFichaPage() {
       </div>
 
       {/* Abas */}
-      <div className="flex border-b border-[#E8D5A3]/50 mb-6">
+      <div className="flex border-b border-[#E0D0B4]/50 mb-6">
         {[
           { id: "visao", label: "Visão Geral" },
           { id: "contatos", label: `Contatos (${contatos.length})` },
@@ -303,7 +303,7 @@ export default function ClienteFichaPage() {
               {sessoes.slice(0, 3).length === 0 ? (
                 <p className="text-sm text-text-muted">Nenhuma sessão registrada.</p>
               ) : sessoes.slice(0, 3).map((s) => (
-                <div key={s.id} className="flex items-center justify-between py-2 border-b border-[#E8D5A3]/30 last:border-0">
+                <div key={s.id} className="flex items-center justify-between py-2 border-b border-[#E0D0B4]/30 last:border-0">
                   <div>
                     <p className="text-sm font-medium text-text-main">{TIPO_SESSAO_LABELS[s.tipo] ?? s.tipo}</p>
                     {s.duracao_minutos && <p className="text-xs text-text-muted">{s.duracao_minutos} min</p>}
@@ -326,7 +326,7 @@ export default function ClienteFichaPage() {
               {interacoes.slice(0, 3).length === 0 ? (
                 <p className="text-sm text-text-muted">Nenhuma interação registrada.</p>
               ) : interacoes.slice(0, 3).map((i) => (
-                <div key={i.id} className="flex gap-2 py-2 border-b border-[#E8D5A3]/30 last:border-0">
+                <div key={i.id} className="flex gap-2 py-2 border-b border-[#E0D0B4]/30 last:border-0">
                   <span className="text-gold mt-0.5">{TIPO_ICONS[i.tipo]}</span>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-text-main truncate">{i.descricao}</p>
@@ -372,7 +372,7 @@ export default function ClienteFichaPage() {
                   <div className="space-y-1.5">
                     <Label>Papel</Label>
                     <select value={novoContato.papel} onChange={(e) => setNovoContato((p) => ({ ...p, papel: e.target.value }))}
-                      className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                      className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                       {Object.entries(PAPEL_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                     </select>
                   </div>
@@ -443,7 +443,7 @@ export default function ClienteFichaPage() {
                   <div className="space-y-1.5">
                     <Label>Tipo</Label>
                     <select value={novaSessao.tipo} onChange={(e) => setNovaSessao((p) => ({ ...p, tipo: e.target.value }))}
-                      className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                      className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                       {Object.entries(TIPO_SESSAO_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                     </select>
                   </div>
@@ -460,13 +460,13 @@ export default function ClienteFichaPage() {
                   <Label>Anotações da sessão</Label>
                   <textarea value={novaSessao.anotacoes} onChange={(e) => setNovaSessao((p) => ({ ...p, anotacoes: e.target.value }))} rows={3}
                     placeholder="O que foi discutido..."
-                    className="flex w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none" />
+                    className="flex w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none" />
                 </div>
                 <div className="space-y-1.5">
                   <Label>Próximos passos</Label>
                   <textarea value={novaSessao.proximos_passos} onChange={(e) => setNovaSessao((p) => ({ ...p, proximos_passos: e.target.value }))} rows={2}
                     placeholder="Ações acordadas..."
-                    className="flex w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none" />
+                    className="flex w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none" />
                 </div>
                 <div className="flex gap-2 justify-end">
                   <Button variant="secondary" onClick={() => setAdicionandoSessao(false)}>Cancelar</Button>
@@ -523,7 +523,7 @@ export default function ClienteFichaPage() {
                 {["whatsapp", "email", "ligacao", "reuniao", "nota"].map((tipo) => (
                   <button key={tipo} onClick={() => setNovaInteracao((p) => ({ ...p, tipo }))}
                     className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-medium transition-colors ${
-                      novaInteracao.tipo === tipo ? "bg-gold text-primary" : "bg-bg border border-[#E8D5A3] text-text-muted hover:text-text-main"
+                      novaInteracao.tipo === tipo ? "bg-gold text-primary" : "bg-bg border border-[#E0D0B4] text-text-muted hover:text-text-main"
                     }`}>
                     {TIPO_ICONS[tipo]}
                     {tipo.charAt(0).toUpperCase() + tipo.slice(1)}
@@ -546,7 +546,7 @@ export default function ClienteFichaPage() {
           ) : (
             <div className="space-y-2">
               {interacoes.map((i) => (
-                <div key={i.id} className="flex gap-3 p-4 bg-surface rounded-btn border border-[#E8D5A3]/50">
+                <div key={i.id} className="flex gap-3 p-4 bg-surface rounded-btn border border-[#E0D0B4]/50">
                   <span className="text-gold mt-0.5">{TIPO_ICONS[i.tipo] ?? <FileText size={13} />}</span>
                   <div className="flex-1">
                     <p className="text-sm text-text-main">{i.descricao}</p>
@@ -571,7 +571,7 @@ export default function ClienteFichaPage() {
       {modalCompartilhar && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-xl">
-            <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+            <div className="flex items-center justify-between p-6 border-b border-[#E0D0B4]/50">
               <div>
                 <h2 className="font-display text-xl font-semibold text-text-main">Portal do Cliente</h2>
                 <p className="text-xs text-text-muted mt-0.5">Documentos visíveis para {cliente.nome}</p>
@@ -602,7 +602,7 @@ export default function ClienteFichaPage() {
             </div>
 
             {/* Formulário novo compartilhamento */}
-            <div className="px-6 pb-6 space-y-3 border-t border-[#E8D5A3]/30 pt-4">
+            <div className="px-6 pb-6 space-y-3 border-t border-[#E0D0B4]/30 pt-4">
               <p className="text-xs font-semibold text-text-muted uppercase tracking-wide">Compartilhar novo documento</p>
               <div className="space-y-1.5">
                 <Label>Título *</Label>
@@ -610,7 +610,7 @@ export default function ClienteFichaPage() {
                   value={formComp.titulo}
                   onChange={(e) => setFormComp((p) => ({ ...p, titulo: e.target.value }))}
                   placeholder="Ex: Relatório Executivo — Jun/2025"
-                  className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                  className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                 />
               </div>
               <div className="space-y-1.5">
@@ -619,7 +619,7 @@ export default function ClienteFichaPage() {
                   value={formComp.arquivo_url}
                   onChange={(e) => setFormComp((p) => ({ ...p, arquivo_url: e.target.value }))}
                   placeholder="https://..."
-                  className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                  className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -628,7 +628,7 @@ export default function ClienteFichaPage() {
                   <select
                     value={formComp.tipo}
                     onChange={(e) => setFormComp((p) => ({ ...p, tipo: e.target.value }))}
-                    className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                    className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                   >
                     {[["relatorio","Relatório"],["diagnostico","Diagnóstico"],["radar360","Radar 360"],["pesquisa","Pesquisa"],["canvas","Canvas"],["proposta","Proposta"],["plano_acao","Plano de Ação"],["documento","Documento"],["outro","Outro"]].map(([v,l]) => (
                       <option key={v} value={v}>{l}</option>
@@ -641,7 +641,7 @@ export default function ClienteFichaPage() {
                     value={formComp.descricao}
                     onChange={(e) => setFormComp((p) => ({ ...p, descricao: e.target.value }))}
                     placeholder="Opcional..."
-                    className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                    className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                   />
                 </div>
               </div>

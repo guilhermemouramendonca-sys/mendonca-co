@@ -32,7 +32,7 @@ export default function MentoriaExpressaPage() {
               placeholder="Descreva brevemente o que está travando o seu crescimento..."
               rows={3}
               maxLength={500}
-              className="flex w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none"
+              className="flex w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none"
             />
             <p className="text-xs text-text-muted text-right">{gargalo.length}/500</p>
           </div>
@@ -42,7 +42,7 @@ export default function MentoriaExpressaPage() {
             <select
               value={disponibilidade}
               onChange={(e) => setDisponibilidade(e.target.value)}
-              className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+              className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
             >
               <option value="">Selecione...</option>
               {HORARIOS.map((h) => <option key={h} value={h}>{h}</option>)}

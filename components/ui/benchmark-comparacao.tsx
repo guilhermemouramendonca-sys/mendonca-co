@@ -56,7 +56,7 @@ export function BenchmarkComparacao({
     : `abaixo da ${benchmark.label}`;
 
   return (
-    <div className="mt-4 rounded-btn border border-[#E8D5A3]/40 bg-[#F5F0E8] px-4 py-3 flex items-center gap-3">
+    <div className="mt-4 rounded-btn border border-[#E0D0B4]/40 bg-[#F5F5F3] px-4 py-3 flex items-center gap-3">
       <Icon size={16} style={{ color: corDiff, flexShrink: 0 }} />
       <div className="flex-1 text-left">
         <p className="text-xs text-[#6B6B6B] leading-snug">

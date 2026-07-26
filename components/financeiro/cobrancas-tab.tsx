@@ -25,7 +25,7 @@ export type Cobranca = {
 type Cliente = { id: string; nome: string };
 
 const STATUS_LABELS: Record<string, string> = { pendente: "Pendente", pago: "Pago", atrasado: "Atrasado", cancelado: "Cancelado" };
-const STATUS_CORES: Record<string, string> = { pendente: "#C9A84C", pago: "#27AE60", atrasado: "#C0392B", cancelado: "#95A5A6" };
+const STATUS_CORES: Record<string, string> = { pendente: "#C2A878", pago: "#27AE60", atrasado: "#C0392B", cancelado: "#95A5A6" };
 const STATUS_ICONS = { pendente: Clock, pago: CheckCircle, atrasado: AlertCircle, cancelado: Clock };
 
 const EMPTY = {
@@ -112,7 +112,7 @@ export default function CobrancasTab({ cobrancas, clientes, contratos, onRefresh
       {/* Resumo */}
       {cobrancas.length > 0 && (
         <div className="grid grid-cols-3 gap-4 mb-6">
-          <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-4">
+          <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-4">
             <p className="text-xs text-text-muted mb-1">A receber</p>
             <p className="font-mono-data text-xl font-bold text-text-main">{formatCurrency(totalPendente)}</p>
           </div>
@@ -120,7 +120,7 @@ export default function CobrancasTab({ cobrancas, clientes, contratos, onRefresh
             <p className="text-xs text-text-muted mb-1">Em atraso</p>
             <p className="font-mono-data text-xl font-bold text-warning">{formatCurrency(totalAtrasado)}</p>
           </div>
-          <div className="bg-surface rounded-card border border-[#E8D5A3]/50 p-4">
+          <div className="bg-surface rounded-card border border-[#E0D0B4]/50 p-4">
             <p className="text-xs text-text-muted mb-1">Recebido (mês)</p>
             <p className="font-mono-data text-xl font-bold text-success">
               {formatCurrency(cobransaProcessadas.filter((c) => c.status === "pago" && c.data_pagamento?.startsWith(new Date().toISOString().slice(0, 7))).reduce((s, c) => s + c.valor, 0))}
@@ -137,7 +137,7 @@ export default function CobrancasTab({ cobrancas, clientes, contratos, onRefresh
               <button
                 key={s}
                 onClick={() => setFiltroStatus(s)}
-                className={`px-3 py-1.5 rounded-btn text-xs font-medium transition-colors ${filtroStatus === s ? "bg-primary text-gold" : "bg-surface text-text-muted hover:text-text-main border border-[#E8D5A3]/50"}`}
+                className={`px-3 py-1.5 rounded-btn text-xs font-medium transition-colors ${filtroStatus === s ? "bg-primary text-gold" : "bg-surface text-text-muted hover:text-text-main border border-[#E0D0B4]/50"}`}
               >
                 {s === "todos" ? "Todos" : STATUS_LABELS[s]}
                 <span className="ml-1.5 opacity-60">({count})</span>
@@ -166,7 +166,7 @@ export default function CobrancasTab({ cobrancas, clientes, contratos, onRefresh
                 const isAtrasada = c.status === "atrasado";
                 const isPaga = c.status === "pago";
                 return (
-                  <div key={c.id} className={`flex items-center gap-4 px-5 py-4 rounded-card border ${isAtrasada ? "border-danger/30 bg-danger/5" : "border-[#E8D5A3]/50 bg-surface"}`}>
+                  <div key={c.id} className={`flex items-center gap-4 px-5 py-4 rounded-card border ${isAtrasada ? "border-danger/30 bg-danger/5" : "border-[#E0D0B4]/50 bg-surface"}`}>
                     <Icon size={18} style={{ color: STATUS_CORES[c.status] }} className="flex-shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-text-main truncate">{c.cliente_nome} — {c.descricao}</p>
@@ -204,13 +204,13 @@ export default function CobrancasTab({ cobrancas, clientes, contratos, onRefresh
       {modalAberto && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-[#E8D5A3]/30">
+            <div className="p-6 border-b border-[#E0D0B4]/30">
               <h2 className="font-display text-xl font-semibold text-text-main">Nova cobrança</h2>
             </div>
             <div className="p-6 space-y-4">
               <div className="space-y-1.5">
                 <Label>Cliente *</Label>
-                <select value={form.cliente_id} onChange={(e) => setForm({ ...form, cliente_id: e.target.value, contrato_id: null })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                <select value={form.cliente_id} onChange={(e) => setForm({ ...form, cliente_id: e.target.value, contrato_id: null })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                   <option value="">Selecionar cliente</option>
                   {clientes.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
                 </select>
@@ -218,7 +218,7 @@ export default function CobrancasTab({ cobrancas, clientes, contratos, onRefresh
               {contratosDoCliente.length > 0 && (
                 <div className="space-y-1.5">
                   <Label>Contrato (opcional)</Label>
-                  <select value={form.contrato_id ?? ""} onChange={(e) => preencherContrato(e.target.value)} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                  <select value={form.contrato_id ?? ""} onChange={(e) => preencherContrato(e.target.value)} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                     <option value="">— Sem contrato —</option>
                     {contratosDoCliente.map((c) => <option key={c.id} value={c.id}>{c.descricao}</option>)}
                   </select>
@@ -239,7 +239,7 @@ export default function CobrancasTab({ cobrancas, clientes, contratos, onRefresh
                 </div>
               </div>
             </div>
-            <div className="p-6 border-t border-[#E8D5A3]/30 flex justify-end gap-3">
+            <div className="p-6 border-t border-[#E0D0B4]/30 flex justify-end gap-3">
               <Button variant="secondary" onClick={() => setModalAberto(false)}>Cancelar</Button>
               <Button onClick={salvar} disabled={salvando || !form.cliente_id || !form.descricao.trim() || form.valor <= 0}>{salvando ? "Salvando..." : "Salvar"}</Button>
             </div>

@@ -192,7 +192,7 @@ export default function TurmasPage() {
       </div>
 
       {/* Filtros */}
-      <div className="flex rounded-btn border border-[#E8D5A3]/50 overflow-hidden text-xs w-fit mb-6">
+      <div className="flex rounded-btn border border-[#E0D0B4]/50 overflow-hidden text-xs w-fit mb-6">
         {(["todas", "inscricoes_abertas", "em_andamento", "encerrada", "rascunho"] as const).map((f) => (
           <button
             key={f}
@@ -267,7 +267,7 @@ export default function TurmasPage() {
                           {ocupacao}%
                         </span>
                       </div>
-                      <div className="w-full bg-[#E8D5A3]/30 rounded-full h-1.5">
+                      <div className="w-full bg-[#E0D0B4]/30 rounded-full h-1.5">
                         <div
                           className="h-1.5 rounded-full transition-all"
                           style={{
@@ -279,7 +279,7 @@ export default function TurmasPage() {
                     </div>
 
                     {t.preco && (
-                      <div className="flex items-center justify-between pt-1 border-t border-[#E8D5A3]/30">
+                      <div className="flex items-center justify-between pt-1 border-t border-[#E0D0B4]/30">
                         <span className="text-xs text-text-muted">Investimento</span>
                         <span className="font-mono-data text-sm font-semibold text-text-main">
                           {t.preco.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
@@ -302,7 +302,7 @@ export default function TurmasPage() {
       {modalAberto && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-xl">
-            <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+            <div className="flex items-center justify-between p-6 border-b border-[#E0D0B4]/50">
               <h2 className="font-display text-2xl font-semibold text-text-main">Nova Turma</h2>
               <button onClick={() => setModalAberto(false)} className="text-text-muted hover:text-text-main">✕</button>
             </div>
@@ -316,13 +316,13 @@ export default function TurmasPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label>Tipo</Label>
-                  <select value={form.tipo} onChange={(e) => set("tipo", e.target.value)} className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                  <select value={form.tipo} onChange={(e) => set("tipo", e.target.value)} className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                     {Object.entries(TIPO_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                   </select>
                 </div>
                 <div className="space-y-1.5">
                   <Label>Modalidade</Label>
-                  <select value={form.modalidade} onChange={(e) => set("modalidade", e.target.value)} className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                  <select value={form.modalidade} onChange={(e) => set("modalidade", e.target.value)} className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                     <option value="presencial">Presencial</option>
                     <option value="online">Online</option>
                     <option value="hibrido">Híbrido</option>
@@ -332,7 +332,7 @@ export default function TurmasPage() {
 
               <div className="space-y-1.5">
                 <Label>Descrição</Label>
-                <textarea value={form.descricao} onChange={(e) => set("descricao", e.target.value)} rows={2} placeholder="Público-alvo, objetivos, diferenciais..." className="flex w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold resize-none" />
+                <textarea value={form.descricao} onChange={(e) => set("descricao", e.target.value)} rows={2} placeholder="Público-alvo, objetivos, diferenciais..." className="flex w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold resize-none" />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -373,13 +373,13 @@ export default function TurmasPage() {
 
               <div className="space-y-1.5">
                 <Label>Status</Label>
-                <select value={form.status} onChange={(e) => set("status", e.target.value)} className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                <select value={form.status} onChange={(e) => set("status", e.target.value)} className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                   {Object.entries(STATUS_CONFIG).map(([v, c]) => <option key={v} value={v}>{c.label}</option>)}
                 </select>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 p-6 border-t border-[#E8D5A3]/50">
+            <div className="flex items-center justify-end gap-3 p-6 border-t border-[#E0D0B4]/50">
               <Button variant="secondary" onClick={() => setModalAberto(false)}>Cancelar</Button>
               <Button onClick={salvar} disabled={salvando || !form.nome}>
                 {salvando ? "Salvando..." : "Criar Turma"}

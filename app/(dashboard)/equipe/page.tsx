@@ -26,11 +26,11 @@ type Membro = {
 };
 
 const PAPEL_CONFIG: Record<Papel, { label: string; descricao: string; cor: string }> = {
-  admin:    { label: "Admin",     descricao: "Acesso total ao sistema",                        cor: "#0D2B2E" },
+  admin:    { label: "Admin",     descricao: "Acesso total ao sistema",                        cor: "#1A2E3A" },
   consultor:{ label: "Consultor", descricao: "Vê sua carteira de clientes e diagnósticos",     cor: "#2980B9" },
   cs:       { label: "CS",        descricao: "Sucesso do cliente, financeiro e administrativo", cor: "#27AE60" },
   sdr:      { label: "SDR",       descricao: "Prospecção — cria e qualifica leads",             cor: "#8E44AD" },
-  closer:   { label: "Closer",    descricao: "Fecha negócios — vê propostas e negociações",    cor: "#C9A84C" },
+  closer:   { label: "Closer",    descricao: "Fecha negócios — vê propostas e negociações",    cor: "#C2A878" },
 };
 
 const EQUIPE_PRE_DEFINIDA = [
@@ -188,7 +188,7 @@ export default function EquipePage() {
                     key={key}
                     onClick={() => setForm({ ...form, papel: key })}
                     className={`p-3 rounded-btn border-2 text-left transition-all ${
-                      form.papel === key ? "border-gold bg-gold/5" : "border-[#E8D5A3]/40 hover:border-gold/40"
+                      form.papel === key ? "border-gold bg-gold/5" : "border-[#E0D0B4]/40 hover:border-gold/40"
                     }`}
                   >
                     <span
@@ -231,7 +231,7 @@ export default function EquipePage() {
                       setForm({ nome: p.nome, email: "", papel: p.papel, cargo: p.cargo, whatsapp: "" });
                       setCriando(true);
                     }}
-                    className="px-3 py-2 text-xs rounded-btn bg-surface border border-[#E8D5A3]/50 text-text-muted hover:text-text-main hover:border-gold/40 transition-all"
+                    className="px-3 py-2 text-xs rounded-btn bg-surface border border-[#E0D0B4]/50 text-text-muted hover:text-text-main hover:border-gold/40 transition-all"
                   >
                     + {p.nome}
                   </button>
@@ -262,7 +262,7 @@ export default function EquipePage() {
                         style={{ backgroundColor: cfg.cor + "18", color: cfg.cor }}
                       >{cfg.label}</span>
                       {m.pendente && (
-                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E8D5A3]/40 text-text-muted font-medium">
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E0D0B4]/40 text-text-muted font-medium">
                           Aguardando convite
                         </span>
                       )}
@@ -312,7 +312,7 @@ export default function EquipePage() {
       </div>
 
       {/* Aviso de convite */}
-      <div className="mt-8 p-4 rounded-btn border border-[#E8D5A3]/40 bg-gold/5">
+      <div className="mt-8 p-4 rounded-btn border border-[#E0D0B4]/40 bg-gold/5">
         <p className="text-xs text-text-muted">
           <span className="font-semibold text-text-main">Convites não enviados ainda.</span>{" "}
           Quando estiver pronto para dar acesso à equipe, vá em Configurações → Enviar convites.

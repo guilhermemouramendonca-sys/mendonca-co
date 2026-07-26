@@ -34,8 +34,8 @@ const PAPEL_LABELS: Record<string, string> = {
 };
 
 const PAPEL_CORES: Record<string, string> = {
-  admin: "#0D2B2E",
-  cliente_dono: "#C9A84C",
+  admin: "#1A2E3A",
+  cliente_dono: "#C2A878",
   cliente_lider: "#2980B9",
   cliente_funcionario: "#27AE60",
 };
@@ -166,7 +166,7 @@ export default function ConfiguracoesPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-8 bg-surface rounded-btn p-1 w-fit border border-[#E8D5A3]/50">
+      <div className="flex gap-1 mb-8 bg-surface rounded-btn p-1 w-fit border border-[#E0D0B4]/50">
         {ABAS.map((aba) => {
           const Icon = aba.icon;
           return (
@@ -255,7 +255,7 @@ export default function ConfiguracoesPage() {
           ) : (
             <div className="space-y-3">
               {usuarios.map((u) => (
-                <div key={u.id} className={`bg-surface rounded-card border px-5 py-4 flex items-center gap-4 ${!u.ativo ? "opacity-50 border-[#E8D5A3]/30" : "border-[#E8D5A3]/50"}`}>
+                <div key={u.id} className={`bg-surface rounded-card border px-5 py-4 flex items-center gap-4 ${!u.ativo ? "opacity-50 border-[#E0D0B4]/30" : "border-[#E0D0B4]/50"}`}>
                   <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
                     <span className="text-gold font-display font-bold text-sm">{u.nome?.charAt(0) ?? "?"}</span>
                   </div>
@@ -265,7 +265,7 @@ export default function ConfiguracoesPage() {
                       <span className="text-[10px] px-2 py-0.5 rounded-full font-medium text-white" style={{ backgroundColor: PAPEL_CORES[u.papel] ?? "#999" }}>
                         {PAPEL_LABELS[u.papel] ?? u.papel}
                       </span>
-                      {!u.ativo && <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E8D5A3]/30 text-text-muted">Inativo</span>}
+                      {!u.ativo && <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E0D0B4]/30 text-text-muted">Inativo</span>}
                     </div>
                     <p className="text-xs text-text-muted flex items-center gap-1 mt-0.5">
                       <Mail size={10} /> {u.email}
@@ -275,7 +275,7 @@ export default function ConfiguracoesPage() {
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <button
                       onClick={() => toggleAtivo(u)}
-                      className={`text-xs px-2.5 py-1 rounded-btn font-medium transition-colors ${u.ativo ? "bg-[#E8D5A3]/30 text-text-muted hover:bg-danger/10 hover:text-danger" : "bg-success/10 text-success hover:bg-success/20"}`}
+                      className={`text-xs px-2.5 py-1 rounded-btn font-medium transition-colors ${u.ativo ? "bg-[#E0D0B4]/30 text-text-muted hover:bg-danger/10 hover:text-danger" : "bg-success/10 text-success hover:bg-success/20"}`}
                     >
                       {u.ativo ? "Desativar" : "Reativar"}
                     </button>
@@ -292,7 +292,7 @@ export default function ConfiguracoesPage() {
           {modalConvite && (
             <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
               <div className="bg-surface rounded-card shadow-xl w-full max-w-md">
-                <div className="p-6 border-b border-[#E8D5A3]/30">
+                <div className="p-6 border-b border-[#E0D0B4]/30">
                   <h2 className="font-display text-xl font-semibold text-text-main">Adicionar usuário</h2>
                 </div>
                 <div className="p-6 space-y-4">
@@ -306,7 +306,7 @@ export default function ConfiguracoesPage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label>Papel</Label>
-                    <select value={convite.papel} onChange={(e) => setConvite({ ...convite, papel: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                    <select value={convite.papel} onChange={(e) => setConvite({ ...convite, papel: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                       {Object.entries(PAPEL_LABELS).filter(([v]) => v !== "admin").map(([v, l]) => (
                         <option key={v} value={v}>{l}</option>
                       ))}
@@ -315,7 +315,7 @@ export default function ConfiguracoesPage() {
                   {convite.papel !== "admin" && (
                     <div className="space-y-1.5">
                       <Label>Cliente associado</Label>
-                      <select value={convite.cliente_id} onChange={(e) => setConvite({ ...convite, cliente_id: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                      <select value={convite.cliente_id} onChange={(e) => setConvite({ ...convite, cliente_id: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                         <option value="">— Selecionar —</option>
                         {clientes.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
                       </select>
@@ -328,7 +328,7 @@ export default function ConfiguracoesPage() {
                     </div>
                   )}
                 </div>
-                <div className="p-6 border-t border-[#E8D5A3]/30 flex justify-end gap-3">
+                <div className="p-6 border-t border-[#E0D0B4]/30 flex justify-end gap-3">
                   <Button variant="secondary" onClick={() => { setModalConvite(false); setFeedbackConvite(null); }}>Fechar</Button>
                   <Button onClick={enviarConvite} disabled={enviandoConvite || !convite.email.trim() || !convite.nome.trim()}>
                     {enviandoConvite ? "Adicionando..." : "Adicionar"}
@@ -356,7 +356,7 @@ export default function ConfiguracoesPage() {
                   };
                   const count = usuarios.filter((u) => u.papel === papel).length;
                   return (
-                    <div key={papel} className="flex items-start gap-4 p-4 bg-bg rounded-btn border border-[#E8D5A3]/50">
+                    <div key={papel} className="flex items-start gap-4 p-4 bg-bg rounded-btn border border-[#E0D0B4]/50">
                       <div className="w-3 h-3 rounded-full mt-1 flex-shrink-0" style={{ backgroundColor: PAPEL_CORES[papel] }} />
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
@@ -375,15 +375,15 @@ export default function ConfiguracoesPage() {
           <Card>
             <CardHeader><CardTitle>Sobre o sistema</CardTitle></CardHeader>
             <CardContent className="space-y-2 text-sm text-text-muted">
-              <div className="flex justify-between py-1.5 border-b border-[#E8D5A3]/30">
+              <div className="flex justify-between py-1.5 border-b border-[#E0D0B4]/30">
                 <span>Sistema</span>
                 <span className="text-text-main font-medium">Mendonça & Co v1.0</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-[#E8D5A3]/30">
+              <div className="flex justify-between py-1.5 border-b border-[#E0D0B4]/30">
                 <span>Framework</span>
                 <span className="text-text-main">Next.js 14 + Supabase</span>
               </div>
-              <div className="flex justify-between py-1.5 border-b border-[#E8D5A3]/30">
+              <div className="flex justify-between py-1.5 border-b border-[#E0D0B4]/30">
                 <span>Módulos ativos</span>
                 <span className="text-text-main">9 módulos</span>
               </div>

@@ -128,13 +128,13 @@ export default function PesquisasPage() {
               className={`flex items-center gap-2 px-4 py-2.5 rounded-btn text-sm font-medium transition-all ${
                 abaAtiva === tipo
                   ? "text-white shadow-sm"
-                  : "bg-surface text-text-muted hover:text-text-main border border-[#E8D5A3]/50"
+                  : "bg-surface text-text-muted hover:text-text-main border border-[#E0D0B4]/50"
               }`}
               style={abaAtiva === tipo ? { backgroundColor: TIPO_CORES[tipo] } : {}}
             >
               <span>{TIPO_LABELS[tipo]}</span>
               {total > 0 && (
-                <span className={`text-xs px-1.5 py-0.5 rounded-full ${abaAtiva === tipo ? "bg-white/20" : "bg-[#E8D5A3]/30"}`}>
+                <span className={`text-xs px-1.5 py-0.5 rounded-full ${abaAtiva === tipo ? "bg-white/20" : "bg-[#E0D0B4]/30"}`}>
                   {concl}/{total}
                 </span>
               )}
@@ -190,7 +190,7 @@ export default function PesquisasPage() {
                   </div>
 
                   {expandido === p.id && p.resultado && (
-                    <div className="border-t border-[#E8D5A3]/30 p-4 bg-bg">
+                    <div className="border-t border-[#E0D0B4]/30 p-4 bg-bg">
                       {p.tipo === "disc" && <ResultadoDISC resultado={p.resultado} />}
                       {p.tipo === "q12" && <ResultadoQ12 resultado={p.resultado} />}
                       {p.tipo === "gptw" && <ResultadoGPTW resultado={p.resultado} />}
@@ -211,7 +211,7 @@ export default function PesquisasPage() {
           </h2>
           <div className="space-y-2">
             {pendentes.map((p) => (
-              <div key={p.id} className="flex items-center justify-between p-4 bg-surface rounded-btn border border-[#E8D5A3]/50">
+              <div key={p.id} className="flex items-center justify-between p-4 bg-surface rounded-btn border border-[#E0D0B4]/50">
                 <div className="flex items-center gap-3">
                   <FileText size={16} className="text-text-muted" />
                   <div>
@@ -264,7 +264,7 @@ function ResultadoDISC({ resultado }: { resultado: Record<string, unknown> }) {
           <div key={f} className="flex items-center gap-3">
             <span className="font-mono-data text-sm font-bold w-4" style={{ color: CORES_DISC[f] }}>{f}</span>
             <span className="text-xs text-text-muted w-20">{LABELS[f]}</span>
-            <div className="flex-1 bg-[#E8D5A3]/30 rounded-full h-2">
+            <div className="flex-1 bg-[#E0D0B4]/30 rounded-full h-2">
               <div className="h-2 rounded-full" style={{ width: `${percentual?.[f] ?? 0}%`, backgroundColor: CORES_DISC[f] }} />
             </div>
             <span className="text-xs font-mono-data text-text-muted w-8 text-right">{percentual?.[f] ?? 0}%</span>
@@ -301,7 +301,7 @@ function ResultadoQ12({ resultado }: { resultado: Record<string, unknown> }) {
           {Object.entries(porDimensao).map(([dim, val]) => (
             <div key={dim} className="flex items-center gap-3">
               <span className="text-xs text-text-muted w-36 flex-shrink-0">{dim}</span>
-              <div className="flex-1 bg-[#E8D5A3]/30 rounded-full h-2">
+              <div className="flex-1 bg-[#E0D0B4]/30 rounded-full h-2">
                 <div className="h-2 rounded-full bg-success" style={{ width: `${((val - 1) / 4) * 100}%` }} />
               </div>
               <span className="text-xs font-mono-data text-text-muted w-8 text-right">{val?.toFixed(1)}</span>
@@ -333,7 +333,7 @@ function ResultadoGPTW({ resultado }: { resultado: Record<string, unknown> }) {
           {Object.entries(porDimensao).map(([dim, val]) => (
             <div key={dim} className="flex items-center gap-3">
               <span className="text-xs text-text-muted w-32 flex-shrink-0">{dim}</span>
-              <div className="flex-1 bg-[#E8D5A3]/30 rounded-full h-2">
+              <div className="flex-1 bg-[#E0D0B4]/30 rounded-full h-2">
                 <div className="h-2 rounded-full" style={{ width: `${val}%`, backgroundColor: cor }} />
               </div>
               <span className="text-xs font-mono-data text-text-muted w-8 text-right">{val}%</span>

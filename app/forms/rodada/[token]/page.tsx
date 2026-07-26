@@ -221,7 +221,7 @@ export default function RodadaPublicaPage() {
                 className={`w-full text-left px-4 py-3 rounded-btn border-2 transition-all text-sm font-medium ${
                   respostaAtual === op.valor
                     ? "border-gold bg-gold/10 text-text-main"
-                    : "border-[#E8D5A3]/30 text-text-muted hover:border-gold/50 hover:text-text-main"
+                    : "border-[#E0D0B4]/30 text-text-muted hover:border-gold/50 hover:text-text-main"
                 }`}
               >
                 <span className="font-mono-data mr-3 text-gold">{op.valor}</span>

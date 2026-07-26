@@ -135,7 +135,7 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
       <div className="bg-surface rounded-card shadow-xl w-full max-w-lg flex flex-col max-h-[90vh]">
 
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+        <div className="flex items-center justify-between p-6 border-b border-[#E0D0B4]/50">
           <div className="flex items-center gap-3">
             {passo === 3
               ? <CheckCircle2 className="text-[#2D6A4F]" size={22} />
@@ -164,9 +164,9 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
             {[1, 2].map((p) => (
               <div key={p} className="flex items-center gap-0 flex-1">
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-                  passo >= p ? "bg-[#2D6A4F] text-white" : "bg-[#E8D5A3]/30 text-text-muted"
+                  passo >= p ? "bg-[#2D6A4F] text-white" : "bg-[#E0D0B4]/30 text-text-muted"
                 }`}>{p}</div>
-                {p < 2 && <div className={`flex-1 h-0.5 transition-colors ${passo > p ? "bg-[#2D6A4F]" : "bg-[#E8D5A3]/30"}`} />}
+                {p < 2 && <div className={`flex-1 h-0.5 transition-colors ${passo > p ? "bg-[#2D6A4F]" : "bg-[#E0D0B4]/30"}`} />}
               </div>
             ))}
             <div className="ml-3 flex gap-4 text-xs text-text-muted">
@@ -194,7 +194,7 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
               <div className="space-y-1.5">
                 <Label>O que foi decisivo para fechar? *</Label>
                 <textarea
-                  className="w-full rounded-btn border border-[#E8D5A3] bg-bg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-full rounded-btn border border-[#E0D0B4] bg-bg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30"
                   rows={3} placeholder="Ex: preço competitivo, fit com o serviço, urgência do cliente..."
                   value={motivo} onChange={(e) => setMotivo(e.target.value)} />
               </div>
@@ -211,7 +211,7 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
                       className={`px-3 py-2 rounded-btn text-xs font-medium text-left border transition-colors ${
                         categoria === cat.id
                           ? "bg-danger/10 border-danger text-danger"
-                          : "border-[#E8D5A3] text-text-muted hover:text-text-main hover:border-gold"
+                          : "border-[#E0D0B4] text-text-muted hover:text-text-main hover:border-gold"
                       }`}>
                       {cat.label}
                     </button>
@@ -221,7 +221,7 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
               <div className="space-y-1.5">
                 <Label>Detalhes do motivo *</Label>
                 <textarea
-                  className="w-full rounded-btn border border-[#E8D5A3] bg-bg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-full rounded-btn border border-[#E0D0B4] bg-bg p-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30"
                   rows={3} placeholder="Descreva o que levou à perda desse negócio..."
                   value={motivo} onChange={(e) => setMotivo(e.target.value)} />
               </div>
@@ -245,7 +245,7 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
                 <div className="space-y-1.5">
                   <Label>Setor</Label>
                   <select value={setor} onChange={(e) => setSetor(e.target.value)}
-                    className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
+                    className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
                     <option value="">Selecione...</option>
                     {SETORES.map((s) => <option key={s} value={s}>{s}</option>)}
                   </select>
@@ -253,7 +253,7 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
                 <div className="space-y-1.5">
                   <Label>Porte</Label>
                   <select value={porte} onChange={(e) => setPorte(e.target.value)}
-                    className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
+                    className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
                     <option value="">Selecione...</option>
                     {PORTES.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
                   </select>
@@ -263,7 +263,7 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
                 <div className="space-y-1.5">
                   <Label>Serviço contratado</Label>
                   <select value={modeloTrabalho} onChange={(e) => setModeloTrabalho(e.target.value)}
-                    className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
+                    className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-surface text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold/30">
                     <option value="">Selecione...</option>
                     {MODELOS.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
                   </select>
@@ -275,7 +275,7 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
               </div>
 
               {/* Contato principal */}
-              <div className="border-t border-[#E8D5A3]/50 pt-4 mt-2">
+              <div className="border-t border-[#E0D0B4]/50 pt-4 mt-2">
                 <label className="flex items-center gap-2 cursor-pointer mb-3">
                   <input type="checkbox" checked={criarContato}
                     onChange={(e) => setCriarContato(e.target.checked)}
@@ -337,7 +337,7 @@ export function ModalGanhoPerca({ lead, tipo, onClose, onConfirmar }: Props) {
 
         {/* Footer */}
         {passo !== 3 && (
-          <div className="flex gap-3 p-6 border-t border-[#E8D5A3]/50">
+          <div className="flex gap-3 p-6 border-t border-[#E0D0B4]/50">
             {passo === 1 && (
               <>
                 <Button variant="secondary" className="flex-1" onClick={onClose}>Cancelar</Button>

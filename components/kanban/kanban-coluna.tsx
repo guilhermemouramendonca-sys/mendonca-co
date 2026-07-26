@@ -26,7 +26,7 @@ export function KanbanColuna({ coluna, leads, onClickLead, onNovoLead }: Props) 
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full" style={{ backgroundColor: coluna.cor }} />
             <span className="text-sm font-semibold text-text-main">{coluna.label}</span>
-            <span className="text-xs text-text-muted bg-[#E8D5A3]/40 px-1.5 py-0.5 rounded-full">
+            <span className="text-xs text-text-muted bg-[#E0D0B4]/40 px-1.5 py-0.5 rounded-full">
               {leads.length}
             </span>
           </div>
@@ -55,7 +55,7 @@ export function KanbanColuna({ coluna, leads, onClickLead, onNovoLead }: Props) 
       <div
         ref={setNodeRef}
         className={`min-h-32 rounded-card p-2 space-y-2 transition-colors ${
-          isOver ? "bg-gold/10 border-2 border-dashed border-gold" : "bg-[#E8D5A3]/20"
+          isOver ? "bg-gold/10 border-2 border-dashed border-gold" : "bg-[#E0D0B4]/20"
         }`}
       >
         {leads.map((lead) => (

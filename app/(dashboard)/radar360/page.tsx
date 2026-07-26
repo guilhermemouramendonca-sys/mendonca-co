@@ -130,7 +130,7 @@ export default function Radar360Page() {
 
                     {/* Detalhe expandido */}
                     {aberto && (
-                      <div className="border-t border-[#E8D5A3]/30 p-4 bg-bg/30">
+                      <div className="border-t border-[#E0D0B4]/30 p-4 bg-bg/30">
                         {/* Scores das 8 dimensões */}
                         <div className="grid grid-cols-4 gap-2 mb-4">
                           {DIMENSOES.map((d) => {
@@ -143,7 +143,7 @@ export default function Radar360Page() {
                                   <p className="font-mono-data text-base font-bold text-text-main">{score}/5</p>
                                   <span className="text-[8px]" style={{ color: cor }}>{labelScore(score)}</span>
                                 </div>
-                                <div className="w-full bg-[#E8D5A3]/30 rounded-full h-1 mt-1">
+                                <div className="w-full bg-[#E0D0B4]/30 rounded-full h-1 mt-1">
                                   <div className="h-1 rounded-full" style={{ width: `${(score / 5) * 100}%`, backgroundColor: cor }} />
                                 </div>
                               </div>
@@ -209,7 +209,7 @@ export default function Radar360Page() {
                 <Card key={r.id}>
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#E8D5A3]/30 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-[#E0D0B4]/30 flex items-center justify-center">
                         <Users size={14} className="text-text-muted" />
                       </div>
                       <div>

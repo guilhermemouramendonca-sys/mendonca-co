@@ -18,7 +18,7 @@ const ETAPA_LABEL: Record<Etapa, string> = {
 };
 const ETAPA_COR: Record<Etapa, string> = {
   novo: "#6B6B6B", contato: "#2980B9", diagnostico: "#8E44AD",
-  proposta: "#C9A84C", negociacao: "#E67E22", fechado: "#27AE60", perdido: "#C0392B",
+  proposta: "#C2A878", negociacao: "#E67E22", fechado: "#27AE60", perdido: "#C0392B",
 };
 const FUNIL_ETAPAS: Etapa[] = ["novo", "contato", "diagnostico", "proposta", "negociacao", "fechado"];
 
@@ -134,9 +134,9 @@ export default function DashboardPage() {
       { label: "Diagnóstico 3D", total: diag3dMes, cor: "#2980B9", href: "/diagnosticos" },
       { label: "Radar 360", total: radar360Mes, cor: "#8E44AD", href: "/radar360" },
       { label: "Q12", total: q12Mes, cor: "#27AE60", href: "/pesquisas" },
-      { label: "GPTW", total: gptwMes, cor: "#C9A84C", href: "/pesquisas" },
+      { label: "GPTW", total: gptwMes, cor: "#C2A878", href: "/pesquisas" },
       { label: "DISC", total: discMes, cor: "#E67E22", href: "/pesquisas" },
-      { label: "Canvas", total: canvasMes, cor: "#0D2B2E", href: "/canvas" },
+      { label: "Canvas", total: canvasMes, cor: "#1A2E3A", href: "/canvas" },
       { label: "Rodadas", total: rodadasMes, cor: "#C0392B", href: "/rodadas" },
     ].filter((f) => f.total > 0);
 
@@ -217,17 +217,17 @@ export default function DashboardPage() {
   const kpis = [
     {
       label: "Leads novos (24h)", value: d.leadsNovos24h, icon: TrendingUp,
-      cor: "#C9A84C", href: "/leads", sub: `${d.totalLeads} no pipeline total`,
+      cor: "#C2A878", href: "/leads", sub: `${d.totalLeads} no pipeline total`,
     },
     {
       label: "Clientes ativos", value: d.clientesAtivos, icon: Users,
-      cor: d.clientesSemInteracao30d > 0 ? "#C9A84C" : "#27AE60", href: "/clientes",
+      cor: d.clientesSemInteracao30d > 0 ? "#C2A878" : "#27AE60", href: "/clientes",
       sub: d.clientesSemInteracao30d > 0 ? `${d.clientesSemInteracao30d} sem sessão há 30d` : "todos com sessão recente",
       alerta: d.clientesSemInteracao30d > 0,
     },
     {
       label: "MRR", value: formatCurrency(d.mrr), icon: DollarSign,
-      cor: "#0D2B2E", href: "/financeiro",
+      cor: "#1A2E3A", href: "/financeiro",
       sub: `ARR ${formatCurrency(d.mrr * 12)}`, grande: true,
     },
     {
@@ -236,18 +236,18 @@ export default function DashboardPage() {
     },
     {
       label: "Taxa de conversão", value: `${d.taxaConversao}%`, icon: BarChart2,
-      cor: d.taxaConversao >= 20 ? "#27AE60" : "#C9A84C", href: "/leads",
+      cor: d.taxaConversao >= 20 ? "#27AE60" : "#C2A878", href: "/leads",
       sub: "leads → fechados",
     },
     {
       label: "Cobranças vencendo", value: d.cobrancasVencendo7d.length, icon: AlertCircle,
-      cor: d.cobrancasAtrasadas > 0 ? "#C0392B" : "#C9A84C", href: "/financeiro",
+      cor: d.cobrancasAtrasadas > 0 ? "#C0392B" : "#C2A878", href: "/financeiro",
       sub: d.cobrancasAtrasadas > 0 ? `${d.cobrancasAtrasadas} em atraso` : "nenhuma em atraso",
       alerta: d.cobrancasAtrasadas > 0,
     },
     {
       label: "Plano de ação", value: `${pctPlano}%`, icon: ListChecks,
-      cor: pctPlano >= 70 ? "#27AE60" : pctPlano >= 40 ? "#C9A84C" : "#C0392B",
+      cor: pctPlano >= 70 ? "#27AE60" : pctPlano >= 40 ? "#C2A878" : "#C0392B",
       href: "/plano-acao", sub: `${d.planoPorStatus.concluido}/${d.planoTotal} ações concluídas`,
     },
     {
@@ -312,7 +312,7 @@ export default function DashboardPage() {
                 return (
                   <div key={etapa} className="flex items-center gap-3">
                     <span className="text-xs text-text-muted w-24 shrink-0">{ETAPA_LABEL[etapa]}</span>
-                    <div className="flex-1 bg-[#E8D5A3]/20 rounded-full h-5 relative overflow-hidden">
+                    <div className="flex-1 bg-[#E0D0B4]/20 rounded-full h-5 relative overflow-hidden">
                       <div
                         className="h-5 rounded-full transition-all duration-500"
                         style={{ width: `${pct}%`, backgroundColor: ETAPA_COR[etapa] + "CC" }}
@@ -323,9 +323,9 @@ export default function DashboardPage() {
                 );
               })}
             </div>
-            <div className="mt-4 pt-4 border-t border-[#E8D5A3]/30 flex items-center justify-between">
+            <div className="mt-4 pt-4 border-t border-[#E0D0B4]/30 flex items-center justify-between">
               <span className="text-xs text-text-muted">Taxa de conversão geral</span>
-              <span className="font-mono-data text-lg font-bold" style={{ color: d.taxaConversao >= 20 ? "#27AE60" : "#C9A84C" }}>
+              <span className="font-mono-data text-lg font-bold" style={{ color: d.taxaConversao >= 20 ? "#27AE60" : "#C2A878" }}>
                 {d.taxaConversao}%
               </span>
             </div>
@@ -348,7 +348,7 @@ export default function DashboardPage() {
                   return (
                     <Link key={f.label} href={f.href} className="flex items-center gap-3 group">
                       <span className="text-xs text-text-muted w-24 shrink-0 group-hover:text-text-main transition-colors">{f.label}</span>
-                      <div className="flex-1 bg-[#E8D5A3]/20 rounded-full h-4 relative overflow-hidden">
+                      <div className="flex-1 bg-[#E0D0B4]/20 rounded-full h-4 relative overflow-hidden">
                         <div
                           className="h-4 rounded-full transition-all duration-500"
                           style={{ width: `${pct}%`, backgroundColor: f.cor + "CC" }}
@@ -380,7 +380,7 @@ export default function DashboardPage() {
               <div className="space-y-1">
                 {d.tarefasAtrasadas.map((t) => (
                   <Link key={t.id} href="/tarefas"
-                    className="flex items-start gap-2 py-1.5 border-b border-[#E8D5A3]/30 last:border-0 group">
+                    className="flex items-start gap-2 py-1.5 border-b border-[#E0D0B4]/30 last:border-0 group">
                     <span className="w-1.5 h-1.5 rounded-full bg-danger mt-1.5 shrink-0" />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-danger truncate group-hover:underline">{t.titulo}</p>
@@ -391,7 +391,7 @@ export default function DashboardPage() {
                 ))}
                 {d.tarefasHoje.map((t) => (
                   <Link key={t.id} href="/tarefas"
-                    className="flex items-start gap-2 py-1.5 border-b border-[#E8D5A3]/30 last:border-0 group">
+                    className="flex items-start gap-2 py-1.5 border-b border-[#E0D0B4]/30 last:border-0 group">
                     <span className="w-1.5 h-1.5 rounded-full bg-gold mt-1.5 shrink-0" />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-text-main truncate group-hover:underline">{t.titulo}</p>
@@ -422,12 +422,12 @@ export default function DashboardPage() {
                     <span>Progresso geral</span>
                     <span className="font-mono-data font-bold">{pctPlano}%</span>
                   </div>
-                  <div className="h-3 bg-[#E8D5A3]/30 rounded-full overflow-hidden">
+                  <div className="h-3 bg-[#E0D0B4]/30 rounded-full overflow-hidden">
                     <div
                       className="h-3 rounded-full transition-all duration-700"
                       style={{
                         width: `${pctPlano}%`,
-                        backgroundColor: pctPlano >= 70 ? "#27AE60" : pctPlano >= 40 ? "#C9A84C" : "#C0392B",
+                        backgroundColor: pctPlano >= 70 ? "#27AE60" : pctPlano >= 40 ? "#C2A878" : "#C0392B",
                       }}
                     />
                   </div>
@@ -437,7 +437,7 @@ export default function DashboardPage() {
                 {(["pendente", "em_andamento", "concluido"] as StatusPlano[]).map((s) => {
                   const count = d.planoPorStatus[s];
                   const pct2 = Math.round((count / d.planoTotal) * 100);
-                  const cor = s === "concluido" ? "#27AE60" : s === "em_andamento" ? "#C9A84C" : "#6B6B6B";
+                  const cor = s === "concluido" ? "#27AE60" : s === "em_andamento" ? "#C2A878" : "#6B6B6B";
                   const label = s === "concluido" ? "Concluídas" : s === "em_andamento" ? "Em andamento" : "Pendentes";
                   return (
                     <div key={s} className="flex items-center gap-2 mb-2">
@@ -469,7 +469,7 @@ export default function DashboardPage() {
             ) : (
               <div className="space-y-3">
                 {d.ultimosLeads.map((lead) => (
-                  <div key={lead.id} className="flex items-start justify-between py-1.5 border-b border-[#E8D5A3]/30 last:border-0">
+                  <div key={lead.id} className="flex items-start justify-between py-1.5 border-b border-[#E0D0B4]/30 last:border-0">
                     <div className="min-w-0 mr-2">
                       <p className="text-sm font-medium text-text-main truncate">{lead.nome}</p>
                       <p className="text-[10px] text-text-muted truncate">{lead.empresa}</p>
@@ -508,7 +508,7 @@ export default function DashboardPage() {
                   const dias = Math.ceil((new Date(c.vencimento).getTime() - Date.now()) / 86400000);
                   const atrasada = dias < 0;
                   return (
-                    <div key={c.id} className="flex items-center justify-between py-1.5 border-b border-[#E8D5A3]/30 last:border-0">
+                    <div key={c.id} className="flex items-center justify-between py-1.5 border-b border-[#E0D0B4]/30 last:border-0">
                       <div>
                         <p className="text-sm font-medium text-text-main">{c.cliente_nome}</p>
                         <p className="text-[10px] flex items-center gap-1" style={{ color: atrasada ? "#C0392B" : "#6B6B6B" }}>

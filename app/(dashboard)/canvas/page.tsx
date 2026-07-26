@@ -120,7 +120,7 @@ export default function CanvasPage() {
                     </div>
 
                     {aberto && r.resultado && (
-                      <div className="border-t border-[#E8D5A3]/30 p-4 bg-bg/30 space-y-4">
+                      <div className="border-t border-[#E0D0B4]/30 p-4 bg-bg/30 space-y-4">
                         {PERGUNTAS_CANVAS.map((q) => {
                           const resposta = r.resultado!.respostas[q.id] ?? "";
                           const analise = r.resultado!.analise?.[q.id] ?? "";
@@ -161,7 +161,7 @@ export default function CanvasPage() {
                 <Card key={r.id}>
                   <CardContent className="p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-[#E8D5A3]/30 flex items-center justify-center">
+                      <div className="w-8 h-8 rounded-full bg-[#E0D0B4]/30 flex items-center justify-center">
                         <Users size={14} className="text-text-muted" />
                       </div>
                       <div>

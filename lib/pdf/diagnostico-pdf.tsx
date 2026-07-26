@@ -6,8 +6,8 @@ import type { Resultado } from "@/lib/diagnostico/perguntas";
 import { faixaScore } from "@/lib/diagnostico/perguntas";
 
 const CORES = {
-  primary: "#0D2B2E", gold: "#C9A84C", goldLight: "#E8D5A3",
-  bg: "#F5F0E8", text: "#1A1A1A", muted: "#6B6B6B",
+  primary: "#1A2E3A", gold: "#C2A878", goldLight: "#E0D0B4",
+  bg: "#F5F5F3", text: "#1A1A1A", muted: "#6B6B6B",
   success: "#2D6A4F", warning: "#E9C46A", danger: "#C1121F", white: "#FFFFFF",
 };
 
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   barraLabel: { flexDirection: "row", justifyContent: "space-between", marginBottom: 3 },
   barraLabelText: { fontSize: 10, color: CORES.text },
   barraLabelScore: { fontSize: 10, fontFamily: "Helvetica-Bold", color: CORES.primary },
-  barraBg: { height: 7, backgroundColor: "#E8D5A3", borderRadius: 4 },
+  barraBg: { height: 7, backgroundColor: "#E0D0B4", borderRadius: 4 },
   barraFill: { height: 7, borderRadius: 4 },
   analiseBox: { backgroundColor: CORES.bg, borderRadius: 8, padding: 14, marginBottom: 14 },
   analiseTitle: { fontSize: 11, fontFamily: "Helvetica-Bold", color: CORES.primary, marginBottom: 6 },
@@ -94,7 +94,7 @@ function RadarChart({ scores }: { scores: [number, number, number] }) {
             key={i}
             points={gridPts(lv)}
             fill="none"
-            stroke={lv === 1.0 ? CORES.goldLight : "#E8D5A3"}
+            stroke={lv === 1.0 ? CORES.goldLight : "#E0D0B4"}
             strokeWidth={lv === 1.0 ? 1.5 : 0.7}
             strokeDasharray={lv < 1.0 ? "3 3" : "0"}
           />

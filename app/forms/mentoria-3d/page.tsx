@@ -34,7 +34,7 @@ export default function MentoriaPage() {
               onChange={(e) => setDesafio(e.target.value)}
               placeholder="Descreva brevemente o seu principal desafio como líder..."
               rows={3}
-              className="flex w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none"
+              className="flex w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none"
             />
           </div>
 
@@ -44,7 +44,7 @@ export default function MentoriaPage() {
               <select
                 value={faturamento}
                 onChange={(e) => setFaturamento(e.target.value)}
-                className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
               >
                 <option value="">Selecione...</option>
                 {FATURAMENTOS.map((f) => <option key={f} value={f}>{f}</option>)}

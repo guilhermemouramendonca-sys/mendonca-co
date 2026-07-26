@@ -9,10 +9,11 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#0D2B2E",
-        gold: "#C9A84C",
-        "gold-light": "#E8D5A3",
-        bg: "#F5F0E8",
+        primary: "#1A2E3A",
+        graphite: "#3E4C59",
+        gold: "#C2A878",
+        "gold-light": "#E0D0B4",
+        bg: "#F5F5F3",
         surface: "#FFFFFF",
         "text-main": "#1A1A1A",
         "text-muted": "#6B6B6B",

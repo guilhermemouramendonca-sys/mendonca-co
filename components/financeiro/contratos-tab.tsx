@@ -27,8 +27,8 @@ type Cliente = { id: string; nome: string };
 
 const TIPO_LABELS: Record<string, string> = { retainer: "Retainer mensal", projeto: "Projeto", avulso: "Avulso" };
 const STATUS_LABELS: Record<string, string> = { ativo: "Ativo", pausado: "Pausado", encerrado: "Encerrado", cancelado: "Cancelado" };
-const STATUS_CORES: Record<string, string> = { ativo: "#27AE60", pausado: "#C9A84C", encerrado: "#95A5A6", cancelado: "#C0392B" };
-const TIPO_CORES: Record<string, string> = { retainer: "#0D2B2E", projeto: "#2980B9", avulso: "#8E44AD" };
+const STATUS_CORES: Record<string, string> = { ativo: "#27AE60", pausado: "#C2A878", encerrado: "#95A5A6", cancelado: "#C0392B" };
+const TIPO_CORES: Record<string, string> = { retainer: "#1A2E3A", projeto: "#2980B9", avulso: "#8E44AD" };
 
 const EMPTY = {
   cliente_id: "",
@@ -88,7 +88,7 @@ export default function ContratosTab({ contratos, clientes, onRefresh }: {
             <button
               key={s}
               onClick={() => setFiltroStatus(s)}
-              className={`px-3 py-1.5 rounded-btn text-xs font-medium transition-colors ${filtroStatus === s ? "bg-primary text-gold" : "bg-surface text-text-muted hover:text-text-main border border-[#E8D5A3]/50"}`}
+              className={`px-3 py-1.5 rounded-btn text-xs font-medium transition-colors ${filtroStatus === s ? "bg-primary text-gold" : "bg-surface text-text-muted hover:text-text-main border border-[#E0D0B4]/50"}`}
             >
               {s === "todos" ? "Todos" : STATUS_LABELS[s]}
               <span className="ml-1.5 opacity-60">({s === "todos" ? contratos.length : contratos.filter((c) => c.status === s).length})</span>
@@ -114,7 +114,7 @@ export default function ContratosTab({ contratos, clientes, onRefresh }: {
               : null;
             const alertaVencimento = diasRestantes !== null && diasRestantes <= 30 && c.status === "ativo";
             return (
-              <div key={c.id} className={`bg-surface rounded-card border p-5 ${alertaVencimento ? "border-warning/50" : "border-[#E8D5A3]/50"}`}>
+              <div key={c.id} className={`bg-surface rounded-card border p-5 ${alertaVencimento ? "border-warning/50" : "border-[#E0D0B4]/50"}`}>
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -160,13 +160,13 @@ export default function ContratosTab({ contratos, clientes, onRefresh }: {
       {modalAberto && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
           <div className="bg-surface rounded-card shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-[#E8D5A3]/30">
+            <div className="p-6 border-b border-[#E0D0B4]/30">
               <h2 className="font-display text-xl font-semibold text-text-main">{editando ? "Editar contrato" : "Novo contrato"}</h2>
             </div>
             <div className="p-6 space-y-4">
               <div className="space-y-1.5">
                 <Label>Cliente *</Label>
-                <select value={form.cliente_id} onChange={(e) => setForm({ ...form, cliente_id: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                <select value={form.cliente_id} onChange={(e) => setForm({ ...form, cliente_id: e.target.value })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                   <option value="">Selecionar cliente</option>
                   {clientes.map((c) => <option key={c.id} value={c.id}>{c.nome}</option>)}
                 </select>
@@ -174,13 +174,13 @@ export default function ContratosTab({ contratos, clientes, onRefresh }: {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label>Tipo</Label>
-                  <select value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value as Contrato["tipo"] })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                  <select value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value as Contrato["tipo"] })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                     {Object.entries(TIPO_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                   </select>
                 </div>
                 <div className="space-y-1.5">
                   <Label>Status</Label>
-                  <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as Contrato["status"] })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                  <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as Contrato["status"] })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                     {Object.entries(STATUS_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                   </select>
                 </div>
@@ -213,10 +213,10 @@ export default function ContratosTab({ contratos, clientes, onRefresh }: {
               </div>
               <div className="space-y-1.5">
                 <Label>Observações</Label>
-                <textarea value={form.observacoes ?? ""} onChange={(e) => setForm({ ...form, observacoes: e.target.value || null })} placeholder="Notas, condições especiais..." rows={2} className="w-full px-3 py-2 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30" />
+                <textarea value={form.observacoes ?? ""} onChange={(e) => setForm({ ...form, observacoes: e.target.value || null })} placeholder="Notas, condições especiais..." rows={2} className="w-full px-3 py-2 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30" />
               </div>
             </div>
-            <div className="p-6 border-t border-[#E8D5A3]/30 flex justify-end gap-3">
+            <div className="p-6 border-t border-[#E0D0B4]/30 flex justify-end gap-3">
               <Button variant="secondary" onClick={() => setModalAberto(false)}>Cancelar</Button>
               <Button onClick={salvar} disabled={salvando || !form.cliente_id || !form.descricao.trim()}>{salvando ? "Salvando..." : "Salvar"}</Button>
             </div>

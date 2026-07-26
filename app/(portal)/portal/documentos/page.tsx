@@ -27,11 +27,11 @@ const TIPO_LABELS: Record<string, string> = {
 };
 
 const TIPO_CORES: Record<string, string> = {
-  relatorio:   "#0D2B2E",
+  relatorio:   "#1A2E3A",
   diagnostico: "#2D6A4F",
   radar360:    "#1D4ED8",
   pesquisa:    "#7C3AED",
-  canvas:      "#C9A84C",
+  canvas:      "#C2A878",
   proposta:    "#DC2626",
   plano_acao:  "#16A34A",
   documento:   "#6B7280",
@@ -79,14 +79,14 @@ export default function PortalDocumentos() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F5F0E8]">
-      <header className="bg-[#0D2B2E] px-6 py-4">
+    <div className="min-h-screen bg-[#F5F5F3]">
+      <header className="bg-[#1A2E3A] px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center gap-4">
           <Link href="/portal" className="text-white/60 hover:text-white transition-colors">
             <ArrowLeft size={18} />
           </Link>
           <div>
-            <h1 className="text-[#C9A84C] font-display text-lg font-bold">Mendonça & Co</h1>
+            <h1 className="text-[#C2A878] font-display text-lg font-bold">Mendonça & Co</h1>
             <p className="text-white/50 text-xs">Documentos</p>
           </div>
         </div>
@@ -94,7 +94,7 @@ export default function PortalDocumentos() {
 
       <main className="max-w-4xl mx-auto px-4 py-8">
         <div className="mb-6">
-          <h2 className="font-display text-2xl font-bold text-[#0D2B2E]">Seus documentos</h2>
+          <h2 className="font-display text-2xl font-bold text-[#1A2E3A]">Seus documentos</h2>
           <p className="text-[#6B7280] text-sm mt-1">{docs.length} arquivo{docs.length !== 1 ? "s" : ""} compartilhado{docs.length !== 1 ? "s" : ""} com você</p>
         </div>
 
@@ -106,14 +106,14 @@ export default function PortalDocumentos() {
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
               placeholder="Buscar documento..."
-              className="w-full pl-9 pr-3 py-2 rounded-xl border border-[#E8D5A3] bg-white text-sm text-[#374151] focus:outline-none focus:ring-2 focus:ring-[#C9A84C]/30"
+              className="w-full pl-9 pr-3 py-2 rounded-xl border border-[#E0D0B4] bg-white text-sm text-[#374151] focus:outline-none focus:ring-2 focus:ring-[#C2A878]/30"
             />
           </div>
           {tiposDisponiveis.length > 1 && (
-            <div className="flex rounded-xl border border-[#E8D5A3] overflow-hidden text-xs">
+            <div className="flex rounded-xl border border-[#E0D0B4] overflow-hidden text-xs">
               <button
                 onClick={() => setFiltroTipo("todos")}
-                className={`px-3 py-2 transition-all ${filtroTipo === "todos" ? "bg-[#0D2B2E] text-[#C9A84C]" : "bg-white text-[#6B7280]"}`}
+                className={`px-3 py-2 transition-all ${filtroTipo === "todos" ? "bg-[#1A2E3A] text-[#C2A878]" : "bg-white text-[#6B7280]"}`}
               >
                 Todos
               </button>
@@ -121,7 +121,7 @@ export default function PortalDocumentos() {
                 <button
                   key={t}
                   onClick={() => setFiltroTipo(t)}
-                  className={`px-3 py-2 transition-all ${filtroTipo === t ? "bg-[#0D2B2E] text-[#C9A84C]" : "bg-white text-[#6B7280]"}`}
+                  className={`px-3 py-2 transition-all ${filtroTipo === t ? "bg-[#1A2E3A] text-[#C2A878]" : "bg-white text-[#6B7280]"}`}
                 >
                   {TIPO_LABELS[t] ?? t}
                 </button>
@@ -144,7 +144,7 @@ export default function PortalDocumentos() {
             {filtrados.map((d) => {
               const cor = TIPO_CORES[d.tipo] ?? "#6B7280";
               return (
-                <div key={d.id} className="bg-white rounded-2xl border border-[#E8D5A3]/50 p-4 flex items-center gap-4">
+                <div key={d.id} className="bg-white rounded-2xl border border-[#E0D0B4]/50 p-4 flex items-center gap-4">
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: cor + "15" }}
@@ -160,7 +160,7 @@ export default function PortalDocumentos() {
                         {TIPO_LABELS[d.tipo] ?? d.tipo}
                       </span>
                     </div>
-                    <p className="font-semibold text-[#0D2B2E] truncate">{d.titulo}</p>
+                    <p className="font-semibold text-[#1A2E3A] truncate">{d.titulo}</p>
                     {d.descricao && <p className="text-xs text-[#6B7280] mt-0.5 truncate">{d.descricao}</p>}
                     <p className="text-xs text-[#9CA3AF] mt-0.5">
                       {new Date(d.criado_em).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })}
@@ -170,7 +170,7 @@ export default function PortalDocumentos() {
                     href={d.arquivo_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-[#0D2B2E] text-[#C9A84C] hover:bg-[#0D2B2E]/90 transition-colors flex-shrink-0"
+                    className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-[#1A2E3A] text-[#C2A878] hover:bg-[#1A2E3A]/90 transition-colors flex-shrink-0"
                   >
                     <Download size={14} /> Abrir
                   </a>

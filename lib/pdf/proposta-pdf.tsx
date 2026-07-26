@@ -16,9 +16,9 @@ Font.register({
   ],
 });
 
-const PRIMARY = "#0D2B2E";
-const GOLD = "#C9A84C";
-const BG = "#F5F0E8";
+const PRIMARY = "#1A2E3A";
+const GOLD = "#C2A878";
+const BG = "#F5F5F3";
 const MUTED = "#6B7280";
 const WHITE = "#FFFFFF";
 

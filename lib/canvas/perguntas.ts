@@ -27,7 +27,7 @@ export const PERGUNTAS_CANVAS: {
     pergunta: "Qual é o propósito da sua empresa e onde você quer chegar nos próximos 3 anos?",
     placeholder: "Ex: Somos uma empresa de tecnologia agrícola que em 3 anos quer ser referência no agronegócio do Centro-Oeste, com R$50M de faturamento e presença em 5 estados.",
     icone: "🎯",
-    cor: "#0D2B2E",
+    cor: "#1A2E3A",
   },
   {
     id: "mercado",
@@ -67,7 +67,7 @@ export const PERGUNTAS_CANVAS: {
     pergunta: "Qual é a decisão mais importante que você precisa tomar nos próximos 90 dias?",
     placeholder: "Ex: Contratar um diretor comercial para desatrelar as vendas de mim. Isso desbloquearia crescimento e me daria espaço para pensar estratégia em vez de operar.",
     icone: "🚀",
-    cor: "#C9A84C",
+    cor: "#C2A878",
   },
 ];
 

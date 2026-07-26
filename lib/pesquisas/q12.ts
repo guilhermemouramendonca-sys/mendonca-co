@@ -47,7 +47,7 @@ export function calcularQ12(respostas: RespostasQ12): ResultadoQ12 {
   let nivel: string;
   let cor: string;
   if (percentual >= 80) { nivel = "Alto Engajamento"; cor = "#27AE60"; }
-  else if (percentual >= 60) { nivel = "Engajamento Moderado"; cor = "#C9A84C"; }
+  else if (percentual >= 60) { nivel = "Engajamento Moderado"; cor = "#C2A878"; }
   else if (percentual >= 40) { nivel = "Baixo Engajamento"; cor = "#E67E22"; }
   else { nivel = "Desengajamento Crítico"; cor = "#C0392B"; }
 

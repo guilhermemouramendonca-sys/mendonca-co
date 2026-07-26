@@ -4,12 +4,12 @@ import {
 
 // ─── Cores ──────────────────────────────────────────────────────────────────
 const C = {
-  primary: "#0D2B2E",
-  gold: "#C9A84C",
-  bg: "#F5F0E8",
+  primary: "#1A2E3A",
+  gold: "#C2A878",
+  bg: "#F5F5F3",
   white: "#FFFFFF",
   muted: "#6B6B6B",
-  border: "#E8D5A3",
+  border: "#E0D0B4",
   verde: "#27AE60",
   amarelo: "#E6B800",
   laranja: "#E67E22",
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   cardTitulo: { fontSize: 11, fontFamily: "Helvetica-Bold", color: C.primary },
   cardData: { fontSize: 9, color: C.muted },
   // Barra de progresso
-  barraContainer: { height: 8, backgroundColor: "#E8D5A3", borderRadius: 4, marginTop: 6 },
+  barraContainer: { height: 8, backgroundColor: "#E0D0B4", borderRadius: 4, marginTop: 6 },
   barraFill: { height: 8, borderRadius: 4 },
   // Texto
   label: { fontSize: 9, color: C.muted, marginBottom: 2, textTransform: "uppercase", letterSpacing: 0.5 },

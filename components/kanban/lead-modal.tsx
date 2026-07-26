@@ -134,7 +134,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-surface rounded-card w-full max-w-2xl max-h-[90vh] flex flex-col shadow-xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+        <div className="flex items-center justify-between p-6 border-b border-[#E0D0B4]/50">
           <div>
             <h2 className="font-display text-2xl font-semibold text-text-main">
               {isNovo ? "Novo Lead" : lead.nome}
@@ -152,7 +152,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
 
         {/* Abas */}
         {!isNovo && (
-          <div className="flex border-b border-[#E8D5A3]/50 px-6">
+          <div className="flex border-b border-[#E0D0B4]/50 px-6">
             {["dados", "historico"].map((a) => (
               <button
                 key={a}
@@ -205,7 +205,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
                   <select
                     value={form.canal}
                     onChange={(e) => set("canal", e.target.value)}
-                    className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                    className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                   >
                     <option value="">Selecione...</option>
                     <option value="indicacao">Indicação</option>
@@ -228,7 +228,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
                   <select
                     value={form.tipo_servico}
                     onChange={(e) => set("tipo_servico", e.target.value)}
-                    className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                    className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                   >
                     <option value="">Selecione...</option>
                     {TIPOS_SERVICO.map((t) => (
@@ -248,7 +248,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
                   <select
                     value={form.etapa}
                     onChange={(e) => handleEtapaChange(e.target.value)}
-                    className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
+                    className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold"
                   >
                     {ETAPAS.map((e) => (
                       <option key={e.value} value={e.value}>{e.label}</option>
@@ -310,7 +310,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-btn text-xs font-medium transition-colors ${
                         novaInteracao.tipo === tipo
                           ? "bg-gold text-primary"
-                          : "bg-surface border border-[#E8D5A3] text-text-muted hover:text-text-main"
+                          : "bg-surface border border-[#E0D0B4] text-text-muted hover:text-text-main"
                       }`}
                     >
                       {TIPO_ICONS[tipo]}
@@ -351,7 +351,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between gap-3 p-6 border-t border-[#E8D5A3]/50">
+        <div className="flex items-center justify-between gap-3 p-6 border-t border-[#E0D0B4]/50">
           <div>
             {form.whatsapp && (
               <a

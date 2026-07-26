@@ -3,8 +3,8 @@ import type { ResultadoDISC, FatorDISC } from "@/lib/pesquisas/disc";
 import { CORES_DISC } from "@/lib/pesquisas/disc";
 
 const C = {
-  primary: "#0D2B2E", gold: "#C9A84C", goldLight: "#E8D5A3",
-  bg: "#F5F0E8", text: "#1A1A1A", muted: "#6B6B6B", white: "#FFFFFF",
+  primary: "#1A2E3A", gold: "#C2A878", goldLight: "#E0D0B4",
+  bg: "#F5F5F3", text: "#1A1A1A", muted: "#6B6B6B", white: "#FFFFFF",
 };
 
 const S = StyleSheet.create({

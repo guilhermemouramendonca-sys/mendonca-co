@@ -56,7 +56,7 @@ function agruparAgenda(leads: Lead[]): AgendaGrupo[] {
   return [
     { label: "Atrasados",         cor: "#C0392B", leads: atrasados },
     { label: "Hoje",              cor: "#E67E22", leads: paraHoje },
-    { label: "Amanhã",            cor: "#C9A84C", leads: paraAmanha },
+    { label: "Amanhã",            cor: "#C2A878", leads: paraAmanha },
     { label: "Próximos 7 dias",   cor: "#2980B9", leads: proxSemana },
     { label: "Sem data agendada", cor: "#6B6B6B", leads: semData },
   ].filter((g) => g.leads.length > 0);
@@ -71,7 +71,7 @@ function LeadRow({ lead, onClick }: { lead: Lead; onClick: () => void }) {
   const acaoAtrasada = lead.data_proxima_acao && lead.data_proxima_acao < hoje;
 
   return (
-    <tr onClick={onClick} className="border-b border-[#E8D5A3]/30 hover:bg-bg cursor-pointer transition-colors group">
+    <tr onClick={onClick} className="border-b border-[#E0D0B4]/30 hover:bg-bg cursor-pointer transition-colors group">
       <td className="px-4 py-3">
         <p className="text-sm font-medium text-text-main group-hover:text-gold transition-colors">{lead.nome}</p>
         {lead.empresa && <p className="text-xs text-text-muted">{lead.empresa}</p>}
@@ -131,7 +131,7 @@ function AgendaCard({ lead, onClick }: { lead: Lead; onClick: () => void }) {
 
   return (
     <div onClick={onClick}
-      className="bg-surface border border-[#E8D5A3]/50 rounded-btn p-4 cursor-pointer hover:border-gold/40 hover:shadow-sm transition-all flex items-start gap-4">
+      className="bg-surface border border-[#E0D0B4]/50 rounded-btn p-4 cursor-pointer hover:border-gold/40 hover:shadow-sm transition-all flex items-start gap-4">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           <p className="text-sm font-semibold text-text-main truncate">{lead.nome}</p>
@@ -327,7 +327,7 @@ export default function LeadsPage() {
           <p className="text-text-muted mt-1 text-sm">Pipeline comercial da Mendonça & Co</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-btn border border-[#E8D5A3] overflow-hidden">
+          <div className="flex rounded-btn border border-[#E0D0B4] overflow-hidden">
             {VIEWS.map((v) => (
               <button key={v.id} onClick={() => setView(v.id)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${view === v.id ? "bg-primary text-white" : "text-text-muted hover:text-text-main"}`}>
@@ -348,7 +348,7 @@ export default function LeadsPage() {
           { label: "Receita ponderada",  value: `R$ ${Math.round(receitaPonderada).toLocaleString("pt-BR")}`, suffix: "" },
           { label: "Ganhos este mês",    value: leads.filter((l) => l.etapa === "ganho" && l.data_ganho?.startsWith(new Date().toISOString().slice(0, 7))).length, suffix: " fechados" },
         ].map((kpi) => (
-          <div key={kpi.label} className="bg-surface border border-[#E8D5A3]/50 rounded-card p-4">
+          <div key={kpi.label} className="bg-surface border border-[#E0D0B4]/50 rounded-card p-4">
             <p className="text-xs text-text-muted mb-1">{kpi.label}</p>
             <p className="text-xl font-semibold text-text-main font-mono-data">{kpi.value}{kpi.suffix}</p>
           </div>
@@ -356,18 +356,18 @@ export default function LeadsPage() {
       </div>
 
       {/* ── Barra de busca + filtros ── */}
-      <div className="bg-surface border border-[#E8D5A3]/50 rounded-card p-3 mb-5 flex flex-wrap items-center gap-2">
+      <div className="bg-surface border border-[#E0D0B4]/50 rounded-card p-3 mb-5 flex flex-wrap items-center gap-2">
         {/* Busca */}
         <div className="relative flex-1 min-w-48">
           <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted/60" />
           <input value={busca} onChange={(e) => setBusca(e.target.value)}
             placeholder="Buscar por nome ou empresa..."
-            className="w-full pl-8 pr-3 py-2 text-sm bg-bg border border-[#E8D5A3]/60 rounded-btn outline-none focus:ring-2 focus:ring-gold/30 text-text-main placeholder:text-text-muted/50" />
+            className="w-full pl-8 pr-3 py-2 text-sm bg-bg border border-[#E0D0B4]/60 rounded-btn outline-none focus:ring-2 focus:ring-gold/30 text-text-main placeholder:text-text-muted/50" />
         </div>
 
         {/* Filtro serviço */}
         <select value={filtroServico} onChange={(e) => setFiltroServico(e.target.value)}
-          className="h-9 px-3 text-sm bg-bg border border-[#E8D5A3]/60 rounded-btn outline-none focus:ring-2 focus:ring-gold/30 text-text-main">
+          className="h-9 px-3 text-sm bg-bg border border-[#E0D0B4]/60 rounded-btn outline-none focus:ring-2 focus:ring-gold/30 text-text-main">
           <option value="">Todos os serviços</option>
           {servicosDisponiveis.map((s) => (
             <option key={s} value={s}>{TIPOS_SERVICO_LABELS[s] ?? s}</option>
@@ -376,7 +376,7 @@ export default function LeadsPage() {
 
         {/* Filtro canal */}
         <select value={filtroCanal} onChange={(e) => setFiltroCanal(e.target.value)}
-          className="h-9 px-3 text-sm bg-bg border border-[#E8D5A3]/60 rounded-btn outline-none focus:ring-2 focus:ring-gold/30 text-text-main">
+          className="h-9 px-3 text-sm bg-bg border border-[#E0D0B4]/60 rounded-btn outline-none focus:ring-2 focus:ring-gold/30 text-text-main">
           <option value="">Todos os canais</option>
           {canaisDisponiveis.map((c) => (
             <option key={c} value={c}>{CANAL_LABELS[c] ?? c}</option>
@@ -385,7 +385,7 @@ export default function LeadsPage() {
 
         {/* Filtro etapa */}
         <select value={filtroEtapa} onChange={(e) => setFiltroEtapa(e.target.value)}
-          className="h-9 px-3 text-sm bg-bg border border-[#E8D5A3]/60 rounded-btn outline-none focus:ring-2 focus:ring-gold/30 text-text-main">
+          className="h-9 px-3 text-sm bg-bg border border-[#E0D0B4]/60 rounded-btn outline-none focus:ring-2 focus:ring-gold/30 text-text-main">
           <option value="">Todas as etapas</option>
           {COLUNAS.map((c) => <option key={c.id} value={c.id}>{c.label}</option>)}
         </select>
@@ -462,7 +462,7 @@ export default function LeadsPage() {
               </div>
             );
           })}
-          <div className="mt-6 pt-6 border-t border-[#E8D5A3]/50">
+          <div className="mt-6 pt-6 border-t border-[#E0D0B4]/50">
             <div className="flex items-center gap-3">
               <div className="w-36 text-right"><p className="text-xs font-medium text-danger">Perdidos</p></div>
               <div className="flex-1">
@@ -481,7 +481,7 @@ export default function LeadsPage() {
                     return acc;
                   }, {} as Record<string, number>)
                 ).map(([cat, count]) => (
-                  <div key={cat} className="bg-surface border border-[#E8D5A3]/50 rounded-btn px-3 py-2">
+                  <div key={cat} className="bg-surface border border-[#E0D0B4]/50 rounded-btn px-3 py-2">
                     <p className="text-xs font-medium text-text-main capitalize">{cat.replace(/_/g, " ")}</p>
                     <p className="text-lg font-bold text-danger">{count}</p>
                   </div>
@@ -494,14 +494,14 @@ export default function LeadsPage() {
 
       {/* ── LISTA ── */}
       {view === "lista" && (
-        <div className="bg-surface border border-[#E8D5A3]/50 rounded-card overflow-hidden">
+        <div className="bg-surface border border-[#E0D0B4]/50 rounded-card overflow-hidden">
           {leadsLista.length === 0 ? (
             <p className="text-sm text-text-muted text-center py-16">Nenhum lead encontrado.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-[#E8D5A3]/50 bg-bg">
+                  <tr className="border-b border-[#E0D0B4]/50 bg-bg">
                     {[
                       { col: "nome",       label: "Nome / Empresa" },
                       { col: "etapa",      label: "Etapa" },

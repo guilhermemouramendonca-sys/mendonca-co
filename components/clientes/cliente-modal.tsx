@@ -85,7 +85,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-surface rounded-card w-full max-w-2xl max-h-[90vh] flex flex-col shadow-xl">
-        <div className="flex items-center justify-between p-6 border-b border-[#E8D5A3]/50">
+        <div className="flex items-center justify-between p-6 border-b border-[#E0D0B4]/50">
           <h2 className="font-display text-2xl font-semibold text-text-main">
             {isNovo ? "Novo Cliente" : "Editar Cliente"}
           </h2>
@@ -114,7 +114,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
             <div className="space-y-1.5">
               <Label>Setor</Label>
               <select value={form.setor} onChange={(e) => set("setor", e.target.value)}
-                className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                 <option value="">Selecione...</option>
                 {SETORES.map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
@@ -122,7 +122,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
             <div className="space-y-1.5">
               <Label>Porte</Label>
               <select value={form.porte} onChange={(e) => set("porte", e.target.value)}
-                className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                 <option value="">Selecione...</option>
                 {PORTES.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
               </select>
@@ -144,14 +144,14 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
                   value={faturamentoFormatado()}
                   onChange={handleFaturamento}
                   placeholder="0,00"
-                  className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface pl-9 pr-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold"
+                  className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface pl-9 pr-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold"
                 />
               </div>
             </div>
             <div className="space-y-1.5">
               <Label>Modelo de trabalho</Label>
               <select value={form.modelo_trabalho} onChange={(e) => set("modelo_trabalho", e.target.value)}
-                className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                 <option value="">Selecione...</option>
                 {MODELOS.map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
               </select>
@@ -166,7 +166,7 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
             <div className="space-y-1.5">
               <Label>Status</Label>
               <select value={form.status} onChange={(e) => set("status", e.target.value)}
-                className="flex h-10 w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
+                className="flex h-10 w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main focus:outline-none focus:ring-2 focus:ring-gold">
                 <option value="ativo">Ativo</option>
                 <option value="pausado">Pausado</option>
                 <option value="encerrado">Encerrado</option>
@@ -181,12 +181,12 @@ export function ClienteModal({ cliente, onClose, onSave }: Props) {
               onChange={(e) => set("observacoes", e.target.value)}
               rows={3}
               placeholder="Observações internas sobre o cliente..."
-              className="flex w-full rounded-btn border border-[#E8D5A3] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none"
+              className="flex w-full rounded-btn border border-[#E0D0B4] bg-surface px-3 py-2 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-gold resize-none"
             />
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-3 p-6 border-t border-[#E8D5A3]/50">
+        <div className="flex items-center justify-end gap-3 p-6 border-t border-[#E0D0B4]/50">
           {erro && <p className="text-sm text-danger flex-1">{erro}</p>}
           <Button variant="secondary" onClick={onClose}>Cancelar</Button>
           <Button onClick={salvar} disabled={salvando || !form.nome.trim()}>

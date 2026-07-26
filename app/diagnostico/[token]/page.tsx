@@ -18,8 +18,8 @@ const DIMENSAO_LABELS: Record<string, string> = {
 };
 
 const DIMENSAO_CORES: Record<string, string> = {
-  disciplina: "#C9A84C",
-  direcao: "#0D2B2E",
+  disciplina: "#C2A878",
+  direcao: "#1A2E3A",
   dominio: "#2D6A4F",
 };
 
@@ -217,7 +217,7 @@ export default function DiagnosticoPublicoPage() {
                 <select
                   value={faturamento}
                   onChange={(e) => setFaturamento(e.target.value)}
-                  className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3]/50 bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30"
+                  className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4]/50 bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30"
                 >
                   <option value="">Selecionar (opcional)</option>
                   <option value="ate_7m">Até R$7M/ano</option>
@@ -258,7 +258,7 @@ export default function DiagnosticoPublicoPage() {
 
     const PLANOS_3D: Record<string, { cor: string; diagnostico: string; acoes: string[] }> = {
       disciplina: {
-        cor: "#C9A84C",
+        cor: "#C2A878",
         diagnostico: "Sua execução está inconsistente. Você sabe o que precisa ser feito, mas o dia a dia consome sua agenda antes que você chegue no que realmente importa.",
         acoes: [
           "Bloqueie na agenda as 3 tarefas mais importantes do dia — toda manhã, antes de abrir e-mail ou WhatsApp.",
@@ -267,7 +267,7 @@ export default function DiagnosticoPublicoPage() {
         ],
       },
       direcao: {
-        cor: "#0D2B2E",
+        cor: "#1A2E3A",
         diagnostico: "Sua empresa opera sem uma bússola clara. Decisões são tomadas no improviso e o time não sabe para onde está indo — o que gera retrabalho, desalinhamento e saída de talentos.",
         acoes: [
           "Escreva em 1 parágrafo onde a empresa estará em 3 anos — seja específico: faturamento, mercado, posicionamento.",
@@ -297,7 +297,7 @@ export default function DiagnosticoPublicoPage() {
             {/* Header */}
             <div className="bg-surface rounded-card p-6 text-center shadow-lg">
               <div className="w-14 h-14 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C2A878" strokeWidth="2">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
@@ -459,7 +459,7 @@ export default function DiagnosticoPublicoPage() {
                       className="h-1.5 rounded-full transition-all duration-300"
                       style={{
                         width: `${pct}%`,
-                        backgroundColor: ativa ? "#C9A84C" : "#C9A84C60",
+                        backgroundColor: ativa ? "#C2A878" : "#C2A87860",
                       }}
                     />
                   </div>

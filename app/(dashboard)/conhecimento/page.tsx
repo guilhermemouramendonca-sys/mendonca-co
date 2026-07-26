@@ -39,7 +39,7 @@ const CATEGORIAS: { key: Categoria; label: string; emoji: string; descricao: str
 const TIPO_ICONS = { texto: FileText, video: Video, arquivo: Paperclip };
 const TIPO_LABELS: Record<TipoDoc, string> = { texto: "Texto", video: "Vídeo", arquivo: "Arquivo" };
 const CAT_CORES: Record<Categoria, string> = {
-  metodologia: "#0D2B2E", ferramenta: "#C9A84C", template: "#2980B9",
+  metodologia: "#1A2E3A", ferramenta: "#C2A878", template: "#2980B9",
   roteiro: "#27AE60", referencia: "#8E44AD",
 };
 
@@ -214,7 +214,7 @@ export default function ConhecimentoPage() {
                 <button
                   key={doc.id}
                   onClick={() => { setDocAberto(doc); setModoEdicao(false); }}
-                  className="w-full text-left bg-surface rounded-card border border-[#E8D5A3]/50 px-5 py-4 hover:border-gold/40 hover:shadow-sm transition-all flex items-start gap-4"
+                  className="w-full text-left bg-surface rounded-card border border-[#E0D0B4]/50 px-5 py-4 hover:border-gold/40 hover:shadow-sm transition-all flex items-start gap-4"
                 >
                   <div className="w-8 h-8 rounded-btn flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: CAT_CORES[doc.categoria] + "20" }}>
                     <Icon size={16} style={{ color: CAT_CORES[doc.categoria] }} />
@@ -234,7 +234,7 @@ export default function ConhecimentoPage() {
                     {doc.tags && doc.tags.length > 0 && (
                       <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
                         {doc.tags.map((tag) => (
-                          <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-[#E8D5A3]/30 text-text-muted flex items-center gap-1">
+                          <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-[#E0D0B4]/30 text-text-muted flex items-center gap-1">
                             <Tag size={9} /> {tag}
                           </span>
                         ))}
@@ -254,7 +254,7 @@ export default function ConhecimentoPage() {
         <div className="fixed inset-0 bg-black/40 z-50 flex items-stretch justify-end" onClick={(e) => { if (e.target === e.currentTarget) fechar(); }}>
           <div className="w-full max-w-3xl bg-surface shadow-2xl flex flex-col h-full overflow-hidden">
             {/* Header do painel */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8D5A3]/30">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#E0D0B4]/30">
               {modoEdicao ? (
                 <div className="flex items-center gap-2">
                   <div className="flex gap-1 bg-bg rounded-btn p-1">
@@ -292,13 +292,13 @@ export default function ConhecimentoPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                       <Label>Categoria</Label>
-                      <select value={form.categoria} onChange={(e) => setForm({ ...form, categoria: e.target.value as Categoria })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                      <select value={form.categoria} onChange={(e) => setForm({ ...form, categoria: e.target.value as Categoria })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                         {CATEGORIAS.map((c) => <option key={c.key} value={c.key}>{c.emoji} {c.label}</option>)}
                       </select>
                     </div>
                     <div className="space-y-1.5">
                       <Label>Tipo</Label>
-                      <select value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value as TipoDoc })} className="w-full h-10 px-3 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
+                      <select value={form.tipo} onChange={(e) => setForm({ ...form, tipo: e.target.value as TipoDoc })} className="w-full h-10 px-3 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm focus:outline-none focus:ring-2 focus:ring-gold/30">
                         {Object.entries(TIPO_LABELS).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
                       </select>
                     </div>
@@ -313,10 +313,10 @@ export default function ConhecimentoPage() {
                           onChange={(e) => setForm({ ...form, conteudo: e.target.value })}
                           placeholder={`## Título\n\nEscreva o conteúdo em **markdown**.\n\n- Item 1\n- Item 2`}
                           rows={18}
-                          className="w-full px-3 py-2 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-gold/30"
+                          className="w-full px-3 py-2 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-gold/30"
                         />
                       ) : (
-                        <div className="min-h-64 p-4 rounded-btn border border-[#E8D5A3] bg-bg prose prose-sm max-w-none">
+                        <div className="min-h-64 p-4 rounded-btn border border-[#E0D0B4] bg-bg prose prose-sm max-w-none">
                           <MarkdownView content={form.conteudo ?? ""} />
                         </div>
                       )}
@@ -334,7 +334,7 @@ export default function ConhecimentoPage() {
                       )}
                       <div className="space-y-1.5 mt-3">
                         <Label>Descrição (opcional)</Label>
-                        <textarea value={form.conteudo ?? ""} onChange={(e) => setForm({ ...form, conteudo: e.target.value })} placeholder="Descreva o conteúdo do vídeo..." rows={4} className="w-full px-3 py-2 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30" />
+                        <textarea value={form.conteudo ?? ""} onChange={(e) => setForm({ ...form, conteudo: e.target.value })} placeholder="Descreva o conteúdo do vídeo..." rows={4} className="w-full px-3 py-2 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30" />
                       </div>
                     </div>
                   )}
@@ -345,7 +345,7 @@ export default function ConhecimentoPage() {
                       <Input value={form.arquivo_url ?? ""} onChange={(e) => setForm({ ...form, arquivo_url: e.target.value || null })} placeholder="https://..." />
                       <div className="space-y-1.5 mt-3">
                         <Label>Descrição (opcional)</Label>
-                        <textarea value={form.conteudo ?? ""} onChange={(e) => setForm({ ...form, conteudo: e.target.value })} placeholder="Descreva o arquivo..." rows={4} className="w-full px-3 py-2 rounded-btn border border-[#E8D5A3] bg-bg text-text-main text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30" />
+                        <textarea value={form.conteudo ?? ""} onChange={(e) => setForm({ ...form, conteudo: e.target.value })} placeholder="Descreva o arquivo..." rows={4} className="w-full px-3 py-2 rounded-btn border border-[#E0D0B4] bg-bg text-text-main text-sm resize-none focus:outline-none focus:ring-2 focus:ring-gold/30" />
                       </div>
                     </div>
                   )}
@@ -367,7 +367,7 @@ export default function ConhecimentoPage() {
 
             {/* Footer do painel (modo edição) */}
             {modoEdicao && (
-              <div className="px-6 py-4 border-t border-[#E8D5A3]/30 flex justify-end gap-3">
+              <div className="px-6 py-4 border-t border-[#E0D0B4]/30 flex justify-end gap-3">
                 <Button variant="secondary" onClick={fechar}>Cancelar</Button>
                 <Button onClick={salvar} disabled={salvando || !form.titulo.trim()}>
                   {salvando ? "Salvando..." : "Salvar"}
@@ -426,10 +426,10 @@ function DocViewer({ doc }: { doc: Documento }) {
 
       {/* Tags */}
       {doc.tags && doc.tags.length > 0 && (
-        <div className="flex items-center gap-2 mt-8 pt-6 border-t border-[#E8D5A3]/30 flex-wrap">
+        <div className="flex items-center gap-2 mt-8 pt-6 border-t border-[#E0D0B4]/30 flex-wrap">
           <Tag size={12} className="text-text-muted" />
           {doc.tags.map((tag) => (
-            <span key={tag} className="text-xs px-2 py-0.5 rounded bg-[#E8D5A3]/30 text-text-muted">{tag}</span>
+            <span key={tag} className="text-xs px-2 py-0.5 rounded bg-[#E0D0B4]/30 text-text-muted">{tag}</span>
           ))}
         </div>
       )}
@@ -451,7 +451,7 @@ function MarkdownView({ content }: { content: string }) {
       <ReactMarkdown
         components={{
           h1: ({ children }) => <h1 className="font-display text-2xl font-bold text-text-main mt-6 mb-3">{children}</h1>,
-          h2: ({ children }) => <h2 className="font-display text-xl font-semibold text-text-main mt-5 mb-2 pb-1 border-b border-[#E8D5A3]/50">{children}</h2>,
+          h2: ({ children }) => <h2 className="font-display text-xl font-semibold text-text-main mt-5 mb-2 pb-1 border-b border-[#E0D0B4]/50">{children}</h2>,
           h3: ({ children }) => <h3 className="font-semibold text-text-main mt-4 mb-2">{children}</h3>,
           p:  ({ children }) => <p className="text-text-main mb-3 leading-relaxed">{children}</p>,
           ul: ({ children }) => <ul className="list-disc list-inside mb-3 space-y-1 text-text-main">{children}</ul>,
@@ -460,9 +460,9 @@ function MarkdownView({ content }: { content: string }) {
           strong: ({ children }) => <strong className="font-semibold text-text-main">{children}</strong>,
           em: ({ children }) => <em className="italic text-text-muted">{children}</em>,
           blockquote: ({ children }) => <blockquote className="border-l-4 border-gold pl-4 my-3 text-text-muted italic">{children}</blockquote>,
-          code: ({ children }) => <code className="bg-[#E8D5A3]/30 text-primary px-1.5 py-0.5 rounded text-xs font-mono">{children}</code>,
-          pre: ({ children }) => <pre className="bg-bg border border-[#E8D5A3]/50 rounded-card p-4 my-3 overflow-x-auto text-xs font-mono">{children}</pre>,
-          hr: () => <hr className="border-[#E8D5A3]/50 my-4" />,
+          code: ({ children }) => <code className="bg-[#E0D0B4]/30 text-primary px-1.5 py-0.5 rounded text-xs font-mono">{children}</code>,
+          pre: ({ children }) => <pre className="bg-bg border border-[#E0D0B4]/50 rounded-card p-4 my-3 overflow-x-auto text-xs font-mono">{children}</pre>,
+          hr: () => <hr className="border-[#E0D0B4]/50 my-4" />,
           a: ({ href, children }) => <a href={href} target="_blank" rel="noopener noreferrer" className="text-gold hover:underline">{children}</a>,
         }}
       >

@@ -256,7 +256,7 @@ export default function PesquisaPublicaPage() {
             {/* Header */}
             <div className="bg-surface rounded-card p-6 text-center shadow-lg">
               <div className="w-14 h-14 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-4">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9A84C" strokeWidth="2">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C2A878" strokeWidth="2">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
@@ -453,7 +453,7 @@ function StepperDISC({ atual, setAtual, respostas, setRespostas, onFinalizar, sa
 
 const Q12_DIMS = [
   { dim: "Necessidades Básicas", cor: "#C0392B" },
-  { dim: "Suporte Individual", cor: "#C9A84C" },
+  { dim: "Suporte Individual", cor: "#C2A878" },
   { dim: "Trabalho em Equipe", cor: "#2980B9" },
   { dim: "Crescimento", cor: "#27AE60" },
 ] as const;
@@ -552,10 +552,10 @@ function StepperQ12({ atual, setAtual, respostas, setRespostas, onFinalizar, sal
 // ─────────────────────────────────────────────────────────────
 
 const GPTW_DIMS_CORES: Record<string, string> = {
-  "Credibilidade": "#0D2B2E",
+  "Credibilidade": "#1A2E3A",
   "Respeito": "#2980B9",
   "Imparcialidade": "#8E44AD",
-  "Orgulho": "#C9A84C",
+  "Orgulho": "#C2A878",
   "Camaradagem": "#27AE60",
 };
 
@@ -757,7 +757,7 @@ const PIRAMIDE_LAYERS = [
     alerta: "Esta é a base de tudo — sem clareza de papel e recursos adequados, nenhum outro esforço de engajamento funciona. O que cada pessoa do seu time sabe exatamente que precisa entregar? Elas têm o que precisam para fazer isso bem feito?",
   },
   {
-    dim: "Suporte Individual", cor: "#C9A84C", nivel: 2,
+    dim: "Suporte Individual", cor: "#C2A878", nivel: 2,
     desc: "Reconhecimento e suporte",
     alerta: "Seu time sente que alguém se importa com eles como pessoas — não só como entregadores de resultado. Fortalecer esse nível sustenta todos os andares acima. Com que frequência você tem conversas individuais estruturadas com cada pessoa? Quando foi a última vez que reconheceu alguém pelo que ele fez, não pelo que entregou?",
   },
@@ -980,8 +980,8 @@ function ResultadoGPTWCard({ resultado, scoresAnteriores }: { resultado: Record<
 
   const dims = ["Credibilidade", "Respeito", "Imparcialidade", "Orgulho", "Camaradagem"];
   const CORES_GPTW: Record<string, string> = {
-    Credibilidade: "#0D2B2E", Respeito: "#2980B9", Imparcialidade: "#8E44AD",
-    Orgulho: "#C9A84C", Camaradagem: "#27AE60",
+    Credibilidade: "#1A2E3A", Respeito: "#2980B9", Imparcialidade: "#8E44AD",
+    Orgulho: "#C2A878", Camaradagem: "#27AE60",
   };
 
   const ordenadas = porDimensao

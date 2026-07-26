@@ -2,8 +2,8 @@ import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import type { ConsolidadoQ12, ConsolidadoGPTW } from "@/lib/rodadas/consolidar";
 
 const C = {
-  primary: "#0D2B2E", gold: "#C9A84C", goldLight: "#E8D5A3",
-  bg: "#F5F0E8", text: "#1A1A1A", muted: "#6B6B6B", white: "#FFFFFF",
+  primary: "#1A2E3A", gold: "#C2A878", goldLight: "#E0D0B4",
+  bg: "#F5F5F3", text: "#1A1A1A", muted: "#6B6B6B", white: "#FFFFFF",
   success: "#27AE60", warning: "#E67E22", danger: "#C0392B",
 };
 
@@ -31,7 +31,7 @@ function BarraDim({ label, pct, cor }: { label: string; pct: number; cor: string
         <Text style={{ fontSize: 10, color: C.text }}>{label}</Text>
         <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: cor }}>{pct}%</Text>
       </View>
-      <View style={{ height: 8, backgroundColor: "#E8D5A3", borderRadius: 4 }}>
+      <View style={{ height: 8, backgroundColor: "#E0D0B4", borderRadius: 4 }}>
         <View style={{ height: 8, borderRadius: 4, width: `${pct}%`, backgroundColor: cor }} />
       </View>
     </View>
@@ -104,7 +104,7 @@ export function RodadaQ12PDF({ nome, empresa, consolidado, respondentes, data }:
               <Text style={{ fontSize: 48, fontFamily: "Helvetica-Bold", color: C.primary }}>{percentualGeral}%</Text>
               <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: cor }}>{nivel}</Text>
             </View>
-            <View style={{ width: 1, height: 80, backgroundColor: "#E8D5A3" }} />
+            <View style={{ width: 1, height: 80, backgroundColor: "#E0D0B4" }} />
             <View style={{ flex: 1 }}>
               <Text style={{ fontSize: 9, color: C.muted, marginBottom: 8 }}>RESPONDENTES</Text>
               <Text style={{ fontSize: 28, fontFamily: "Helvetica-Bold", color: C.primary }}>{totalRespondentes}</Text>
@@ -145,14 +145,14 @@ export function RodadaQ12PDF({ nome, empresa, consolidado, respondentes, data }:
                   <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: c, marginLeft: "auto" }}>{p.percentual}%</Text>
                 </View>
                 <Text style={{ fontSize: 10, color: C.text, lineHeight: 1.6 }}>{p.texto}</Text>
-                <View style={{ marginTop: 8, height: 6, backgroundColor: "#E8D5A3", borderRadius: 3 }}>
+                <View style={{ marginTop: 8, height: 6, backgroundColor: "#E0D0B4", borderRadius: 3 }}>
                   <View style={{ height: 6, borderRadius: 3, width: `${p.percentual}%`, backgroundColor: c }} />
                 </View>
               </View>
             );
           })}
 
-          <View style={{ backgroundColor: "#E8D5A3" + "50", borderRadius: 8, padding: 14, marginTop: 8 }}>
+          <View style={{ backgroundColor: "#E0D0B4" + "50", borderRadius: 8, padding: 14, marginTop: 8 }}>
             <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: C.primary, marginBottom: 6 }}>Como interpretar</Text>
             <Text style={{ fontSize: 9, color: C.text, lineHeight: 1.6 }}>
               Cada afirmação representa um elemento de engajamento do time. Percentuais abaixo de 50% indicam gaps significativos que impactam retenção, produtividade e cultura. Perguntas abaixo de 30% exigem ação imediata.
@@ -270,7 +270,7 @@ export function RodadaGPTWPDF({ nome, empresa, consolidado, respondentes, data }
               <Text style={{ fontSize: 48, fontFamily: "Helvetica-Bold", color: C.primary }}>{trustIndexMedio}%</Text>
               <Text style={{ fontSize: 12, fontFamily: "Helvetica-Bold", color: cor }}>{nivel}</Text>
             </View>
-            <View style={{ width: 1, height: 80, backgroundColor: "#E8D5A3" }} />
+            <View style={{ width: 1, height: 80, backgroundColor: "#E0D0B4" }} />
             <View style={{ flex: 1 }}>
               <Text style={{ fontSize: 9, color: C.muted, marginBottom: 8 }}>RESPONDENTES</Text>
               <Text style={{ fontSize: 28, fontFamily: "Helvetica-Bold", color: C.primary }}>{totalRespondentes}</Text>
@@ -309,7 +309,7 @@ export function RodadaGPTWPDF({ nome, empresa, consolidado, respondentes, data }
                   <Text style={{ fontSize: 10, fontFamily: "Helvetica-Bold", color: c, marginLeft: "auto" }}>{a.percentual}%</Text>
                 </View>
                 <Text style={{ fontSize: 10, color: C.text, lineHeight: 1.6 }}>{a.texto}</Text>
-                <View style={{ marginTop: 8, height: 6, backgroundColor: "#E8D5A3", borderRadius: 3 }}>
+                <View style={{ marginTop: 8, height: 6, backgroundColor: "#E0D0B4", borderRadius: 3 }}>
                   <View style={{ height: 6, borderRadius: 3, width: `${a.percentual}%`, backgroundColor: c }} />
                 </View>
               </View>

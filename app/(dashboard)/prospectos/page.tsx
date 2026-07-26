@@ -217,7 +217,7 @@ export default function ProspectosPage() {
   const totalPaginas = Math.ceil(totalFiltrado / POR_PAGINA)
 
   const statsConfig = [
-    { label: "Total", valor: stats.total, cor: "text-[#0D2B2E]", filtro: null },
+    { label: "Total", valor: stats.total, cor: "text-[#1A2E3A]", filtro: null },
     { label: "Novos", valor: stats.novo, cor: "text-gray-500", filtro: "novo" },
     { label: "Abordados", valor: stats.abordado, cor: "text-blue-600", filtro: "abordado" },
     { label: "Responderam", valor: stats.respondeu, cor: "text-green-600", filtro: "respondeu" },
@@ -229,7 +229,7 @@ export default function ProspectosPage() {
     <div className="p-6 max-w-[1400px] mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#0D2B2E]">Base de Prospecção</h1>
+          <h1 className="text-2xl font-bold text-[#1A2E3A]">Base de Prospecção</h1>
           <p className="text-sm text-gray-500 mt-1">{stats.total.toLocaleString("pt-BR")} contatos{stats.total === 0 ? " — importe a planilha para começar" : ""}</p>
         </div>
         <div className="flex items-center gap-3">
@@ -241,11 +241,11 @@ export default function ProspectosPage() {
           <button
             onClick={importarPlanilha}
             disabled={importando}
-            className="flex items-center gap-2 bg-[#0D2B2E] text-[#C9A84C] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#1a3f43] transition-colors disabled:opacity-60"
+            className="flex items-center gap-2 bg-[#1A2E3A] text-[#C2A878] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#243e50] transition-colors disabled:opacity-60"
           >
             {importando ? (
               <>
-                <span className="animate-spin w-4 h-4 border-2 border-[#C9A84C] border-t-transparent rounded-full inline-block" />
+                <span className="animate-spin w-4 h-4 border-2 border-[#C2A878] border-t-transparent rounded-full inline-block" />
                 Importando...
               </>
             ) : (
@@ -263,7 +263,7 @@ export default function ProspectosPage() {
             onClick={() => s.filtro && setFiltroStatus(filtroStatus === s.filtro ? "" : s.filtro)}
             className={`bg-white rounded-lg border p-3 text-center transition-all ${
               s.filtro && filtroStatus === s.filtro
-                ? "border-[#C9A84C] shadow-sm ring-1 ring-[#C9A84C]"
+                ? "border-[#C2A878] shadow-sm ring-1 ring-[#C2A878]"
                 : "border-gray-200 hover:border-gray-300"
             } ${s.filtro ? "cursor-pointer" : "cursor-default"}`}
           >
@@ -280,12 +280,12 @@ export default function ProspectosPage() {
           placeholder="Buscar nome, @instagram, email..."
           value={buscaInput}
           onChange={e => setBuscaInput(e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-64 focus:outline-none focus:border-[#C9A84C]"
+          className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-64 focus:outline-none focus:border-[#C2A878]"
         />
         <select
           value={filtroSegmento}
           onChange={e => setFiltroSegmento(e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C9A84C]"
+          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C2A878]"
         >
           <option value="">Todos os segmentos</option>
           {segmentos.map(s => <option key={s} value={s}>{s}</option>)}
@@ -293,7 +293,7 @@ export default function ProspectosPage() {
         <select
           value={filtroPrioridade}
           onChange={e => setFiltroPrioridade(e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C9A84C]"
+          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C2A878]"
         >
           <option value="">Todas as prioridades</option>
           <option value="altissima">⭐⭐⭐ Altíssima</option>
@@ -318,7 +318,7 @@ export default function ProspectosPage() {
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         {carregando ? (
           <div className="flex items-center justify-center h-40">
-            <div className="animate-spin w-6 h-6 border-2 border-[#C9A84C] border-t-transparent rounded-full" />
+            <div className="animate-spin w-6 h-6 border-2 border-[#C2A878] border-t-transparent rounded-full" />
           </div>
         ) : (
           <div className="overflow-x-auto">
@@ -427,7 +427,7 @@ export default function ProspectosPage() {
                               if (e.key === "Enter") salvarNota(p.id)
                               if (e.key === "Escape") setEditandoNota(null)
                             }}
-                            className="border border-gray-200 rounded px-2 py-1 text-xs w-full focus:outline-none focus:border-[#C9A84C]"
+                            className="border border-gray-200 rounded px-2 py-1 text-xs w-full focus:outline-none focus:border-[#C2A878]"
                             placeholder="Nota..."
                           />
                           <button onClick={() => salvarNota(p.id)} className="text-green-600 text-xs font-bold shrink-0">✓</button>
@@ -450,7 +450,7 @@ export default function ProspectosPage() {
                       ) : p.status !== "descartado" ? (
                         <button
                           onClick={() => setConvertendo(p)}
-                          className="text-xs bg-[#0D2B2E] text-[#C9A84C] px-3 py-1.5 rounded-full hover:bg-[#1a3f43] transition-colors whitespace-nowrap font-medium"
+                          className="text-xs bg-[#1A2E3A] text-[#C2A878] px-3 py-1.5 rounded-full hover:bg-[#243e50] transition-colors whitespace-nowrap font-medium"
                         >
                           → Lead
                         </button>
@@ -493,7 +493,7 @@ export default function ProspectosPage() {
       {convertendo && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
-            <h2 className="text-lg font-bold text-[#0D2B2E] mb-1">Converter em lead</h2>
+            <h2 className="text-lg font-bold text-[#1A2E3A] mb-1">Converter em lead</h2>
             <p className="text-sm text-gray-500 mb-4">
               Será adicionado ao CRM com etapa &ldquo;Novo&rdquo; e canal &ldquo;Lista de Prospecção&rdquo;.
             </p>
@@ -516,7 +516,7 @@ export default function ProspectosPage() {
               <button
                 onClick={converterParaLead}
                 disabled={salvando}
-                className="flex-1 bg-[#C9A84C] text-white rounded-lg py-2.5 text-sm font-semibold hover:bg-[#b8943f] transition-colors disabled:opacity-60"
+                className="flex-1 bg-[#C2A878] text-white rounded-lg py-2.5 text-sm font-semibold hover:bg-[#a8905e] transition-colors disabled:opacity-60"
               >
                 {salvando ? "Criando..." : "Criar lead →"}
               </button>
