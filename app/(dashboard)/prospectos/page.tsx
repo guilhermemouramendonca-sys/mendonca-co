@@ -42,10 +42,10 @@ const STATUS_CORES: Record<Status, string> = {
 }
 
 const PRIORIDADE_DOT: Record<string, string> = {
-  alta: "bg-red-500",
-  alta_prioridade: "bg-red-500",
-  média: "bg-amber-500",
-  media: "bg-amber-500",
+  altissima: "bg-red-600",
+  alta: "bg-orange-500",
+  media: "bg-amber-400",
+  média: "bg-amber-400",
   baixa: "bg-gray-300",
 }
 
@@ -68,6 +68,8 @@ export default function ProspectosPage() {
   const [notaTexto, setNotaTexto] = useState("")
   const [convertendo, setConvertendo] = useState<Prospecto | null>(null)
   const [salvando, setSalvando] = useState(false)
+  const [importando, setImportando] = useState(false)
+  const [importMsg, setImportMsg] = useState<{ ok: boolean; texto: string } | null>(null)
 
   // Debounce busca
   useEffect(() => {
@@ -176,6 +178,25 @@ export default function ProspectosPage() {
     setConvertendo(null)
   }
 
+  async function importarPlanilha() {
+    setImportando(true)
+    setImportMsg(null)
+    try {
+      const resp = await fetch("/api/import/prospectos", { method: "POST" })
+      const data = await resp.json()
+      if (data.ok) {
+        setImportMsg({ ok: true, texto: `${data.importado.toLocaleString("pt-BR")} contatos importados com sucesso!` })
+        await carregarMeta()
+        await carregar()
+      } else {
+        setImportMsg({ ok: false, texto: data.error ?? "Erro desconhecido" })
+      }
+    } catch {
+      setImportMsg({ ok: false, texto: "Erro de rede ao importar" })
+    }
+    setImportando(false)
+  }
+
   const totalPaginas = Math.ceil(totalFiltrado / POR_PAGINA)
 
   const statsConfig = [
@@ -192,7 +213,28 @@ export default function ProspectosPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-[#0D2B2E]">Base de Prospecção</h1>
-          <p className="text-sm text-gray-500 mt-1">{stats.total.toLocaleString("pt-BR")} contatos importados</p>
+          <p className="text-sm text-gray-500 mt-1">{stats.total.toLocaleString("pt-BR")} contatos{stats.total === 0 ? " — importe a planilha para começar" : ""}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {importMsg && (
+            <span className={`text-sm font-medium ${importMsg.ok ? "text-green-600" : "text-red-500"}`}>
+              {importMsg.ok ? "✓ " : "✗ "}{importMsg.texto}
+            </span>
+          )}
+          <button
+            onClick={importarPlanilha}
+            disabled={importando}
+            className="flex items-center gap-2 bg-[#0D2B2E] text-[#C9A84C] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#1a3f43] transition-colors disabled:opacity-60"
+          >
+            {importando ? (
+              <>
+                <span className="animate-spin w-4 h-4 border-2 border-[#C9A84C] border-t-transparent rounded-full inline-block" />
+                Importando...
+              </>
+            ) : (
+              <>↓ Importar planilha</>
+            )}
+          </button>
         </div>
       </div>
 
