@@ -355,7 +355,7 @@ export function LeadModal({ lead, etapaInicial, onClose, onSave, onGanhoPerda }:
           <div>
             {form.whatsapp && (
               <a
-                href={`https://wa.me/55${form.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Olá ${form.nome}, tudo bem? Vi que você preencheu nosso formulário e gostaria de conversar sobre como podemos ajudar você e a ${form.empresa || "sua empresa"}. Quando tiver um momento?`)}`}
+                href={`https://wa.me/55${form.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Olá ${form.nome}, tudo bem? Vi que você preencheu nosso formulário e queria conversar sobre os resultados com você.\n\nSe quiser, pode escolher um horário aqui para a gente bater um papo de 30min: https://calendar.app.google/ZHeh2G1QZJvtFUYX7`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-btn bg-[#25D366] text-white text-sm font-medium hover:bg-[#1ebe5d] transition-colors"

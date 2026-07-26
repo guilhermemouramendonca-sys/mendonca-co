@@ -48,6 +48,13 @@ export async function notificarNovoLead(params: NotificarLeadParams) {
         </div>
         <div style="background:#fff;padding:32px;border-radius:0 0 8px 8px;border:1px solid #e8d5a3;border-top:none;line-height:1.8;color:#1a1a1a;font-size:14px">
           ${linhas}
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid #e8d5a3">
+            <p style="margin:0 0 12px;font-size:13px;color:#555">Agende uma conversa de diagnóstico:</p>
+            <a href="https://calendar.app.google/ZHeh2G1QZJvtFUYX7"
+              style="display:inline-block;background:#0D2B2E;color:#C9A84C;text-decoration:none;padding:10px 24px;border-radius:6px;font-size:13px;font-weight:600">
+              📅 Agendar Conversa de 30min
+            </a>
+          </div>
         </div>
       </div>
     `,
