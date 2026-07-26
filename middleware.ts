@@ -29,11 +29,18 @@ export async function middleware(request: NextRequest) {
 
   // Rotas públicas — sem autenticação necessária
   const publicPaths = ["/login", "/forms", "/pesquisa", "/diagnostico"];
-  const isPublic = publicPaths.some((p) => pathname.startsWith(p));
+  const isPublic = pathname === "/" || publicPaths.some((p) => pathname.startsWith(p));
 
   if (!user && !isPublic) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  // Usuário autenticado na raiz → vai direto pro dashboard
+  if (user && pathname === "/") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
