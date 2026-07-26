@@ -77,7 +77,7 @@ function RadarChart8({ scores }: { scores: number[] }) {
             fill="none"
             stroke={lv === 1.0 ? CORES.goldLight : "#E0D0B4"}
             strokeWidth={lv === 1.0 ? 1.2 : 0.6}
-            strokeDasharray={lv < 1.0 ? "3 3" : "0"}
+            strokeDasharray={lv < 1.0 ? "3 3" : undefined}
           />
         ))}
         {/* Axes */}
