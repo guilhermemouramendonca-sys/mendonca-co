@@ -55,9 +55,12 @@ export default function LandingPage() {
       {/* ── NAV ─────────────────────────────────────────────── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-primary/96 backdrop-blur-md border-b border-gold/10">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="font-display text-xl font-bold text-gold tracking-tight">
-            Mendonça & Co
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/logos/wordmark-dark.svg"
+            alt="Mendonça & Co"
+            className="h-9 w-auto"
+          />
           <nav className="hidden md:flex items-center gap-8">
             <a href="#servicos" className="text-sm text-gold/70 hover:text-gold transition-colors">Serviços</a>
             <a href="#sobre"    className="text-sm text-gold/70 hover:text-gold transition-colors">Sobre</a>
@@ -170,12 +173,12 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-2 gap-6">
             {SERVICOS.map((s) => (
               <div key={s.num}
-                className="bg-white border border-[#E0D0B4]/60 rounded-card p-8 hover:border-gold/40 hover:shadow-sm transition-all group">
+                className="bg-white border border-[#E4E2DE] rounded-card p-8 hover:border-gold/40 hover:shadow-sm transition-all group">
                 <div className="flex items-start justify-between mb-5">
-                  <span className="font-display text-5xl font-bold text-[#E0D0B4] group-hover:text-gold/30 transition-colors">
+                  <span className="font-display text-5xl font-bold text-[#E4E2DE] group-hover:text-gold/30 transition-colors">
                     {s.num}
                   </span>
-                  <span className="text-xs font-medium text-text-muted bg-bg px-3 py-1 rounded-full border border-[#E0D0B4]/60">
+                  <span className="text-xs font-medium text-text-muted bg-bg px-3 py-1 rounded-full border border-[#E4E2DE]">
                     {s.duracao}
                   </span>
                 </div>
@@ -252,7 +255,7 @@ export default function LandingPage() {
                 "Faturamento cresceu, mas a margem não acompanhou",
                 "Quer escalar sem perder qualidade e controle",
               ].map((item) => (
-                <div key={item} className="flex items-start gap-3 p-4 bg-white rounded-btn border border-[#E0D0B4]/40">
+                <div key={item} className="flex items-start gap-3 p-4 bg-white rounded-btn border border-[#E4E2DE]">
                   <span className="text-gold mt-0.5 shrink-0">✓</span>
                   <span className="text-sm text-text-main">{item}</span>
                 </div>
@@ -339,8 +342,13 @@ export default function LandingPage() {
       <footer className="bg-primary py-12 border-t border-gold/10">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div>
-            <p className="font-display text-lg font-bold text-gold">Mendonça & Co</p>
-            <p className="text-xs text-gold/40 mt-1">Consultoria de Board e Liderança Empresarial</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logos/wordmark-dark.svg"
+              alt="Mendonça & Co"
+              className="h-8 w-auto mb-1"
+            />
+            <p className="text-xs text-gold/40">Consultoria de Board e Liderança Empresarial</p>
           </div>
           <div className="flex items-center gap-6">
             <a href={CALENDAR} target="_blank" rel="noopener noreferrer"

@@ -1,0 +1,12 @@
+<svg width="800" height="200" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="200" fill="#FAF9F7"/>
+  <text x="400" y="100" dominant-baseline="central" text-anchor="middle"
+        font-family="'Cormorant Garamond', 'Garamond', 'Georgia', serif" font-weight="400"
+        font-size="76" letter-spacing="10" fill="#1A2E3A">MENDONÇA</text>
+  <text x="400" y="158" dominant-baseline="central" text-anchor="middle"
+        font-family="'Cormorant Garamond', 'Garamond', 'Georgia', serif" font-weight="300"
+        font-size="32" letter-spacing="16" fill="rgba(26,46,58,0.4)">
+    <tspan font-style="italic" fill="#C2A878" letter-spacing="14">&amp;</tspan>
+    <tspan dx="0" font-weight="400" letter-spacing="-1" fill="rgba(26,46,58,0.4)">CO</tspan>
+  </text>
+</svg>
