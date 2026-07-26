@@ -34,12 +34,34 @@ function parseCSVLine(line: string): string[] {
   return cells
 }
 
-function limparInstagram(v: string | undefined): string | null {
-  if (!v) return null
-  const clean = v.replace(/^'/, "").trim()
-  const lower = clean.toLowerCase()
-  if (!clean || ["nao possui", "não possui", "nao tem", "não tem", "n/a", "-", "sem instagram"].includes(lower)) return null
-  return clean
+const NULOS = ["nao possui", "não possui", "nao tem", "não tem", "n/a", "-", "sem instagram", "sem rede", ""]
+
+// Detecta se é handle de Instagram ou site de empresa
+function extrairContato(raw: string | undefined): { instagram: string | null; website: string | null } {
+  if (!raw) return { instagram: null, website: null }
+  const v = raw.replace(/^'/, "").trim()
+  const lower = v.toLowerCase()
+  if (NULOS.includes(lower)) return { instagram: null, website: null }
+
+  // Começa com @ = Instagram
+  if (v.startsWith("@")) return { instagram: v.replace(/^@/, ""), website: null }
+
+  // Tem .com, .com.br, .br, .net, .org, www. = site
+  // Exclui sufixos de estado BR usados em handles (.rn, .sp, .mg, .go, .rs, .pr, .ba, .pe)
+  const estadosBR = /\.(rn|sp|mg|go|rs|pr|ba|pe|sc|ce|es|pa|am|mt|ms|to|ro|ac|rr|ap|ma|pi|al|se|pb|df)$/i
+  const isSite = /^(www\.|https?:\/\/)/.test(lower) ||
+    /\.(com|com\.br|net|org|io|co|store|shop|online|digital|tech|app|biz|info|br|pt|me)(\/|$)/i.test(lower)
+
+  if (isSite && !estadosBR.test(lower) && !v.startsWith("@")) {
+    const url = /^https?:\/\//i.test(v) ? v : `https://${v}`
+    return { instagram: null, website: url }
+  }
+
+  // Sem espaço, sem domínio reconhecido = handle de Instagram
+  if (!/\s/.test(v)) return { instagram: v, website: null }
+
+  // Nome de empresa ou texto livre = sem link
+  return { instagram: null, website: null }
 }
 
 export async function POST(req: NextRequest) {
@@ -76,12 +98,15 @@ export async function POST(req: NextRequest) {
       const nome = r[2]?.trim()
       if (!nome || isNaN(num)) return null
 
+      const { instagram, website } = extrairContato(r[4])
+
       return {
         numero: num,
         prioridade: normalizarPrioridade(r[1] ?? ""),
         nome,
         telefone: r[3]?.trim() || null,
-        instagram: limparInstagram(r[4]),
+        instagram,
+        website,
         email: r[5]?.trim() || null,
         segmento: r[6]?.trim() || null,
         faturamento: r[7]?.trim() || null,
