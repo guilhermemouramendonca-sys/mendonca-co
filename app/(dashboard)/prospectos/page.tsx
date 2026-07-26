@@ -42,12 +42,28 @@ const STATUS_CORES: Record<Status, string> = {
   convertido: "bg-amber-100 text-amber-700",
 }
 
-const PRIORIDADE_DOT: Record<string, string> = {
-  altissima: "bg-red-600",
-  alta: "bg-orange-500",
-  media: "bg-amber-400",
-  média: "bg-amber-400",
-  baixa: "bg-gray-300",
+const PRIORIDADE_BADGE: Record<string, { label: string; cls: string }> = {
+  altissima: { label: "⭐⭐⭐", cls: "bg-red-100 text-red-700" },
+  alta:      { label: "⭐⭐",  cls: "bg-orange-100 text-orange-700" },
+  media:     { label: "⭐",   cls: "bg-amber-100 text-amber-700" },
+  média:     { label: "⭐",   cls: "bg-amber-100 text-amber-700" },
+  baixa:     { label: "–",   cls: "bg-gray-100 text-gray-400" },
+}
+
+function abreviarFaturamento(f: string | null): string {
+  if (!f) return "—"
+  const acima = f.match(/acima de R\$\s*([\d,.]+)\s*(milh[õo]es?|mil)/i)
+  if (acima) {
+    const u = acima[2].toLowerCase().includes("milh") ? "M" : "K"
+    return `R$ ${acima[1]}${u}+`
+  }
+  const range = f.match(/R\$\s*([\d,.]+)\s*(milh[õo]es?|mil).*?([\d,.]+)\s*(milh[õo]es?|mil)/i)
+  if (range) {
+    const u1 = range[2].toLowerCase().includes("milh") ? "M" : "K"
+    const u2 = range[4].toLowerCase().includes("milh") ? "M" : "K"
+    return `R$ ${range[1]}${u1}–${range[3]}${u2}`
+  }
+  return f
 }
 
 const POR_PAGINA = 50
@@ -280,10 +296,10 @@ export default function ProspectosPage() {
           className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#C9A84C]"
         >
           <option value="">Todas as prioridades</option>
-          <option value="alta">Alta</option>
-          <option value="média">Média</option>
-          <option value="media">Média (sem acento)</option>
-          <option value="baixa">Baixa</option>
+          <option value="altissima">⭐⭐⭐ Altíssima</option>
+          <option value="alta">⭐⭐ Alta</option>
+          <option value="media">⭐ Média</option>
+          <option value="baixa">– Baixa</option>
         </select>
         {(buscaInput || filtroStatus || filtroSegmento || filtroPrioridade) && (
           <button
@@ -332,10 +348,12 @@ export default function ProspectosPage() {
                   <tr key={p.id} className="hover:bg-gray-50 transition-colors">
                     {/* Prioridade */}
                     <td className="px-4 py-3">
-                      <div
-                        className={`w-2.5 h-2.5 rounded-full ${PRIORIDADE_DOT[p.prioridade?.toLowerCase() ?? ""] ?? "bg-gray-200"}`}
-                        title={p.prioridade ?? "sem prioridade"}
-                      />
+                      {(() => {
+                        const b = PRIORIDADE_BADGE[p.prioridade?.toLowerCase() ?? ""]
+                        return b
+                          ? <span className={`text-xs px-1.5 py-0.5 rounded font-medium whitespace-nowrap ${b.cls}`}>{b.label}</span>
+                          : <span className="text-gray-300 text-xs">—</span>
+                      })()}
                     </td>
                     {/* Nome */}
                     <td className="px-4 py-3">
@@ -345,7 +363,7 @@ export default function ProspectosPage() {
                     {/* Segmento */}
                     <td className="px-4 py-3 text-xs text-gray-600">{p.segmento ?? "—"}</td>
                     {/* Faturamento */}
-                    <td className="px-4 py-3 text-xs text-gray-500">{p.faturamento ?? "—"}</td>
+                    <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">{abreviarFaturamento(p.faturamento)}</td>
                     {/* Contato */}
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
