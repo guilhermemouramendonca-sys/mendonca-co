@@ -27,6 +27,7 @@ import {
   GraduationCap,
   Sprout,
   CheckSquare,
+  Contact2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -45,6 +46,7 @@ const navItems = [
   { href: "/canvas", label: "Canvas Estratégico", icon: LayoutTemplate },
   { href: "/benchmarks", label: "Benchmarks", icon: LineChart },
   { href: "/sdr", label: "SDR / Prospecção", icon: Megaphone },
+  { href: "/prospectos", label: "Base de Prospecção", icon: Contact2 },
   { href: "/propostas", label: "Propostas", icon: FileBadge },
   { href: "/cs", label: "CS / Sucesso", icon: HeartPulse },
   { href: "/marketing", label: "Marketing & Growth", icon: Sprout },
