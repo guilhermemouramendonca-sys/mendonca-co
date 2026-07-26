@@ -2,8 +2,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Trocar para "Mendonça & Co <noreply@mendonca.co>" após verificar domínio no Resend
-const FROM = "Mendonça & Co <onboarding@resend.dev>";
+const FROM = "Mendonça & Co <guilherme@mendoncaeco.com>";
 
 type TipoFerramenta =
   | "diagnostico_3d"
@@ -100,7 +99,7 @@ function htmlEmail(nome: string, tipo: TipoFerramenta, pdfUrl: string): string {
                 Estou disponível para uma conversa de 30 minutos sobre o que o diagnóstico revelou e qual seria o próximo passo mais inteligente para o seu negócio.
               </p>
               <p style="margin:0;font-size:14px;color:#1A2E3A;">
-                <a href="mailto:guilherme@mendonca.co" style="color:#C2A878;text-decoration:none;font-weight:700;">guilherme@mendonca.co</a>
+                <a href="mailto:guilherme@mendoncaeco.com" style="color:#C2A878;text-decoration:none;font-weight:700;">guilherme@mendoncaeco.com</a>
               </p>
             </td>
           </tr>

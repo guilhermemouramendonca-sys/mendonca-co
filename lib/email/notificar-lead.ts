@@ -27,7 +27,7 @@ export async function notificarPDFGerado({
   if (!process.env.RESEND_API_KEY) return;
   const titulo = TITULOS_PDF[tipo] ?? tipo;
   await resend.emails.send({
-    from: "Mendonça & Co <onboarding@resend.dev>",
+    from: "Mendonça & Co <guilherme@mendoncaeco.com>",
     to: "guilherme.moura.mendonca@gmail.com",
     subject: `📄 PDF gerado: ${nome} — ${titulo}`,
     html: `
@@ -85,7 +85,7 @@ export async function notificarNovoLead(params: NotificarLeadParams) {
   ].filter(Boolean).join("<br>");
 
   await resend.emails.send({
-    from: "Mendonça & Co <onboarding@resend.dev>",
+    from: "Mendonça & Co <guilherme@mendoncaeco.com>",
     to: "guilherme.moura.mendonca@gmail.com",
     subject: `Novo lead: ${nome} — ${origemLabel}`,
     html: `
