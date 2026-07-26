@@ -55,6 +55,32 @@ const CANAL_CONFIG: Record<string, { label: string; icon: React.ReactNode; cor: 
 const DIAS_CADENCIA = [0, 3, 7];
 const CANAIS_CADENCIA = ["whatsapp", "email", "ligacao", "linkedin"];
 
+type ProspectoSDR = {
+  id: string;
+  nome: string;
+  telefone: string | null;
+  instagram: string | null;
+  segmento: string | null;
+  faturamento: string | null;
+  prioridade: string | null;
+};
+
+const PRIORIDADE_COR: Record<string, string> = {
+  altissima: "#C0392B",
+  alta: "#E67E22",
+  media: "#C2A878",
+  baixa: "#6B6B6B",
+};
+
+function msgWhatsApp(nome: string, empresa: string, dia: number): string {
+  const primeiro = nome.split(" ")[0];
+  if (dia === 0)
+    return `Olá ${primeiro}! Tudo bem?\n\nVi seu perfil e achei que faria sentido a gente conversar. Trabalho com consultoria de liderança e crescimento — ajudo donos de empresa a estruturar equipe, direção e cultura.\n\nVocê teria 30 minutos para um papo rápido? Pode escolher um horário aqui: https://calendar.app.google/ZHeh2G1QZJvtFUYX7`;
+  if (dia === 3)
+    return `Olá ${primeiro}! Só retomando meu contato anterior. Entendo que a agenda aperta — quando tiver um momento, adoraria conversar alguns minutos sobre crescimento de ${empresa || "seu negócio"}.\n\nLink para agendar: https://calendar.app.google/ZHeh2G1QZJvtFUYX7`;
+  return `Olá ${primeiro}! Última mensagem da minha parte. Se em algum momento fizer sentido conversar sobre estrutura e liderança em ${empresa || "seu negócio"}, é só me chamar.\n\nAbraço!`;
+}
+
 function semanaISO(date = new Date()): string {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -89,17 +115,25 @@ export default function SDRPage() {
   const [acao, setAcao] = useState<{ leadId: string; dia: number } | null>(null);
   const [notaAcao, setNotaAcao] = useState("");
   const [canalAcao, setCanalAcao] = useState("whatsapp");
+  const [prospectos, setProspectos] = useState<ProspectoSDR[]>([]);
+  const [iniciando, setIniciando] = useState<string | null>(null);
 
   const semana = semanaISO();
 
   const carregar = useCallback(async () => {
-    const [{ data: leadsData }, { data: cadData }, { data: metaData }] = await Promise.all([
+    const [{ data: leadsData }, { data: cadData }, { data: metaData }, { data: prospData }] = await Promise.all([
       supabase.from("leads")
         .select("*")
         .in("etapa", ["novo", "contato", "diagnostico"])
         .order("criado_em", { ascending: false }),
       supabase.from("lead_cadencia").select("*"),
       supabase.from("sdr_metas").select("*").eq("semana_iso", semana).maybeSingle(),
+      supabase.from("prospectos")
+        .select("id, nome, telefone, instagram, segmento, faturamento, prioridade")
+        .in("prioridade", ["altissima", "alta"])
+        .eq("status", "novo")
+        .order("numero", { ascending: true })
+        .limit(20),
     ]);
 
     if (leadsData) setLeads(leadsData as Lead[]);
@@ -112,6 +146,7 @@ export default function SDRPage() {
       setCadencias(map);
     }
     if (metaData) setMeta(metaData.meta_leads);
+    if (prospData) setProspectos(prospData as ProspectoSDR[]);
   }, [supabase, semana]);
 
   useEffect(() => { carregar(); }, [carregar]);
@@ -120,6 +155,31 @@ export default function SDRPage() {
     await supabase.from("sdr_metas").upsert({ semana_iso: semana, meta_leads: parseInt(novaMeta) || 10 }, { onConflict: "semana_iso" });
     setMeta(parseInt(novaMeta) || 10);
     setEditandoMeta(false);
+  }
+
+  async function iniciarAbordagem(p: ProspectoSDR) {
+    setIniciando(p.id);
+    const { data: lead } = await supabase.from("leads").insert({
+      nome: p.nome,
+      email: "",
+      whatsapp: p.telefone,
+      instagram: p.instagram,
+      tipo_servico: p.segmento ? "mentoria_3d" : null,
+      canal: "lista_prospectos",
+      etapa: "novo",
+      origem: "prospectos",
+      observacoes: p.faturamento ? `Faturamento: ${p.faturamento}` : null,
+    }).select("id").single();
+
+    if (lead) {
+      await supabase.from("prospectos").update({
+        status: "abordado",
+        lead_id: lead.id,
+        data_abordagem: new Date().toISOString().split("T")[0],
+      }).eq("id", p.id);
+    }
+    setIniciando(null);
+    await carregar();
   }
 
   async function registrarAcao(leadId: string, dia: number, status: "feito" | "sem_resposta" | "pulado") {
@@ -194,7 +254,7 @@ export default function SDRPage() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-5 gap-4 mb-8">
         {/* Meta semanal */}
         <Card className="col-span-2">
           <CardContent className="p-5">
@@ -254,7 +314,91 @@ export default function SDRPage() {
             <p className="text-xs text-text-muted mt-1">leads com D0/D3/D7 feitos</p>
           </CardContent>
         </Card>
+
+        <Card className="border-danger/20">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2 mb-2">
+              <Target size={16} className="text-danger" />
+              <span className="text-xs text-text-muted uppercase tracking-wide">Prospectos</span>
+            </div>
+            <p className="font-mono-data text-4xl font-bold text-text-main">{prospectos.length}</p>
+            <p className="text-xs text-text-muted mt-1">alta prioridade p/ abordar</p>
+          </CardContent>
+        </Card>
       </div>
+
+      {/* Prospectos prioritários */}
+      {prospectos.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-2 h-5 bg-danger rounded-full" />
+            <h2 className="font-display text-lg font-semibold text-text-main">
+              Prospectos para abordar ({prospectos.length})
+            </h2>
+            <span className="text-xs text-text-muted">— alta prioridade, ainda não abordados</span>
+          </div>
+          <div className="space-y-2">
+            {prospectos.map((p) => {
+              const corPrior = PRIORIDADE_COR[p.prioridade ?? "media"];
+              return (
+                <Card key={p.id} className="border-[#E0D0B4]/30">
+                  <CardContent className="p-4 flex items-center gap-4">
+                    <div
+                      className="w-2 h-10 rounded-full shrink-0"
+                      style={{ backgroundColor: corPrior }}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-0.5">
+                        <span className="font-semibold text-text-main text-sm">{p.nome}</span>
+                        {p.prioridade && (
+                          <span className="text-[10px] px-2 py-0.5 rounded-full font-bold"
+                            style={{ backgroundColor: corPrior + "18", color: corPrior }}>
+                            {p.prioridade === "altissima" ? "⭐⭐⭐" : "⭐⭐"}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-text-muted">
+                        {[p.segmento, p.faturamento].filter(Boolean).join(" · ")}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {p.telefone && (
+                        <a
+                          href={`https://wa.me/55${p.telefone.replace(/\D/g, "")}?text=${encodeURIComponent(msgWhatsApp(p.nome, p.segmento ?? "", 0))}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-btn border border-[#E0D0B4]/50 text-[#25D366] hover:bg-[#25D366]/10 transition-all"
+                          title="Abrir WhatsApp com mensagem D0"
+                        >
+                          <MessageCircle size={16} />
+                        </a>
+                      )}
+                      {p.instagram && (
+                        <a
+                          href={`https://instagram.com/${p.instagram.replace(/^@/, "")}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-btn border border-[#E0D0B4]/50 text-[#E1306C] hover:bg-[#E1306C]/10 transition-all text-xs font-bold"
+                          title="Abrir Instagram"
+                        >
+                          IG
+                        </a>
+                      )}
+                      <Button
+                        size="sm"
+                        disabled={iniciando === p.id}
+                        onClick={() => iniciarAbordagem(p)}
+                      >
+                        {iniciando === p.id ? "..." : "Iniciar cadência"}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Fila do dia */}
       {filaDoDia.length > 0 && (
@@ -366,11 +510,11 @@ export default function SDRPage() {
                       <div className="flex gap-2 shrink-0">
                         {lead.whatsapp && (
                           <a
-                            href={`https://wa.me/55${lead.whatsapp.replace(/\D/g, "")}`}
+                            href={`https://wa.me/55${lead.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(msgWhatsApp(lead.nome, lead.empresa ?? "", proximoDia))}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="p-2 rounded-btn border border-[#E0D0B4]/50 text-[#25D366] hover:bg-[#25D366]/10 transition-all"
-                            title="Abrir WhatsApp"
+                            title={`Abrir WhatsApp — mensagem D${proximoDia}`}
                           >
                             <MessageCircle size={16} />
                           </a>
