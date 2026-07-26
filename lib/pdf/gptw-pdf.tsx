@@ -129,7 +129,7 @@ function TrustGauge({ value }: { value: number }) {
         fill="none"
         stroke={cor}
         strokeWidth={14}
-        strokeDasharray={`${filled} ${circum - filled}`}
+        strokeDasharray={`${filled} ${Math.max(0.001, circum - filled)}`}
         strokeLinecap="round"
         transform={`rotate(-90 ${cx} ${cy})`}
       />
